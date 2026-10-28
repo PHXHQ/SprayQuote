@@ -1,2 +1,0 @@
-# MoeDizzle
-Yes
