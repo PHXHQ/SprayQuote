@@ -6,7 +6,10 @@
 <meta name="color-scheme" content="light dark"/>
 <meta name="description" content="SprayQuote — price any exterior cleaning job in 60 seconds and send a branded quote. Installable on phone, tablet and computer; works offline once installed."/>
 <!-- PWA / installable app -->
-<link rel="manifest" href="data:application/octet-stream;base64,eyJiYWNrZ3JvdW5kX2NvbG9yIjoiIzEyMTQxNyIsImNhdGVnb3JpZXMiOlsiYnVzaW5lc3MiLCJwcm9kdWN0aXZpdHkiLCJ1dGlsaXRpZXMiXSwiZGVzY3JpcHRpb24iOiJQcmljZSBhbnkgZXh0ZXJpb3IgY2xlYW5pbmcgam9iIGluIDYwIHNlY29uZHMgYW5kIHNlbmQgYSBicmFuZGVkIHF1b3RlIOKAlCBkcml2ZXdheSwgaG91c2Ugd2FzaCwgcm9vZiwgcGF0aW8sIHBhdmVycywgcGFya2luZyBhbmQgbW9yZSwgd2l0aCB5b3VyIG93biByYXRlcywgYWRkLW9ucyBhbmQgY2l0eSB0YXguIiwiZGlyIjoibHRyIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJkaXNwbGF5X292ZXJyaWRlIjpbIndpbmRvdy1jb250cm9scy1vdmVybGF5Iiwic3RhbmRhbG9uZSIsIm1pbmltYWwtdWkiXSwiaWNvbnMiOlt7InB1cnBvc2UiOiJhbnkiLCJzaXplcyI6IjE5MngxOTIiLCJzcmMiOiJpY29uLTE5Mi5wbmciLCJ0eXBlIjoiaW1hZ2UvcG5nIn0seyJwdXJwb3NlIjoiYW55Iiwic2l6ZXMiOiI1MTJ4NTEyIiwic3JjIjoiaWNvbi01MTIucG5nIiwidHlwZSI6ImltYWdlL3BuZyJ9LHsicHVycG9zZSI6Im1hc2thYmxlIiwic2l6ZXMiOiI1MTJ4NTEyIiwic3JjIjoiaWNvbi1tYXNrYWJsZS01MTIucG5nIiwidHlwZSI6ImltYWdlL3BuZyJ9LHsicHVycG9zZSI6ImFueSIsInNpemVzIjoiMTgweDE4MCIsInNyYyI6ImFwcGxlLXRvdWNoLWljb24ucG5nIiwidHlwZSI6ImltYWdlL3BuZyJ9XSwibGFuZyI6ImVuLVVTIiwibmFtZSI6IlNwcmF5UXVvdGUg4oCUIEV4dGVyaW9yIENsZWFuaW5nIFF1b3RlcyIsIm9yaWVudGF0aW9uIjoiYW55Iiwic2hvcnRfbmFtZSI6IlNwcmF5UXVvdGUiLCJzdGFydF91cmwiOiIuLi9pbmRleC5odG1sIiwidGhlbWVfY29sb3IiOiIjMTIxNDE3In0=">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#121417"/>
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#121417"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -232,6 +235,63 @@ body.sample-mode .calc input:disabled,body.sample-mode .calc select:disabled,bod
 body.sample-mode .presets .chip,body.sample-mode #addService,body.sample-mode .seg button,body.sample-mode .addon,body.sample-mode .service-card .remove,body.sample-mode .service-card .chip,body.sample-mode .swatch{pointer-events:none;opacity:.55}
 body.sample-mode .preset-lock-note{display:block}
 .preset-lock-note{display:none;font-size:13px;color:var(--muted);font-weight:700;width:100%}
+/* Sample tour — only visible in SAMPLE602 preview, guides the eye over the filled-in job */
+.sample-tour{display:none;max-width:1180px;margin:18px auto 0;padding:0 20px}
+body.sample-mode .sample-tour{display:block}
+.sample-tour-inner{background:var(--panel);border:2px solid var(--amber);border-radius:18px;padding:18px 20px;box-shadow:var(--shadow)}
+.sample-tour-head{display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap;margin-bottom:12px}
+.sample-tour-head b{font-family:"Barlow Condensed",sans-serif;font-size:24px;text-transform:uppercase;letter-spacing:.03em;line-height:1}
+.sample-tour-head b span{color:var(--amber-dark)}
+.sample-tour-head span{font-size:13.5px;color:var(--muted);font-weight:600}
+.sample-tour-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.sample-tour-grid article{border-top:3px solid var(--amber);padding-top:9px}
+.sample-tour-grid b{display:block;font-size:14.5px;line-height:1.25;margin-bottom:3px}
+.sample-tour-grid p{margin:0;font-size:13.5px;color:var(--muted);line-height:1.45}
+.sample-tour-grid p b{display:inline;font-size:13.5px;color:var(--ink)}
+@media(max-width:900px){.sample-tour-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.sample-tour-grid{grid-template-columns:1fr}}
+/* Packages (Good/Better/Best), upsells, signature, actuals, saved quotes, customer view */
+.tier-cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px}
+.tier-card{border:2px solid var(--line);background:var(--panel);border-radius:12px;padding:12px 10px;cursor:pointer;text-align:left;color:var(--ink);font:inherit}
+.tier-card b{display:block;font-family:"Barlow Condensed",sans-serif;font-size:19px;text-transform:uppercase;letter-spacing:.03em;line-height:1}
+.tier-card .t-total{display:block;font-size:21px;font-weight:800;margin:4px 0 2px}
+.tier-card .t-inc{display:block;font-size:11.5px;color:var(--muted);line-height:1.35}
+.tier-card.sel{border-color:var(--amber);background:#fff8e1}
+@media(prefers-color-scheme:dark){.tier-card.sel{background:#2a240f}}
+.tier-note{font-size:12.5px;color:var(--muted);margin:8px 0 0}
+.upsell-chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:4px}
+.upsell-chip{border:1.5px dashed var(--amber-dark);background:var(--panel);color:var(--ink);border-radius:999px;padding:8px 12px;font-weight:700;font-size:13.5px;cursor:pointer}
+.upsell-chip:hover{background:#fff8e1}@media(prefers-color-scheme:dark){.upsell-chip:hover{background:#2a240f}}
+.tier-edit-row{display:flex;gap:8px;align-items:center;border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:9px 11px;margin-bottom:7px;flex-wrap:wrap}
+.tier-edit-row .nm{flex:1;min-width:130px;font-weight:700;font-size:14px}
+.tier-edit-row .nm span{display:block;font-weight:500;font-size:12px;color:var(--muted)}
+.tier-edit-row label{font-size:13px;font-weight:700;display:flex;gap:5px;align-items:center;cursor:pointer}
+.tier-edit-row input{width:18px;height:18px;accent-color:var(--amber)}
+.sig-wrap{margin-top:12px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.sig-wrap .label{margin-bottom:8px}
+.sig-pad{width:100%;height:140px;border:1.5px dashed var(--line);border-radius:10px;background:#fff;touch-action:none;display:block}
+.sig-row{display:flex;gap:8px;margin-top:8px;align-items:center;flex-wrap:wrap}
+.sig-row span{font-size:12.5px;color:var(--muted)}
+.q-paylinks{display:none;gap:8px;flex-wrap:wrap;margin-top:12px}
+.q-paylinks a{background:var(--amber);color:#111;text-decoration:none;font-weight:800;font-size:14px;border-radius:9px;padding:10px 14px}
+.q-links{display:none;gap:8px;flex-wrap:wrap;margin-top:10px;font-size:13.5px}
+.q-links a{font-weight:800;color:var(--amber-dark);text-decoration:underline}
+.saved-item{border:1px solid var(--line);background:var(--panel2);border-radius:10px;padding:11px 12px;margin-bottom:8px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.saved-item .si-main{flex:1;min-width:160px}
+.saved-item b{font-size:14.5px;display:block;line-height:1.3}
+.saved-item span{font-size:12.5px;color:var(--muted)}
+.actuals{background:var(--onyx);color:#fff;border-radius:14px;padding:16px 18px;margin-top:12px}
+.actuals h3{margin:0 0 10px;font-family:"Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:.05em;font-size:20px}
+.actuals .q-row{color:#e8e8e8;font-size:14px}.actuals .q-row b{color:#fff}
+.actuals input{background:#1e2227;color:#fff;border-color:#2a2f36}
+.actuals-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.actuals-grid label{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#c9ced4;display:block;margin-bottom:4px}
+.cust-view{position:fixed;inset:0;z-index:95;background:var(--bg);overflow-y:auto;padding:20px 14px 44px;display:none}
+.cust-view.open{display:block}
+.cust-inner{max-width:640px;margin:0 auto}
+.cust-inner h2{font-family:"Barlow Condensed",sans-serif;text-transform:uppercase;font-size:30px;margin:0 0 4px}
+.cust-inner .sub{color:var(--muted);margin:0 0 14px;font-size:14.5px}
+body.sample-mode .tier-card,body.sample-mode .sig-wrap,body.sample-mode .upsell-chip,body.sample-mode .tier-edit-row input{pointer-events:none;opacity:.55}
 /* Gate showcase — previews of the tool behind the paywall */
 .showcase{margin:0 0 20px}
 .showcase-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-end;flex-wrap:wrap;margin-bottom:12px}
@@ -282,7 +342,7 @@ body.sample-mode .preset-lock-note{display:block}
 @media print{ .drawer,.scrim,.install-bar,.modal-scrim,.gate{display:none!important} }
 @media print{ .topbar,.hero,.presets,.calc,.how,.foot,.q-actions,.profit{display:none!important} .layout{display:block;padding:0} .quote-doc{box-shadow:none;border:0} }
 </style>
-<link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="icon" type="image/png" sizes="512x512" href="icon-512.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"></head>
+</head>
 <body class="gate-locked">
 <div class="gate" id="accessGate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
   <div class="gate-card">
@@ -297,31 +357,30 @@ body.sample-mode .preset-lock-note{display:block}
       <section class="showcase" aria-label="Preview of SprayQuote — calculator, customer quote, PDF and Pro View">
         <div class="showcase-head">
           <h2>See what you get <span>before you pay</span></h2>
-          <p>Previews of the actual tool — same layout, same sample job that loads when you unlock: a 600 sq ft driveway, heavy condition, no add-ons ticked yet.</p>
+          <p>Previews of the actual tool — same layout, same sample job that loads with <b>SAMPLE602</b>: a full bundle job (driveway + house wash, 3 add-ons ticked, discount, travel &amp; deposit filled in) totalling <b>$1,137</b> — not an empty form.</p>
         </div>
         <div class="showcase-grid">
           <article class="preview">
             <div class="preview-top light"><span>1 · The calculator</span><span class="tag">Live pricing</span></div>
             <div class="preview-body">
-              <p class="mock-label">Service type</p>
-              <div class="mock-field"><span>Driveway &amp; Concrete</span><span>▾</span></div>
-              <p class="mock-label">Size — 600 sq ft</p>
-              <div class="mock-range" aria-hidden="true"></div>
-              <div class="mock-chips"><span>400 sf</span><span class="on">600 sf</span><span>1,000 sf</span><span>2,000 sf</span></div>
+              <p class="mock-label">Service 1 — Driveway &amp; Concrete · 600 sq ft</p>
+              <div class="mock-field"><span>Heavy — oil / calcium · $0.28 / sq ft</span><span>$244</span></div>
+              <p class="mock-label">Service 2 — House Wash (Soft Wash) · 2,000 sq ft</p>
+              <div class="mock-field"><span>Moderate · 2 stories ×1.25 · $0.19 / sq ft</span><span>$570</span></div>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-                <div><p class="mock-label">Condition</p><div class="mock-field" style="margin:0"><span>Heavy — oil / calcium</span></div></div>
-                <div><p class="mock-label">Your rate</p><div class="mock-field" style="margin:0"><span>$0.28 / sq ft</span></div></div>
+                <div><p class="mock-label">Travel</p><div class="mock-field" style="margin:0"><span>10–20 mi — $25</span></div></div>
+                <div><p class="mock-label">Line notes</p><div class="mock-field" style="margin:0"><span>Oil spots, patio…</span></div></div>
               </div>
-              <p class="mock-label" style="margin-top:10px">Add-ons &amp; upsells</p>
+              <p class="mock-label" style="margin-top:10px">Add-ons &amp; upsells — 3 ticked in the sample</p>
               <div class="mock-checks">
-                <div class="mock-check"><b>☐ Oil stain treatment</b>$75 flat</div>
+                <div class="mock-check on"><b>☑ Oil stain treatment</b>$75 flat</div>
+                <div class="mock-check on"><b>☑ Rust removal</b>$89 flat</div>
+                <div class="mock-check on"><b>☑ Exterior windows</b>$99 flat</div>
                 <div class="mock-check"><b>☐ Paver sealer</b>$0.85 / sq ft</div>
-                <div class="mock-check"><b>☐ Rust removal</b>$89 flat</div>
-                <div class="mock-check"><b>☐ Exterior windows</b>$99 flat</div>
               </div>
-              <p style="font-size:12.5px;color:var(--muted);margin:8px 0 0">None ticked in the sample job — tick one and the quote on the right grows instantly.</p>
+              <p style="font-size:12.5px;color:var(--muted);margin:8px 0 0">Plus a 5% bundle discount and a 25% deposit to book — every field that changes the price is filled in, so you can follow the math end to end.</p>
             </div>
-            <div class="preview-cap"><b>Build the job in the driveway</b><span>Presets, sliders, condition &amp; access multipliers, discounts and city tax — totals update as you tap.</span></div>
+            <div class="preview-cap"><b>Build the job in the driveway</b><span>Multiple services on one quote, presets, sliders, condition &amp; access multipliers, discounts and city tax — totals update as you tap.</span></div>
           </article>
 
           <article class="preview">
@@ -330,12 +389,17 @@ body.sample-mode .preset-lock-note{display:block}
               <div class="mock-doc" aria-label="Sample quote PDF preview">
                 <div class="mock-doc-head"><b>SunState Pressure Washing</b><span>(555) 210-8842 • Phoenix, AZ &nbsp;·&nbsp; QUOTE Q-1027-01</span></div>
                 <div class="mock-doc-body">
-                  <div style="font-size:12.5px;color:#444">Prepared for<br><b style="color:#111;font-size:14px">Alex Rivera</b><br>4821 E Cactus Wren Rd, Phoenix, AZ</div>
-                  <div class="mock-line"><div><b>Driveway &amp; Concrete</b><small>600 sq ft @ $0.28/sf • Heavy — stains / oil / calcium</small></div><b>$244</b></div>
-                  <div style="display:flex;justify-content:space-between;font-size:12.5px;padding-top:6px"><span>Subtotal</span><b>$244</b></div>
-                  <div style="display:flex;justify-content:space-between;font-size:12.5px;padding-top:3px"><span>Tax — Phoenix (8.6%)</span><b>$21</b></div>
-                  <div class="mock-total"><span>TOTAL</span><span>$265</span></div>
-                  <div style="font-size:11.5px;color:#666;background:#f7f7f5;border:1px solid #ececec;border-radius:6px;padding:7px 8px;margin-top:8px">Quote valid for 14 days. Price includes pre-treatment, surface cleaning, and final rinse.</div>
+                  <div style="font-size:12.5px;color:#444">Prepared for<br><b style="color:#111;font-size:14px">Alex Rivera</b><br>4821 E Cactus Wren Rd, Phoenix, AZ 85032 · (555) 014-7789</div>
+                  <div class="mock-line"><div><b>Driveway &amp; Concrete</b><small>600 sq ft @ $0.28/sf • Heavy — oil / calcium • Oil spots by garage</small></div><b>$244</b></div>
+                  <div class="mock-line"><div><b>House Wash (Soft Wash)</b><small>2,000 sq ft @ $0.19/sf • Moderate • 2 stories ×1.25</small></div><b>$570</b></div>
+                  <div class="mock-line"><div><b>Oil stain + Rust + Windows</b><small>3 add-ons ticked — $75 + $89 + $99</small></div><b>$263</b></div>
+                  <div class="mock-line"><div><b>Travel</b><small>10–20 miles</small></div><b>$25</b></div>
+                  <div style="display:flex;justify-content:space-between;font-size:12.5px;padding-top:6px"><span>Subtotal</span><b>$1,102</b></div>
+                  <div style="display:flex;justify-content:space-between;font-size:12.5px;padding-top:3px;color:#0f7a4d"><span>Bundle discount (5%)</span><b>−$55</b></div>
+                  <div style="display:flex;justify-content:space-between;font-size:12.5px;padding-top:3px"><span>Tax — Phoenix (8.6%)</span><b>$90</b></div>
+                  <div class="mock-total"><span>TOTAL</span><span>$1,137</span></div>
+                  <div style="display:flex;justify-content:space-between;font-size:12.5px;padding-top:3px"><span>Deposit due to book (25%)</span><b>$284</b></div>
+                  <div style="font-size:11.5px;color:#666;background:#f7f7f5;border:1px solid #ececec;border-radius:6px;padding:7px 8px;margin-top:8px">Bundle visit — driveway + house wash same trip. Gate on east side; dogs inside. Price includes pre-treatment, surface cleaning, window rinse &amp; final rinse. Valid 14 days.</div>
                 </div>
               </div>
               <div class="mock-pdfbar" aria-hidden="true"><span class="a">📄 Download PDF</span><span class="d">✉️ Email</span><span class="g">📋 Copy</span></div>
@@ -349,11 +413,11 @@ body.sample-mode .preset-lock-note{display:block}
             <div class="preview-body">
               <div class="mock-profit">
                 <div style="font-weight:800;font-size:13px;letter-spacing:.04em;text-transform:uppercase;margin-bottom:4px">🔒 Pro View — your numbers only</div>
-                <div class="r"><span>Est. time on site</span><b>1.2 hrs</b></div>
-                <div class="r"><span>Est. chemical + fuel</span><b>$24</b></div>
-                <div class="r"><span>Est. labor (crew of 2)</span><b>$53</b></div>
-                <div class="r"><span>Effective $ / hour</span><b>$221 / hr</b></div>
-                <div class="r"><span>Est. gross margin</span><b class="margin">71% ($188)</b></div>
+                <div class="r"><span>Est. time on site</span><b>4.0 hrs</b></div>
+                <div class="r"><span>Est. chemical + fuel</span><b>$102</b></div>
+                <div class="r"><span>Est. labor (crew of 2)</span><b>$176</b></div>
+                <div class="r"><span>Effective $ / hour</span><b>$284 / hr</b></div>
+                <div class="r"><span>Est. gross margin</span><b class="margin">76% ($859)</b></div>
               </div>
               <p class="mock-label" style="margin-top:12px">Pro Settings — set once</p>
               <div class="mock-field"><span>Your rates &amp; minimums</span><span>⚙</span></div>
@@ -409,7 +473,7 @@ body.sample-mode .preset-lock-note{display:block}
 
       <div class="unlock-box">
         <h2>Have a code? Unlock it</h2>
-        <p style="margin:0;color:var(--muted);font-size:14.5px">Enter your access code — or your feedback code if you were invited to test. <b>Preview only?</b> Enter <b>SAMPLE602</b> to see a complete sample quote — the numbers are locked so the example stays exactly as sent.</p>
+        <p style="margin:0;color:var(--muted);font-size:14.5px">Enter your access code — or your feedback code if you were invited to test. <b>Preview only?</b> Enter <b>SAMPLE602</b> to see a complete filled-in sample — a $1,137 bundle job with two services, add-ons, discount &amp; deposit — the numbers are locked so the example stays exactly as sent.</p>
         <form class="unlock-row" id="unlockForm">
           <input type="password" id="accessCode" placeholder="ACCESS OR FEEDBACK CODE" autocomplete="off" autocapitalize="characters" aria-label="Access or feedback code">
           <button class="btn btn-amber" type="submit" style="width:auto;padding-left:22px;padding-right:22px">Unlock SprayQuote</button>
@@ -424,7 +488,7 @@ body.sample-mode .preset-lock-note{display:block}
   <div class="sample-banner-inner">
     <div>
       <b>Sample Preview <span>• Read-Only</span></b>
-      <p>You’re viewing a complete example quote with sample data filled in. All numbers, rates and fields are locked so the example can’t be changed — this is a quick look at the UI, not the live calculator. The full version lets you edit everything and send your own quotes.</p>
+      <p>This is a complete filled-in example — a $1,137 bundle job for a sample customer: driveway + house wash, 3 add-ons ticked, travel, a 5% discount and a 25% deposit, with the customer quote and Pro View margins built from the same numbers. Everything is locked so the example can’t be changed. The full version lets you edit everything and send your own quotes.</p>
     </div>
     <button class="btn btn-amber" id="sampleUnlockFull" type="button" style="width:auto">Unlock Full Version — $10/mo</button>
   </div>
@@ -483,6 +547,18 @@ body.sample-mode .preset-lock-note{display:block}
   <span class="preset-lock-note">🔒 Presets are disabled in Sample Preview — you’re viewing the locked example job.</span>
 </div>
 
+<div class="sample-tour" id="sampleTour" aria-label="What to look at in this sample">
+  <div class="sample-tour-inner">
+    <div class="sample-tour-head"><b>What you’re looking at — <span>a complete sample job</span></b><span>Follow it left to right: build on the left, quote &amp; margins on the right.</span></div>
+    <div class="sample-tour-grid">
+      <article><b>1 · Two services, one quote</b><p>Driveway &amp; Concrete <b>600 sf, Heavy</b> ($244) plus a House Wash <b>2,000 sf, Moderate, 2 stories</b> ($570) — each with its own rate, condition and line note.</p></article>
+      <article><b>2 · Add-ons actually ticked</b><p>Oil stain treatment ($75), rust removal ($89) and exterior windows ($99) are <b>checked on</b> — $263 of upsells sitting in the total, not just listed as options.</p></article>
+      <article><b>3 · Every money field filled</b><p>Travel $25, <b>5% bundle discount (−$55)</b>, Phoenix tax 8.6% ($90) and a <b>25% deposit to book ($284)</b> — so the $1,137 total shows exactly how it was built.</p></article>
+      <article><b>4 · Both outputs are live</b><p>The branded customer quote (try <b>Download PDF / Copy / Email</b>) and, under it, Pro View: <b>4.0 hrs, $284/hr, 76% margin</b> — the numbers only the contractor sees.</p></article>
+    </div>
+  </div>
+</div>
+
 <main class="layout">
   <!-- CALCULATOR -->
   <section class="panel calc" aria-label="Calculator">
@@ -519,6 +595,18 @@ body.sample-mode .preset-lock-note{display:block}
         <p style="font-size:13px;color:var(--muted);margin:8px 0 0">Every add-on’s price — and whether it’s flat or per sq ft — is set in ⚙ Pro Settings. Phoenix note baked in: desert work is dust, calcium, oil &amp; rust — degreasers and specialty treatments, not bleach-first pricing.</p>
       </div>
 
+      <div class="field" id="upsellField" style="display:none">
+        <span class="label">Suggested add-ons for this job — tap to add</span>
+        <div class="upsell-chips" id="upsellChips"></div>
+        <p style="font-size:12.5px;color:var(--muted);margin:7px 0 0">Suggestions only — nothing is ever added until you tap it.</p>
+      </div>
+
+      <div class="field">
+        <span class="label">Package tiers — what Better &amp; Best add</span>
+        <p style="font-size:13px;color:var(--muted);margin:0 0 9px">Good is the quote exactly as built above. Tick anything here and it gets priced into the Better and/or Best package totals on the right — the customer picks a tier, and the PDF follows their pick.</p>
+        <div id="tierEditor"></div>
+      </div>
+
       <div class="grid3">
         <div class="field"><label for="discount">Discount</label><div style="display:flex;gap:6px"><input type="number" id="discount" min="0" max="100" value="0" style="min-width:0"><select id="discountType" style="width:84px;flex-shrink:0" aria-label="Discount type"><option value="pct">%</option><option value="flat">$ flat</option></select></div></div>
         <div class="field"><label for="citySel">City — tax follows it</label><select id="citySel"></select></div>
@@ -540,6 +628,12 @@ body.sample-mode .preset-lock-note{display:block}
         <div class="field"><label for="clientAddr">Property address</label><input type="text" id="clientAddr" value="4821 E Cactus Wren Rd, Phoenix, AZ 85032"></div>
       </div>
       <div class="field"><label for="notes">Notes for the customer</label><textarea id="notes" rows="2" placeholder="e.g. Gate on east side. Dogs inside. Water spigot at front.">Quote valid for 14 days. Price includes pre-treatment, surface cleaning, and final rinse.</textarea></div>
+
+      <div class="divider"></div>
+      <h2 style="font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;font-size:24px;margin:0 0 6px">3 — Save this quote</h2>
+      <p style="font-size:13px;color:var(--muted);margin:0 0 10px">Saved quotes and all Pro Settings are stored <b>on this device only</b> (this browser) — they survive a reload here, but they don’t sync to your other devices.</p>
+      <button class="btn btn-dark btn-small" id="saveQuoteBtn" type="button" style="width:100%">💾 Save this quote on this device</button>
+      <div id="savedList" style="margin-top:12px"></div>
 
     </div>
   </section>
@@ -568,16 +662,33 @@ body.sample-mode .preset-lock-note{display:block}
           <div class="q-row grand"><span>TOTAL</span><span id="qTotal">$0</span></div>
           <div class="q-row" id="qDepRow" style="display:none;color:#555"><span>Deposit due to book</span><b id="qDep">$0</b></div>
         </div>
+        <div class="q-paylinks" id="qPayLinks"></div>
         <div class="q-note" id="qNote">Quote valid for 14 days. Price includes pre-treatment, surface cleaning, and final rinse.</div>
         <div style="font-size:12px;color:#888;margin-top:12px">To accept, reply to this quote or call <span id="qCall">(555) 210-8842</span>. <span id="qValid">Valid for 14 days.</span> <span id="qPayTerms">Payment due in full on completion.</span></div>
+        <div class="q-links" id="qLinks"></div>
         <div class="q-terms" id="qTerms"></div>
       </div>
+    </div>
+
+    <div id="tierSection">
+      <div class="tier-cards" id="tierCards" role="group" aria-label="Choose a package — Good, Better or Best"></div>
+      <p class="tier-note">Three ways to do this job. Tap a package to make it the quote — the totals, deposit and PDF follow the one you pick. Set what Better &amp; Best add in the tier editor on the left.</p>
     </div>
 
     <div class="q-actions">
       <button class="btn btn-amber full" id="pdfBtn">📄 Download quote PDF</button>
       <button class="btn btn-dark" id="emailBtn">✉️ Email quote</button>
       <button class="btn btn-ghost" id="copyBtn" style="background:var(--panel)">📋 Copy quote text</button>
+      <button class="btn btn-ghost full" id="shareBtn" style="background:var(--panel)">🔗 Copy customer link — totals only, no costs or margins</button>
+    </div>
+
+    <div class="sig-wrap" id="sigWrap">
+      <span class="label">Customer signature — sign right here to accept</span>
+      <canvas class="sig-pad" id="sigPad" width="880" height="280" aria-label="Signature pad — draw to sign"></canvas>
+      <div class="sig-row">
+        <button class="btn btn-ghost btn-small" id="sigClear" type="button">Clear signature</button>
+        <span id="sigState">Not signed yet. A drawn signature is embedded in the PDF quote.</span>
+      </div>
     </div>
     <p id="doneMsg" style="display:none;text-align:center;font-weight:800;color:var(--green);margin:10px 0 0">✓ Quote sent out in <span id="doneTime">0:00</span> — that’s the whole pitch.</p>
 
@@ -590,6 +701,21 @@ body.sample-mode .preset-lock-note{display:block}
       <div class="q-row"><span>Effective $ / hour (gross)</span><b id="pHourly">—</b></div>
       <div class="q-row"><span>Est. gross margin</span><b class="margin" id="pMargin">—</b></div>
       <p style="font-size:12.5px;opacity:.75;margin:10px 0 0">Rule of thumb: if gross $/hr drops under $125 on residential flatwork, raise the rate or tighten the minimum — don’t discount your way out of it.</p>
+    </div>
+
+    <div class="actuals" id="actualsBox">
+      <h3>🧾 After the job — actuals vs. estimate</h3>
+      <div class="actuals-grid">
+        <div><label for="actHours">Actual hours on site</label><input type="number" id="actHours" min="0" step="0.25" placeholder="e.g. 3.5"></div>
+        <div><label for="actChem">Actual chemical + fuel $</label><input type="number" id="actChem" min="0" step="1" placeholder="e.g. 85"></div>
+      </div>
+      <div id="actResults">
+        <div class="q-row"><span>Estimated margin</span><b id="actEstMargin">—</b></div>
+        <div class="q-row"><span>Actual margin</span><b id="actMargin">Enter actuals above</b></div>
+        <div class="q-row"><span>Actual $ / hour (gross)</span><b id="actHourly">—</b></div>
+        <div class="q-row"><span>Margin variance vs. estimate</span><b id="actVar">—</b></div>
+      </div>
+      <p style="font-size:12.5px;opacity:.75;margin:10px 0 0">Labor uses your Pro Settings crew size &amp; rate. Actuals save with the quote when you save it below — so you can check what a job really made, not what you hoped.</p>
     </div>
   </aside>
 </main>
@@ -637,7 +763,7 @@ body.sample-mode .preset-lock-note{display:block}
         <span style="background:#fff;border:1px solid var(--line);border-radius:8px;padding:5px 8px;display:inline-block"><img id="logoPreview" alt="Your logo preview" style="max-height:44px;max-width:160px;display:block"></span>
         <button type="button" class="xbtn" id="removeLogo">Remove logo ✕</button>
       </div>
-      <p style="font-size:12.5px;color:var(--muted);margin:6px 0 0">A PNG with a transparent background looks best. Like the rest of Pro Settings, it stays for this session — add it again next visit.</p>
+      <p style="font-size:12.5px;color:var(--muted);margin:6px 0 0">A PNG with a transparent background looks best. Like the rest of Pro Settings, it’s saved on this device only and comes back on your next visit here.</p>
     </div>
     <div class="field">
       <span class="label">Brand accent color — recolors the whole calculator &amp; quote</span>
@@ -709,6 +835,22 @@ body.sample-mode .preset-lock-note{display:block}
     </div>
     <div class="field"><label for="termsText">Terms &amp; conditions (prints on quote)</label><textarea id="termsText" rows="3">Final price confirmed on-site if square footage differs materially from the estimate. Customer to provide water access and clear the work area of vehicles and loose items before arrival. Sealer work requires 24 hours of dry weather after application.</textarea></div>
 
+    <h3 class="dsec">Your payment links — deposits</h3>
+    <p class="dhint">YOUR links for YOUR customers — not SprayQuote’s subscription payments. When a quote has a deposit due, the quote and PDF show a “Pay deposit” button using the first link you fill in (all filled-in apps are listed on the on-screen quote). Paste the full link for each app you take.</p>
+    <div class="grid2">
+      <div class="field"><label for="payCashApp">Cash App link</label><input type="text" id="payCashApp" placeholder="https://cash.app/$YourTag"></div>
+      <div class="field"><label for="payPayPal">PayPal link</label><input type="text" id="payPayPal" placeholder="https://www.paypal.me/YourName"></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label for="payVenmo">Venmo link</label><input type="text" id="payVenmo" placeholder="https://venmo.com/u/YourName"></div>
+      <div class="field"><label for="payGeneric">Any other payment link</label><input type="text" id="payGeneric" placeholder="https://…"></div>
+    </div>
+
+    <h3 class="dsec">Reviews &amp; booking</h3>
+    <p class="dhint">Your Google review link prints on the finished quote &amp; PDF (“enjoyed the work? leave a review”). Your booking calendar link shows on the quote and in the customer link view, so the customer can pick a day right from the quote.</p>
+    <div class="field"><label for="reviewLink">Review link (e.g. Google reviews)</label><input type="text" id="reviewLink" placeholder="https://g.page/r/…"></div>
+    <div class="field"><label for="bookingLink">Booking calendar link</label><input type="text" id="bookingLink" placeholder="https://calendly.com/… or your booking page"></div>
+
     <h3 class="dsec">Job cost assumptions — Pro View</h3>
     <p class="dhint">Feeds the margin math in Pro View. Never prints on the customer quote.</p>
     <div class="set-row"><div class="set-grid g3">
@@ -720,7 +862,7 @@ body.sample-mode .preset-lock-note{display:block}
   <div class="drawer-foot">
     <button class="btn btn-amber" id="doneSettings" type="button" style="flex:1">Done — apply to my quotes</button>
     <button class="btn btn-ghost" id="resetSettings" type="button">Reset rates &amp; taxes</button>
-    <p style="flex-basis:100%;margin:2px 0 0;font-size:12.5px;color:var(--muted)">Settings stay in place while this page is open and apply to every quote you build.</p>
+    <p style="flex-basis:100%;margin:2px 0 0;font-size:12.5px;color:var(--muted)">Settings are saved on this device only (this browser) and apply to every quote you build here. They don’t sync to other devices.</p>
   </div>
 </aside>
 
@@ -754,6 +896,24 @@ body.sample-mode .preset-lock-note{display:block}
 
     <p class="sub" style="margin-top:16px">Once installed it loads fast and opens full-screen like a regular app — handy for quoting in a driveway or a parking garage.</p>
     <div class="modal-foot"><button class="btn btn-amber" id="closeInstall" type="button">Got it</button></div>
+  </div>
+</div>
+
+<div class="cust-view" id="custView" role="dialog" aria-modal="true" aria-label="Your quote">
+  <div class="cust-inner">
+    <h2>Your quote</h2>
+    <p class="sub">Pick the package that fits, sign to accept, and use the buttons below to pay the deposit or book your day. Questions? Call the number on the quote.</p>
+    <div id="custDoc"></div>
+    <div class="tier-cards" id="custTierCards" style="margin-top:14px"></div>
+    <div class="sig-wrap">
+      <span class="label">Sign to accept this quote</span>
+      <canvas class="sig-pad" id="custSigPad" width="880" height="280" aria-label="Signature pad — draw to sign"></canvas>
+      <div class="sig-row">
+        <button class="btn btn-ghost btn-small" id="custSigClear" type="button">Clear signature</button>
+        <span id="custSigState">Not signed yet.</span>
+      </div>
+    </div>
+    <div id="custActions" style="display:grid;gap:8px;margin-top:14px"></div>
   </div>
 </div>
 
@@ -928,6 +1088,11 @@ function quoteText(){
   out.push("TOTAL: "+money(r.total)); if(r.dep>0)out.push("Deposit to book: "+money(r.dep));
   out.push(""); out.push($("notes").value||""); out.push($("qValid").textContent+" "+$("payTerms").value);
   if($("optTerms").checked&&$("termsText").value.trim()){out.push(""); out.push("Terms: "+$("termsText").value.trim());}
+  if(window.__tier&&window.__tier!=="good") out.push("Package selected: "+window.__tier.toUpperCase());
+  var pl=(typeof getPayLinks==="function")?getPayLinks():[];
+  if(r.dep>0&&pl.length){ out.push(""); out.push("Pay your "+money(r.dep)+" deposit to book:"); pl.forEach(function(p){ out.push(p.label+": "+p.url); }); }
+  var bkl=($("bookingLink")&&$("bookingLink").value||"").trim(); if(bkl){ out.push(""); out.push("Book your service day: "+bkl); }
+  var rvl=($("reviewLink")&&$("reviewLink").value||"").trim(); if(rvl) out.push("Leave us a review: "+rvl);
   out.push(""); out.push("To accept, reply here or call "+($("bizPhone").value||"us")+".");
   return out.join("\n");
 }
@@ -1064,6 +1229,32 @@ function downloadPDF(){
   if($("optTerms").checked&&$("termsText").value.trim()){
     doc.setFontSize(8); doc.setTextColor(119,119,119);
     doc.splitTextToSize($("termsText").value.trim(),CW).forEach(function(ln){ need(4.5); doc.text(ln,M,y); y+=3.8; });
+  }
+  // Deposit pay link, review & booking links (contractor's own — set in Pro Settings)
+  var payLinks=(typeof getPayLinks==="function")?getPayLinks():[];
+  if(r.dep>0&&payLinks.length){
+    need(10); y+=1;
+    doc.setFont("helvetica","bold"); doc.setFontSize(10); doc.setTextColor(20,20,20);
+    doc.text("Pay your "+money(r.dep)+" deposit to book:",M,y); y+=4.6;
+    doc.setFont("helvetica","normal"); doc.setFontSize(9); doc.setTextColor(85,85,85);
+    payLinks.forEach(function(p){ need(4.6); doc.text(p.label+": "+p.url,M,y); y+=4.4; });
+    y+=1.5;
+  }
+  var rv=($("reviewLink")&&$("reviewLink").value||"").trim(), bk=($("bookingLink")&&$("bookingLink").value||"").trim();
+  if(rv||bk){
+    need(10); doc.setFont("helvetica","normal"); doc.setFontSize(9); doc.setTextColor(85,85,85);
+    if(bk){ doc.text("Book your service day: "+bk,M,y); y+=4.4; }
+    if(rv){ doc.text("Happy with the work? Leave us a review: "+rv,M,y); y+=4.4; }
+    y+=1.5;
+  }
+  // Customer signature, drawn on the quote (or in the customer link view)
+  if(window.__sigData){
+    need(30); y+=3;
+    doc.setFont("helvetica","bold"); doc.setFontSize(9); doc.setTextColor(120,120,120);
+    doc.text("ACCEPTED & SIGNED BY CUSTOMER",M,y); y+=3;
+    try{ doc.addImage(window.__sigData,"PNG",M,y,62,19.7); }catch(e){}
+    doc.setDrawColor(150,150,150); doc.setLineWidth(0.3); doc.line(M,y+21,W-M,y+21);
+    y+=27;
   }
   doc.save("quote-"+$("qNum").textContent+".pdf");
   markDone(); toast(bizLogo?"Quote PDF downloaded — logo included":"Quote PDF downloaded");
@@ -1219,6 +1410,394 @@ document.querySelectorAll("[data-preset]").forEach(function(b){b.addEventListene
 </script>
 
 <script>
+/* ---------- Packages, upsells, signature, actuals, on-device saving, share links ---------- */
+window.__tier = "good";
+window.__sigData = null;
+var tierFlags = { addon:{}, svcType:{} };
+var TIER_SQFT = { concrete:600, house:2000, roof:1800, patio:800, pavers:800, parking:5000, fence:600, garage:400, walkway:400 };
+var editorSig = "";
+var lastTotals = null;
+
+function getPayLinks(){
+  var defs = [ ["payCashApp","Cash App"], ["payPayPal","PayPal"], ["payVenmo","Venmo"], ["payGeneric","Payment link"] ];
+  var out = [];
+  defs.forEach(function(d){
+    var el = $(d[0]); var v = el ? (el.value || "").trim() : "";
+    if (!v) return;
+    if (!/^https?:\/\//i.test(v)) v = "https://" + v;
+    out.push({ label:d[1], url:v });
+  });
+  return out;
+}
+function svcAmountFor(type, sqft, condKey){
+  var r = RATESET[type]; var isCom = propType === "commercial";
+  var base = isCom ? r.com : r.res; var min = isCom ? r.minCom : r.minRes;
+  var stories = parseFloat($("stories").value) || 1;
+  var storyMult = (type === "house" || type === "roof") ? stories : 1;
+  return Math.max(min, sqft * base * CONDS[condKey].mult * storyMult);
+}
+function addonAmt(a){
+  if (a.type === "sqft") { var f = flatworkSqft(); return f > 0 ? f * a.amount : 0; }
+  return a.amount || 0;
+}
+function tierExtras(tier){
+  var lines = [];
+  ADDONS.forEach(function(a){
+    var fl = tierFlags.addon[a.id];
+    if (fl && fl[tier] && !selectedAddons[a.id]) {
+      var amt = addonAmt(a);
+      if (amt > 0) lines.push({ title:a.name, detail:"Included in the " + tier + " package", amt:amt });
+    }
+  });
+  Object.keys(RATES).forEach(function(k){
+    var fl = tierFlags.svcType[k];
+    if (fl && fl[tier] && !services.some(function(s){ return s.type === k; })) {
+      var sq = TIER_SQFT[k] || 600;
+      lines.push({ title:RATES[k].label, detail:"Included in the " + tier + " package • approx. " + sq.toLocaleString() + " sq ft", amt:svcAmountFor(k, sq, "moderate") });
+    }
+  });
+  return lines;
+}
+function tierTotals(r, extras){
+  var sub = r.subtotal + extras.reduce(function(a,l){ return a + l.amt; }, 0);
+  var dv = parseFloat($("discount").value) || 0;
+  var disc = $("discountType").value === "flat" ? Math.min(dv, sub) : sub * dv / 100;
+  var tax = (sub - disc) * r.taxPct / 100;
+  var total = sub - disc + tax;
+  var dep = total * (parseFloat($("deposit").value) || 0) / 100;
+  return { subtotal:sub, disc:disc, tax:tax, total:total, dep:dep };
+}
+function renderTierCards(r, cards){
+  var w = $("tierCards"); if (!w) return;
+  w.innerHTML = "";
+  [["good","Good"],["better","Better"],["best","Best"]].forEach(function(pair){
+    var key = pair[0], c = cards[key];
+    var b = document.createElement("button"); b.type = "button";
+    b.className = "tier-card" + ((window.__tier === key) ? " sel" : "");
+    b.setAttribute("aria-pressed", window.__tier === key ? "true" : "false");
+    var inc = key === "good" ? "The job exactly as built" : (c.lines.length ? "Good + " + c.lines.map(function(l){ return l.title; }).join(", ") : "Same as Good — tick extras in the tier editor");
+    b.innerHTML = "<b>" + pair[1] + "</b><span class='t-total'>" + money(c.total) + "</span><span class='t-inc'></span>";
+    b.querySelector(".t-inc").textContent = inc;
+    b.addEventListener("click", function(){ window.__tier = key; calc(); toast(pair[1] + " package selected — quote & PDF now use " + money(c.total)); });
+    w.appendChild(b);
+  });
+}
+function renderQuoteLinks(r){
+  var pl = getPayLinks();
+  var pw = $("qPayLinks");
+  if (pw) {
+    pw.innerHTML = "";
+    if (r.dep > 0 && pl.length) {
+      pw.style.display = "flex";
+      pl.forEach(function(p){
+        var a = document.createElement("a"); a.href = p.url; a.target = "_blank"; a.rel = "noopener";
+        a.textContent = "💳 Pay " + money(r.dep) + " deposit — " + p.label;
+        pw.appendChild(a);
+      });
+    } else pw.style.display = "none";
+  }
+  var lw = $("qLinks");
+  if (lw) {
+    lw.innerHTML = "";
+    var bk = ($("bookingLink").value || "").trim(), rv = ($("reviewLink").value || "").trim();
+    if (bk || rv) {
+      lw.style.display = "flex";
+      if (bk) { var a1 = document.createElement("a"); a1.href = /^https?:\/\//i.test(bk) ? bk : "https://" + bk; a1.target = "_blank"; a1.rel = "noopener"; a1.textContent = "📅 Book your service day"; lw.appendChild(a1); }
+      if (rv) { var a2 = document.createElement("a"); a2.href = /^https?:\/\//i.test(rv) ? rv : "https://" + rv; a2.target = "_blank"; a2.rel = "noopener"; a2.textContent = "⭐ Leave us a review"; lw.appendChild(a2); }
+    } else lw.style.display = "none";
+  }
+}
+var UPSELL = { concrete:["oil","sealer","windows","efflo"], house:["windows","gutter"], roof:["gutter","windows"], patio:["sealer","efflo"], pavers:["sealer","efflo"], parking:["oil"], fence:["efflo"], garage:["oil"], walkway:["efflo","sealer"] };
+function renderUpsells(){
+  var f = $("upsellField"), w = $("upsellChips"); if (!f || !w) return;
+  var want = {};
+  services.forEach(function(s){ (UPSELL[s.type] || []).forEach(function(id){ want[id] = 1; }); });
+  var chips = ADDONS.filter(function(a){ return want[a.id] && !selectedAddons[a.id] && a.amount > 0; });
+  if (!chips.length) { f.style.display = "none"; return; }
+  f.style.display = "block"; w.innerHTML = "";
+  chips.forEach(function(a){
+    var b = document.createElement("button"); b.type = "button"; b.className = "upsell-chip";
+    b.textContent = "+ " + a.name + " — " + addonPriceText(a);
+    b.addEventListener("click", function(){ selectedAddons[a.id] = true; renderAddons(); calc(); toast(a.name + " added to the quote"); });
+    w.appendChild(b);
+  });
+}
+function renderTierEditor(){
+  var w = $("tierEditor"); if (!w) return; w.innerHTML = "";
+  function row(name, sub, key, kind, disabled){
+    var d = document.createElement("div"); d.className = "tier-edit-row";
+    var nm = document.createElement("span"); nm.className = "nm"; nm.textContent = name;
+    if (sub) { var sp = document.createElement("span"); sp.textContent = sub; nm.appendChild(sp); }
+    d.appendChild(nm);
+    var flags = (kind === "addon" ? tierFlags.addon[key] : tierFlags.svcType[key]) || {};
+    ["better","best"].forEach(function(t){
+      var lab = document.createElement("label");
+      var cb = document.createElement("input"); cb.type = "checkbox"; cb.checked = !!flags[t]; cb.disabled = !!disabled;
+      cb.addEventListener("change", function(){
+        var store = kind === "addon" ? tierFlags.addon : tierFlags.svcType;
+        if (!store[key]) store[key] = {};
+        store[key][t] = cb.checked; calc();
+      });
+      lab.appendChild(cb); lab.appendChild(document.createTextNode(t === "better" ? "Better" : "Best"));
+      d.appendChild(lab);
+    });
+    w.appendChild(d);
+  }
+  ADDONS.forEach(function(a){ row(a.name, selectedAddons[a.id] ? "Already in Good (the base quote)" : addonPriceText(a), a.id, "addon", !!selectedAddons[a.id]); });
+  Object.keys(RATES).forEach(function(k){
+    var present = services.some(function(s){ return s.type === k; });
+    row(RATES[k].label, present ? "Already in Good (the base quote)" : "Adds approx. " + (TIER_SQFT[k] || 600).toLocaleString() + " sq ft at your rate", k, "svc", present);
+  });
+}
+function renderTierEditorMaybe(){
+  var sig = services.map(function(s){ return s.type; }).join(",") + "|" + ADDONS.map(function(a){ return a.id + (selectedAddons[a.id] ? "*" : ""); }).join(",");
+  if (sig === editorSig) return; editorSig = sig; renderTierEditor();
+}
+function renderActuals(r){
+  lastTotals = r; updateActuals();
+}
+function updateActuals(){
+  if (!lastTotals) return;
+  var h = parseFloat($("actHours").value), c = parseFloat($("actChem").value);
+  if (isNaN(h) || h <= 0 || isNaN(c)) {
+    $("actMargin").textContent = "Enter actuals above"; $("actHourly").textContent = "—"; $("actVar").textContent = "—";
+    return;
+  }
+  var total = lastTotals.total;
+  var crew = parseFloat($("pCrew").value) || 2, lr = parseFloat($("pLaborRate").value) || 22;
+  var estHours = parseFloat(($("pTime").textContent || "").replace(/[^0-9.]/g, "")) || 0;
+  var chemPct = (parseFloat($("pChemPct").value) || 0) / 100;
+  var estChem = Math.round(total * chemPct), estLabor = Math.round(estHours * crew * lr);
+  var estProfit = Math.round(total) - estChem - estLabor;
+  var estMargin = total > 0 ? Math.round(estProfit / Math.round(total) * 100) : 0;
+  var actProfit = Math.round(total - c - Math.round(h * crew * lr));
+  var actMargin = total > 0 ? Math.round(actProfit / Math.round(total) * 100) : 0;
+  $("actEstMargin").textContent = estMargin + "% (" + money(estProfit) + ")";
+  $("actMargin").textContent = actMargin + "% (" + money(actProfit) + ")";
+  $("actHourly").textContent = money(total / h) + " / hr";
+  var dv = actMargin - estMargin;
+  $("actVar").textContent = (dv > 0 ? "+" : "") + dv + " pts (" + money(actProfit - estProfit) + ")";
+}
+
+/* ----- On-device persistence (this browser only) ----- */
+var LS_KEY = "sprayquote-device-v1";
+var store = { settings:null, quotes:[] };
+try { var rawLs = localStorage.getItem(LS_KEY); if (rawLs) { var parsed = JSON.parse(rawLs); if (parsed) store = parsed; } } catch(e){}
+var saveTimer = null;
+function persist(){ try { localStorage.setItem(LS_KEY, JSON.stringify(store)); } catch(e){} }
+function scheduleSave(){
+  if (document.body.classList.contains("sample-mode")) return;
+  clearTimeout(saveTimer); saveTimer = setTimeout(saveNow, 700);
+}
+function saveNow(){
+  if (document.body.classList.contains("sample-mode")) return;
+  store.settings = collectSettings(); persist();
+}
+function multsOf(o){ var m = {}; Object.keys(o).forEach(function(k){ m[k] = o[k].mult; }); return m; }
+var FIELD_IDS = ["stories","travel","discount","discountType","serviceFee","jobDate","deposit","clientName","clientPhone","clientEmail","clientAddr","notes","bizName","bizPhone","bizEmail","bizWebsite","bizTag","termsText","validDays","payTerms","pCrew","pLaborRate","pChemPct","payCashApp","payPayPal","payVenmo","payGeneric","reviewLink","bookingLink","actHours","actChem"];
+function collectSettings(){
+  var f = {};
+  FIELD_IDS.forEach(function(id){ var el = $(id); if (el) f[id] = el.value; });
+  return {
+    fields:f, rates:RATESET, addons:ADDONS, cities:CITIES,
+    condsMult:multsOf(CONDS), accMult:multsOf(ACCESS),
+    selectedCity:selectedCity, prop:propType,
+    optDetail:$("optDetail").checked, optSqft:$("optSqft").checked, optTerms:$("optTerms").checked,
+    accent:getComputedStyle(document.documentElement).getPropertyValue("--amber").trim(),
+    tierFlags:tierFlags, tier:window.__tier || "good",
+    logo:(typeof bizLogo !== "undefined" ? bizLogo : null),
+    logoFmt:(typeof bizLogoFmt !== "undefined" ? bizLogoFmt : "PNG"),
+    logoRatio:(typeof bizLogoRatio !== "undefined" ? bizLogoRatio : 1),
+    services:services, selectedAddons:selectedAddons
+  };
+}
+function applySettings(s){
+  if (!s) return;
+  try {
+    if (s.rates) RATESET = s.rates;
+    if (s.addons) ADDONS = s.addons;
+    if (s.cities) CITIES = s.cities;
+    if (s.condsMult) Object.keys(s.condsMult).forEach(function(k){ if (CONDS[k]) CONDS[k].mult = s.condsMult[k]; });
+    if (s.accMult) Object.keys(s.accMult).forEach(function(k){ if (ACCESS[k]) ACCESS[k].mult = s.accMult[k]; });
+    if (s.selectedCity !== undefined) selectedCity = s.selectedCity;
+    if (s.prop) propType = s.prop;
+    if (s.tierFlags) tierFlags = s.tierFlags;
+    window.__tier = s.tier || "good";
+    var f = s.fields || {};
+    Object.keys(f).forEach(function(id){ var el = $(id); if (el) el.value = f[id]; });
+    if (typeof s.optDetail === "boolean") $("optDetail").checked = s.optDetail;
+    if (typeof s.optSqft === "boolean") $("optSqft").checked = s.optSqft;
+    if (typeof s.optTerms === "boolean") $("optTerms").checked = s.optTerms;
+    if (s.services && s.services.length) {
+      services = s.services;
+      var mx = 0; services.forEach(function(x){ if (x.id > mx) mx = x.id; }); svcId = mx;
+    }
+    if (s.selectedAddons) selectedAddons = s.selectedAddons;
+    if (s.accent && s.accent.indexOf("#") === 0) setAccent(s.accent);
+    if (s.logo) {
+      bizLogo = s.logo; bizLogoFmt = s.logoFmt || "PNG"; bizLogoRatio = s.logoRatio || 1;
+      $("logoPreview").src = s.logo; $("logoRow").style.display = "flex";
+      $("qLogo").src = s.logo; $("qLogoWrap").style.display = "block";
+    }
+    setPropSeg(); renderSettings(); renderCities(); renderAddons(); renderServices();
+    editorSig = ""; renderTierEditorMaybe(); calc();
+  } catch(e){}
+}
+function renderSavedList(){
+  var w = $("savedList"); if (!w) return; w.innerHTML = "";
+  if (!store.quotes || !store.quotes.length) {
+    w.innerHTML = '<p style="font-size:13px;color:var(--muted);margin:0">No saved quotes on this device yet.</p>'; return;
+  }
+  store.quotes.forEach(function(q){
+    var d = document.createElement("div"); d.className = "saved-item";
+    var hasAct = q.state && q.state.fields && ((q.state.fields.actHours || "") !== "" || (q.state.fields.actChem || "") !== "");
+    d.innerHTML = '<div class="si-main"><b></b><span></span></div>';
+    d.querySelector("b").textContent = q.name;
+    d.querySelector("span").textContent = q.dateStr + " • " + money(q.total) + (hasAct ? " • actuals saved" : "");
+    var load = document.createElement("button"); load.className = "btn btn-dark btn-small"; load.textContent = "Load";
+    load.addEventListener("click", function(){
+      applySettings(JSON.parse(JSON.stringify(q.state)));
+      toast("Loaded saved quote: " + q.name);
+      window.scrollTo({ top:document.querySelector(".layout").offsetTop - 10, behavior:"smooth" });
+    });
+    var del = document.createElement("button"); del.className = "btn btn-ghost btn-small"; del.textContent = "Delete";
+    del.addEventListener("click", function(){
+      store.quotes = store.quotes.filter(function(x){ return x.id !== q.id; });
+      persist(); renderSavedList(); toast("Saved quote deleted from this device");
+    });
+    d.appendChild(load); d.appendChild(del); w.appendChild(d);
+  });
+}
+
+/* ----- calc wrapper: tiers, upsells, links, actuals, autosave ----- */
+var _baseCalc = calc;
+calc = function(){
+  var r = _baseCalc();
+  renderUpsells(); renderTierEditorMaybe();
+  var cards = { good:{ lines:[], subtotal:r.subtotal, disc:r.disc, tax:r.tax, total:r.total, dep:r.dep } };
+  ["better","best"].forEach(function(t){
+    var ex = tierExtras(t); var tt = tierTotals(r, ex);
+    cards[t] = { lines:ex, subtotal:tt.subtotal, disc:tt.disc, tax:tt.tax, total:tt.total, dep:tt.dep };
+  });
+  window.__tierCards = cards;
+  renderTierCards(r, cards);
+  renderQuoteLinks(r);
+  var out = r, tier = window.__tier || "good";
+  if (tier !== "good" && cards[tier]) {
+    var c = cards[tier], ql = $("qLines");
+    c.lines.forEach(function(l){
+      var d = document.createElement("div"); d.className = "line-item";
+      d.innerHTML = '<div><b></b><small></small></div><div class="line-amt"></div>';
+      d.querySelector("b").textContent = l.title;
+      d.querySelector("small").textContent = l.detail || "";
+      d.querySelector(".line-amt").textContent = money(l.amt);
+      ql.appendChild(d);
+    });
+    var banner = document.createElement("div"); banner.className = "q-note"; banner.style.marginTop = "10px";
+    banner.textContent = "Package: " + tier.toUpperCase() + " — everything in Good, plus " + (c.lines.length ? c.lines.map(function(l){ return l.title; }).join(", ") : "no extras ticked yet") + ".";
+    ql.appendChild(banner);
+    $("qSub").textContent = money(c.subtotal);
+    $("qDiscRow").style.display = c.disc > 0 ? "flex" : "none"; $("qDisc").textContent = "−" + money(c.disc);
+    $("qTaxRow").style.display = c.tax > 0 ? "flex" : "none"; $("qTax").textContent = money(c.tax);
+    $("qTotal").textContent = money(c.total);
+    $("qDepRow").style.display = c.dep > 0 ? "flex" : "none"; $("qDep").textContent = money(c.dep);
+    $("statTotal").textContent = money(c.total);
+    renderQuoteLinks(c);
+    out = { lines:r.lines.concat(c.lines), subtotal:c.subtotal, disc:c.disc, tax:c.tax, total:c.total, dep:c.dep, taxPct:r.taxPct, city:r.city };
+  }
+  renderActuals(out);
+  scheduleSave();
+  return out;
+};
+
+/* The main script registered its static field listeners with the ORIGINAL calc
+   function by value, so they would bypass the wrapper above. Re-point them at
+   the wrapper (closures elsewhere resolve calc by name and already get it). */
+["stories","travel","discount","discountType","serviceFee","jobDate","deposit","clientName","clientPhone","clientEmail","clientAddr","notes","bizName","bizPhone","bizEmail","bizWebsite","bizTag","termsText","validDays","payTerms","pCrew","pLaborRate","pChemPct"].forEach(function(id){
+  var el = $(id); if (!el) return;
+  el.removeEventListener("input", _baseCalc); el.removeEventListener("change", _baseCalc);
+  el.addEventListener("input", calc); el.addEventListener("change", calc);
+});
+["optDetail","optSqft","optTerms"].forEach(function(id){
+  var el = $(id); if (!el) return;
+  el.removeEventListener("change", _baseCalc); el.addEventListener("change", calc);
+});
+
+/* ----- Signature pads ----- */
+function initPad(canvasId, clearId, stateId){
+  var cv = $(canvasId); if (!cv) return;
+  var ctx = cv.getContext("2d");
+  ctx.lineWidth = 3; ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.strokeStyle = "#141414";
+  var drawing = false, last = null, has = false;
+  function pos(e){
+    var r = cv.getBoundingClientRect();
+    return { x:(e.clientX - r.left) * cv.width / r.width, y:(e.clientY - r.top) * cv.height / r.height };
+  }
+  cv.addEventListener("pointerdown", function(e){ drawing = true; last = pos(e); try { cv.setPointerCapture(e.pointerId); } catch(err){} e.preventDefault(); });
+  cv.addEventListener("pointermove", function(e){
+    if (!drawing) return;
+    var p = pos(e);
+    ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(p.x, p.y); ctx.stroke();
+    last = p; has = true; e.preventDefault();
+  });
+  function end(){
+    if (drawing && has) {
+      window.__sigData = cv.toDataURL("image/png");
+      var st = $(stateId); if (st) st.textContent = "Signed ✓ — this signature is embedded in the PDF quote.";
+    }
+    drawing = false;
+  }
+  cv.addEventListener("pointerup", end); cv.addEventListener("pointercancel", end);
+  var cl = $(clearId);
+  if (cl) cl.addEventListener("click", function(){
+    ctx.clearRect(0, 0, cv.width, cv.height); has = false; window.__sigData = null;
+    var st = $(stateId); if (st) st.textContent = "Not signed yet.";
+  });
+}
+initPad("sigPad", "sigClear", "sigState");
+
+/* ----- Settings inputs that feed links / actuals ----- */
+["payCashApp","payPayPal","payVenmo","payGeneric","reviewLink","bookingLink"].forEach(function(id){
+  $(id).addEventListener("input", function(){ calc(); });
+});
+["actHours","actChem"].forEach(function(id){
+  $(id).addEventListener("input", function(){ updateActuals(); scheduleSave(); });
+});
+
+/* ----- Save / share ----- */
+$("saveQuoteBtn").addEventListener("click", function(){
+  if (document.body.classList.contains("sample-mode")) { toast("Sample Preview is locked — unlock the full version to save your own quotes"); return; }
+  var r = calc(); var st = JSON.parse(JSON.stringify(collectSettings()));
+  var name = ($("clientName").value.trim() || "Untitled job") + " — " + ($("clientAddr").value.trim() || "no address");
+  var d = new Date();
+  if (!store.quotes) store.quotes = [];
+  store.quotes.unshift({ id:"q" + Date.now(), name:name, dateStr:d.toLocaleDateString("en-US", { month:"short", day:"numeric", year:"numeric" }), total:r.total, state:st });
+  if (store.quotes.length > 30) store.quotes.length = 30;
+  store.settings = st; persist(); renderSavedList();
+  toast("Quote saved on this device — total " + money(r.total));
+});
+function encodeState(st){
+  var b = btoa(unescape(encodeURIComponent(JSON.stringify(st))));
+  return b.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+$("shareBtn").addEventListener("click", function(){
+  var url = location.href.split("#")[0] + "#q=" + encodeState(collectSettings());
+  function ok(){ toast("Customer link copied — text it to your customer. Totals only: no costs, no margins."); markDone(); }
+  function fb(){
+    var ta = document.createElement("textarea"); ta.value = url; document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); ok(); } catch(e){ toast("Copy blocked — long-press the quote total to share another way"); }
+    ta.remove();
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(ok).catch(fb); else fb();
+});
+
+/* ----- Restore on-device settings, then render ----- */
+if (store.settings) applySettings(store.settings);
+renderSavedList();
+calc();
+</script>
+
+<script>
 /* ---------- Access gate: direct-pay + access code (in-memory, this visit only) ---------- */
 (function(){
   // Only SHA-256 hashes of the accepted codes ship — never the codes themselves.
@@ -1245,16 +1824,50 @@ document.querySelectorAll("[data-preset]").forEach(function(b){b.addEventListene
   var closeBtn = document.getElementById("gateClose");
 
   function applySampleData(){
-    // Ensure the locked example is the complete sample job already described on the gate:
-    // SunState (Sample) / Alex Rivera / 600 sq ft Driveway & Concrete, Heavy, Phoenix tax.
-    // The calculator's defaults already load exactly that — re-assert the key fields
-    // in case anything was touched before the gate, then recalc.
+    // Locked example = a complete, filled-in bundle job (not a single bare line):
+    // SunState (Sample) for Alex Rivera, Phoenix — Driveway 600 sf Heavy ($244) +
+    // House Wash 2,000 sf Moderate / 2 stories ($570) + 3 add-ons ticked ($263) +
+    // travel $25, 5% bundle discount, Phoenix tax 8.6%, 25% deposit. Total $1,137.
+    // Everything is set through the calculator's own state, so calc(), the quote
+    // doc, the PDF/copy/email text and Pro View all build from these same numbers.
     try {
       var cn = document.getElementById("clientName"); if (cn) cn.value = "Alex Rivera";
       var cp = document.getElementById("clientPhone"); if (cp) cp.value = "(555) 014-7789";
       var ce = document.getElementById("clientEmail"); if (ce) ce.value = "alex.rivera@example.com";
       var ca = document.getElementById("clientAddr"); if (ca) ca.value = "4821 E Cactus Wren Rd, Phoenix, AZ 85032";
-      var nt = document.getElementById("notes"); if (nt) nt.value = "Quote valid for 14 days. Price includes pre-treatment, surface cleaning, and final rinse.";
+      var nt = document.getElementById("notes"); if (nt) nt.value = "Bundle visit — driveway + full house wash on the same trip. Gate on east side; dogs inside. Water spigot at front. Price includes pre-treatment, surface cleaning, window rinse, and final rinse.";
+      var st = document.getElementById("stories"); if (st) st.value = "1.25";
+      var tv = document.getElementById("travel"); if (tv) tv.value = "25";
+      var dc = document.getElementById("discount"); if (dc) dc.value = "5";
+      var dt = document.getElementById("discountType"); if (dt) dt.value = "pct";
+      var dp = document.getElementById("deposit"); if (dp) dp.value = "25";
+      var sf = document.getElementById("serviceFee"); if (sf) sf.value = "0";
+      var jd = document.getElementById("jobDate");
+      if (jd) {
+        var d = new Date(); d.setDate(d.getDate() + 5);
+        var mm = String(d.getMonth() + 1); if (mm.length < 2) mm = "0" + mm;
+        var dd = String(d.getDate()); if (dd.length < 2) dd = "0" + dd;
+        jd.value = d.getFullYear() + "-" + mm + "-" + dd;
+      }
+      // Two services with their own notes — rebuilt through the calculator's own helpers.
+      if (typeof services !== "undefined" && typeof addService === "function") {
+        if (typeof propType !== "undefined") propType = "residential";
+        if (typeof setPropSeg === "function") setPropSeg();
+        services.length = 0;
+        addService("concrete", 600, "heavy");
+        addService("house", 2000, "moderate");
+        if (services[0]) { services[0].note = "Oil spots by garage + calcium at curb"; services[0].access = "standard"; }
+        if (services[1]) { services[1].note = "Soft wash only — covered patio included"; services[1].access = "standard"; }
+        if (typeof renderServices === "function") renderServices();
+      }
+      // Three add-ons ticked on, the rest off.
+      if (typeof selectedAddons !== "undefined") {
+        for (var k in selectedAddons) { if (Object.prototype.hasOwnProperty.call(selectedAddons, k)) delete selectedAddons[k]; }
+        selectedAddons.oil = true;
+        selectedAddons.rust = true;
+        selectedAddons.windows = true;
+        if (typeof renderAddons === "function") renderAddons();
+      }
       if (typeof calc === "function") calc();
     } catch(e){}
   }
@@ -1406,6 +2019,90 @@ document.querySelectorAll("[data-preset]").forEach(function(b){b.addEventListene
         .catch(function(){ /* page still works fully online without the worker */ });
     });
   }
+})();
+</script>
+
+<script>
+/* ---------- Customer share view: opens from a #q= link — totals only, no Pro View ---------- */
+(function(){
+  var m = /#q=([A-Za-z0-9\-_]+)/.exec(location.hash || "");
+  if (!m) return;
+  var st = null;
+  try {
+    var b = m[1].replace(/-/g, "+").replace(/_/g, "/");
+    while (b.length % 4) b += "=";
+    st = JSON.parse(decodeURIComponent(escape(atob(b))));
+  } catch(e){}
+  if (!st || typeof applySettings !== "function") return;
+
+  // Customer view bypasses the members gate entirely and never shows Pro View.
+  var gate = document.getElementById("accessGate");
+  if (gate) gate.classList.add("hidden");
+  document.body.classList.remove("gate-locked");
+  document.body.classList.remove("sample-mode");
+
+  applySettings(st);
+
+  var view = document.getElementById("custView");
+  var docSlot = document.getElementById("custDoc");
+  var cardsSlot = document.getElementById("custTierCards");
+  var actions = document.getElementById("custActions");
+
+  function refresh(){
+    docSlot.innerHTML = "";
+    var clone = document.getElementById("quoteDoc").cloneNode(true);
+    clone.removeAttribute("id");
+    docSlot.appendChild(clone);
+    cardsSlot.innerHTML = "";
+    var cards = window.__tierCards || {};
+    [["good","Good"],["better","Better"],["best","Best"]].forEach(function(pair){
+      var key = pair[0], c = cards[key]; if (!c) return;
+      var b = document.createElement("button"); b.type = "button";
+      b.className = "tier-card" + ((window.__tier === key) ? " sel" : "");
+      var inc = key === "good" ? "The job as quoted" : (c.lines.length ? "Good + " + c.lines.map(function(l){ return l.title; }).join(", ") : "Same as Good");
+      b.innerHTML = "<b>" + pair[1] + "</b><span class='t-total'>" + money(c.total) + "</span><span class='t-inc'></span>";
+      b.querySelector(".t-inc").textContent = inc;
+      b.addEventListener("click", function(){ window.__tier = key; calc(); refresh(); });
+      cardsSlot.appendChild(b);
+    });
+  }
+  function buildActions(){
+    actions.innerHTML = "";
+    var r = calc();
+    var pl = (typeof getPayLinks === "function") ? getPayLinks() : [];
+    if (r.dep > 0 && pl.length) {
+      var a = document.createElement("a");
+      a.className = "btn btn-amber"; a.href = pl[0].url; a.target = "_blank"; a.rel = "noopener";
+      a.textContent = "💳 Pay " + money(r.dep) + " deposit — " + pl[0].label;
+      actions.appendChild(a);
+    }
+    var bk = (document.getElementById("bookingLink").value || "").trim();
+    if (bk) {
+      var a2 = document.createElement("a");
+      a2.className = "btn btn-dark"; a2.href = /^https?:\/\//i.test(bk) ? bk : "https://" + bk; a2.target = "_blank"; a2.rel = "noopener";
+      a2.textContent = "📅 Book your service day";
+      actions.appendChild(a2);
+    }
+    var rv = (document.getElementById("reviewLink").value || "").trim();
+    if (rv) {
+      var a3 = document.createElement("a");
+      a3.className = "btn btn-ghost"; a3.style.background = "var(--panel)"; a3.href = /^https?:\/\//i.test(rv) ? rv : "https://" + rv; a3.target = "_blank"; a3.rel = "noopener";
+      a3.textContent = "⭐ Leave us a review";
+      actions.appendChild(a3);
+    }
+    var pdf = document.createElement("button");
+    pdf.className = "btn btn-ghost"; pdf.style.background = "var(--panel)"; pdf.type = "button";
+    pdf.textContent = "📄 Download this quote (PDF)";
+    pdf.addEventListener("click", function(){ if (typeof downloadPDF === "function") downloadPDF(); });
+    actions.appendChild(pdf);
+  }
+  initPad("custSigPad", "custSigClear", "custSigState");
+  view.classList.add("open");
+  refresh(); buildActions();
+  // Keep action totals (deposit) in step with the chosen package.
+  var origRefresh = refresh;
+  cardsSlot.addEventListener("click", function(){ setTimeout(buildActions, 30); });
+  window.scrollTo(0, 0);
 })();
 </script>
 </body>
