@@ -218,6 +218,52 @@ body.gate-locked{overflow:hidden}
 .unlock-row input{flex:1;min-width:200px;text-transform:uppercase;font-weight:700;letter-spacing:.06em}
 .unlock-err{display:none;color:var(--red);font-weight:700;font-size:14px;margin-top:9px}
 .gate-close{display:none;margin-top:14px}
+/* Gate showcase — previews of the tool behind the paywall */
+.showcase{margin:0 0 20px}
+.showcase-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-end;flex-wrap:wrap;margin-bottom:12px}
+.showcase-head h2{font-family:"Barlow Condensed",sans-serif;font-size:30px;text-transform:uppercase;line-height:.95;margin:0}
+.showcase-head h2 span{color:var(--amber-dark)}
+.showcase-head p{margin:0;color:var(--muted);font-size:14.5px;max-width:52ch}
+.showcase-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.preview{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel);display:flex;flex-direction:column}
+.preview-top{font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;padding:9px 12px;display:flex;justify-content:space-between;gap:8px;align-items:center}
+.preview-top.dark{background:var(--onyx);color:#fff}
+.preview-top.light{background:var(--panel2);color:var(--muted);border-bottom:1px solid var(--line)}
+.preview-top .tag{background:var(--amber);color:#111;padding:3px 7px;border-radius:999px;letter-spacing:.05em}
+.preview-body{padding:12px;font-size:13px;flex:1}
+.preview-cap{padding:11px 12px 13px;border-top:1px solid var(--line)}
+.preview-cap b{display:block;font-size:14.5px;line-height:1.25}
+.preview-cap span{font-size:13px;color:var(--muted);line-height:1.4;display:block;margin-top:2px}
+.mock-label{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 5px}
+.mock-field{border:1.5px solid var(--line);border-radius:8px;padding:8px 9px;font-weight:600;font-size:13px;background:var(--panel);margin-bottom:8px;display:flex;justify-content:space-between;gap:8px}
+.mock-range{height:8px;border-radius:999px;background:linear-gradient(to right,var(--amber) 0 55%,var(--line) 55%);margin:10px 0 6px;position:relative}
+.mock-range::after{content:"";position:absolute;left:55%;top:50%;width:18px;height:18px;border-radius:50%;background:#fff;border:3px solid var(--amber);transform:translate(-50%,-50%)}
+.mock-chips{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+.mock-chips span{border:1px solid var(--line);background:var(--panel2);border-radius:999px;padding:4px 8px;font-size:11.5px;font-weight:700}
+.mock-chips span.on{background:var(--onyx);color:#fff;border-color:var(--onyx)}
+.mock-checks{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.mock-check{border:1px solid var(--line);border-radius:8px;padding:7px 8px;font-size:12px;line-height:1.3}
+.mock-check b{display:block;font-size:12.5px}
+.mock-check.on{border-color:var(--amber);background:#fff8e1}
+@media(prefers-color-scheme:dark){.mock-check.on{background:#2a240f}}
+.mock-doc{background:#fff;color:#141414;border:1px solid #ddd;border-radius:6px;overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.12)}
+.mock-doc-head{background:#121417;color:#fff;padding:10px 12px;border-bottom:4px solid var(--amber)}
+.mock-doc-head b{font-family:"Barlow Condensed",sans-serif;font-size:19px;text-transform:uppercase;line-height:1;display:block}
+.mock-doc-head span{font-size:11px;opacity:.85}
+.mock-doc-body{padding:10px 12px 12px}
+.mock-line{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-top:1px solid #eee;font-size:12.5px}
+.mock-line small{display:block;color:#666}
+.mock-total{display:flex;justify-content:space-between;border-top:2px solid #121417;margin-top:6px;padding-top:7px;font-weight:800;font-size:15px}
+.mock-pdfbar{display:flex;gap:6px;margin-top:10px}
+.mock-pdfbar span{flex:1;text-align:center;border-radius:7px;padding:8px 6px;font-weight:800;font-size:12px}
+.mock-pdfbar .a{background:var(--amber);color:#111}.mock-pdfbar .d{background:#121417;color:#fff}.mock-pdfbar .g{border:1.5px solid var(--line);color:var(--ink)}
+.mock-profit{background:var(--onyx);color:#fff;border-radius:10px;padding:12px}
+.mock-profit .r{display:flex;justify-content:space-between;gap:10px;padding:5px 0;font-size:13px;color:#dfe3e6}
+.mock-profit .r b{color:#fff}
+.mock-profit .margin{color:var(--amber);font-size:17px}
+.showcase-strip{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.showcase-strip span{border:1px solid var(--line);background:var(--panel2);border-radius:999px;padding:7px 11px;font-size:13px;font-weight:700}
+@media(max-width:760px){.showcase-grid{grid-template-columns:1fr}.showcase-head h2{font-size:27px}}
 @media(max-width:640px){.gate-steps,.pay-grid{grid-template-columns:1fr}.gate-head h1{font-size:32px}.gate-body{padding:18px 16px 22px}.gate-head{padding:20px 18px}}
 @media print{ .drawer,.scrim,.install-bar,.modal-scrim,.gate{display:none!important} }
 @media print{ .topbar,.hero,.presets,.calc,.how,.foot,.q-actions,.profit{display:none!important} .layout{display:block;padding:0} .quote-doc{box-shadow:none;border:0} }
@@ -234,6 +280,80 @@ body.gate-locked{overflow:hidden}
       <div class="gate-price"><b>$10</b><span>per month</span></div>
     </div>
     <div class="gate-body">
+      <section class="showcase" aria-label="Preview of SprayQuote — calculator, customer quote, PDF and Pro View">
+        <div class="showcase-head">
+          <h2>See what you get <span>before you pay</span></h2>
+          <p>Previews of the actual tool — same layout, same sample job that loads when you unlock: a 600 sq ft driveway, heavy condition, no add-ons ticked yet.</p>
+        </div>
+        <div class="showcase-grid">
+          <article class="preview">
+            <div class="preview-top light"><span>1 · The calculator</span><span class="tag">Live pricing</span></div>
+            <div class="preview-body">
+              <p class="mock-label">Service type</p>
+              <div class="mock-field"><span>Driveway &amp; Concrete</span><span>▾</span></div>
+              <p class="mock-label">Size — 600 sq ft</p>
+              <div class="mock-range" aria-hidden="true"></div>
+              <div class="mock-chips"><span>400 sf</span><span class="on">600 sf</span><span>1,000 sf</span><span>2,000 sf</span></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <div><p class="mock-label">Condition</p><div class="mock-field" style="margin:0"><span>Heavy — oil / calcium</span></div></div>
+                <div><p class="mock-label">Your rate</p><div class="mock-field" style="margin:0"><span>$0.28 / sq ft</span></div></div>
+              </div>
+              <p class="mock-label" style="margin-top:10px">Add-ons &amp; upsells</p>
+              <div class="mock-checks">
+                <div class="mock-check"><b>☐ Oil stain treatment</b>$75 flat</div>
+                <div class="mock-check"><b>☐ Paver sealer</b>$0.85 / sq ft</div>
+                <div class="mock-check"><b>☐ Rust removal</b>$89 flat</div>
+                <div class="mock-check"><b>☐ Exterior windows</b>$99 flat</div>
+              </div>
+              <p style="font-size:12.5px;color:var(--muted);margin:8px 0 0">None ticked in the sample job — tick one and the quote on the right grows instantly.</p>
+            </div>
+            <div class="preview-cap"><b>Build the job in the driveway</b><span>Presets, sliders, condition &amp; access multipliers, discounts and city tax — totals update as you tap.</span></div>
+          </article>
+
+          <article class="preview">
+            <div class="preview-top light"><span>2 · Customer quote + PDF</span><span class="tag">What they see</span></div>
+            <div class="preview-body">
+              <div class="mock-doc" aria-label="Sample quote PDF preview">
+                <div class="mock-doc-head"><b>SunState Pressure Washing</b><span>(555) 210-8842 • Phoenix, AZ &nbsp;·&nbsp; QUOTE Q-1027-01</span></div>
+                <div class="mock-doc-body">
+                  <div style="font-size:12.5px;color:#444">Prepared for<br><b style="color:#111;font-size:14px">Alex Rivera</b><br>4821 E Cactus Wren Rd, Phoenix, AZ</div>
+                  <div class="mock-line"><div><b>Driveway &amp; Concrete</b><small>600 sq ft @ $0.28/sf • Heavy — stains / oil / calcium</small></div><b>$244</b></div>
+                  <div style="display:flex;justify-content:space-between;font-size:12.5px;padding-top:6px"><span>Subtotal</span><b>$244</b></div>
+                  <div style="display:flex;justify-content:space-between;font-size:12.5px;padding-top:3px"><span>Tax — Phoenix (8.6%)</span><b>$21</b></div>
+                  <div class="mock-total"><span>TOTAL</span><span>$265</span></div>
+                  <div style="font-size:11.5px;color:#666;background:#f7f7f5;border:1px solid #ececec;border-radius:6px;padding:7px 8px;margin-top:8px">Quote valid for 14 days. Price includes pre-treatment, surface cleaning, and final rinse.</div>
+                </div>
+              </div>
+              <div class="mock-pdfbar" aria-hidden="true"><span class="a">📄 Download PDF</span><span class="d">✉️ Email</span><span class="g">📋 Copy</span></div>
+              <p style="font-size:12.5px;color:var(--muted);margin:9px 0 0">The PDF prints exactly like this — your company name, your logo, your terms at the top and bottom. Sample company &amp; customer shown.</p>
+            </div>
+            <div class="preview-cap"><b>A branded quote, not a text message</b><span>Download the PDF, email it, or copy the text — sent before you leave the property.</span></div>
+          </article>
+
+          <article class="preview">
+            <div class="preview-top dark"><span>3 · Pro View + Settings</span><span class="tag">Only you see this</span></div>
+            <div class="preview-body">
+              <div class="mock-profit">
+                <div style="font-weight:800;font-size:13px;letter-spacing:.04em;text-transform:uppercase;margin-bottom:4px">🔒 Pro View — your numbers only</div>
+                <div class="r"><span>Est. time on site</span><b>1.2 hrs</b></div>
+                <div class="r"><span>Est. chemical + fuel</span><b>$24</b></div>
+                <div class="r"><span>Est. labor (crew of 2)</span><b>$53</b></div>
+                <div class="r"><span>Effective $ / hour</span><b>$221 / hr</b></div>
+                <div class="r"><span>Est. gross margin</span><b class="margin">71% ($188)</b></div>
+              </div>
+              <p class="mock-label" style="margin-top:12px">Pro Settings — set once</p>
+              <div class="mock-field"><span>Your rates &amp; minimums</span><span>⚙</span></div>
+              <div class="mock-field"><span>Company logo &amp; brand color</span><span>⚙</span></div>
+              <div class="mock-field" style="margin:0"><span>Cities, tax &amp; your own add-ons</span><span>⚙</span></div>
+            </div>
+            <div class="preview-cap"><b>Know your margin before you commit</b><span>Pro View and Settings never print on the customer quote — they’re how you stop underpricing jobs.</span></div>
+          </article>
+        </div>
+        <div class="showcase-strip" aria-label="Also included">
+          <span>📱 Installs on phone, tablet &amp; computer</span><span>⚡ Works offline once installed</span><span>🏢 Residential + commercial rates</span><span>🧾 City tax built in</span>
+        </div>
+      </section>
+
       <div class="gate-steps">
         <div class="gate-step"><b>Step 1 — Pay $10</b>Use PayPal, Cash App, Venmo, Zelle, or Revolut below. Put “SprayQuote” in the payment note.</div>
         <div class="gate-step"><b>Step 2 — Enter your code</b>You’ll receive the access code once your payment is confirmed, or a feedback code if you were invited to test. Enter it below — the link alone no longer opens the calculator.</div>
