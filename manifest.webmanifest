@@ -1,0 +1,33 @@
+{
+  "name": "SprayQuote \u2014 Exterior Cleaning Quotes",
+  "short_name": "SprayQuote",
+  "description": "SprayQuote \u2014 price any exterior cleaning job in 60 seconds and send a branded quote.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#121417",
+  "theme_color": "#121417",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
