@@ -218,6 +218,20 @@ body.gate-locked{overflow:hidden}
 .unlock-row input{flex:1;min-width:200px;text-transform:uppercase;font-weight:700;letter-spacing:.06em}
 .unlock-err{display:none;color:var(--red);font-weight:700;font-size:14px;margin-top:9px}
 .gate-close{display:none;margin-top:14px}
+/* Sample preview mode — SAMPLE602 */
+.sample-banner{display:none;background:#111;color:#fff;border-bottom:3px solid var(--amber);padding:12px 20px}
+body.sample-mode .sample-banner{display:block}
+.sample-banner-inner{max-width:1180px;margin:0 auto;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.sample-banner b{font-family:"Barlow Condensed",sans-serif;font-size:20px;letter-spacing:.04em;text-transform:uppercase}
+.sample-banner b span{color:var(--amber)}
+.sample-banner p{margin:2px 0 0;font-size:13.5px;color:#c9ced4;max-width:62ch}
+.sample-banner .btn{flex-shrink:0}
+body.sample-mode .calc input,body.sample-mode .calc select,body.sample-mode .calc textarea,
+body.sample-mode .drawer input,body.sample-mode .drawer select,body.sample-mode .drawer textarea{pointer-events:none;background:var(--panel2)}
+body.sample-mode .calc input:disabled,body.sample-mode .calc select:disabled,body.sample-mode .calc textarea:disabled{opacity:1;color:var(--ink);-webkit-text-fill-color:var(--ink)}
+body.sample-mode .presets .chip,body.sample-mode #addService,body.sample-mode .seg button,body.sample-mode .addon,body.sample-mode .service-card .remove,body.sample-mode .service-card .chip,body.sample-mode .swatch{pointer-events:none;opacity:.55}
+body.sample-mode .preset-lock-note{display:block}
+.preset-lock-note{display:none;font-size:13px;color:var(--muted);font-weight:700;width:100%}
 /* Gate showcase — previews of the tool behind the paywall */
 .showcase{margin:0 0 20px}
 .showcase-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-end;flex-wrap:wrap;margin-bottom:12px}
@@ -268,18 +282,14 @@ body.gate-locked{overflow:hidden}
 @media print{ .drawer,.scrim,.install-bar,.modal-scrim,.gate{display:none!important} }
 @media print{ .topbar,.hero,.presets,.calc,.how,.foot,.q-actions,.profit{display:none!important} .layout{display:block;padding:0} .quote-doc{box-shadow:none;border:0} }
 </style>
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-</head>
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="icon" type="image/png" sizes="512x512" href="icon-512.png"><link rel="apple-touch-icon" href="apple-touch-icon.png"></head>
 <body class="gate-locked">
 <div class="gate" id="accessGate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
   <div class="gate-card">
     <div class="gate-head">
       <div>
         <h1 id="gateTitle">Spray<span>Quote</span> — Members Access</h1>
-        <p>SprayQuote is for paying pros and invited feedback testers. Pay $10/mo with any app below to get the access code — or enter your feedback code if you were invited to test — and unlock the full tool: live pricing, branded quotes, PDF download, and Pro View margins.</p>
+        <p>SprayQuote is for paying pros and invited feedback testers. Pay $10/mo with any app below to get the access code — or enter your feedback code if you were invited to test — and unlock the full tool: live pricing, branded quotes, PDF download, and Pro View margins. Just looking? Enter the sample code <b style="color:#fff">SAMPLE602</b> for a locked, read-only preview with a sample job already filled in.</p>
       </div>
       <div class="gate-price"><b>$10</b><span>per month</span></div>
     </div>
@@ -399,7 +409,7 @@ body.gate-locked{overflow:hidden}
 
       <div class="unlock-box">
         <h2>Have a code? Unlock it</h2>
-        <p style="margin:0;color:var(--muted);font-size:14.5px">Enter your access code — or your feedback code if you were invited to test.</p>
+        <p style="margin:0;color:var(--muted);font-size:14.5px">Enter your access code — or your feedback code if you were invited to test. <b>Preview only?</b> Enter <b>SAMPLE602</b> to see a complete sample quote — the numbers are locked so the example stays exactly as sent.</p>
         <form class="unlock-row" id="unlockForm">
           <input type="password" id="accessCode" placeholder="ACCESS OR FEEDBACK CODE" autocomplete="off" autocapitalize="characters" aria-label="Access or feedback code">
           <button class="btn btn-amber" type="submit" style="width:auto;padding-left:22px;padding-right:22px">Unlock SprayQuote</button>
@@ -408,6 +418,15 @@ body.gate-locked{overflow:hidden}
       </div>
       <button class="btn btn-ghost gate-close" id="gateClose" type="button">← Back to SprayQuote</button>
     </div>
+  </div>
+</div>
+<div class="sample-banner" id="sampleBanner" role="status">
+  <div class="sample-banner-inner">
+    <div>
+      <b>Sample Preview <span>• Read-Only</span></b>
+      <p>You’re viewing a complete example quote with sample data filled in. All numbers, rates and fields are locked so the example can’t be changed — this is a quick look at the UI, not the live calculator. The full version lets you edit everything and send your own quotes.</p>
+    </div>
+    <button class="btn btn-amber" id="sampleUnlockFull" type="button" style="width:auto">Unlock Full Version — $10/mo</button>
   </div>
 </div>
 <header class="topbar">
@@ -461,6 +480,7 @@ body.gate-locked{overflow:hidden}
   <button class="chip" data-preset="patio">🌴 Patio + Pool Deck</button>
   <button class="chip" data-preset="commercial">🏢 Commercial Lot</button>
   <button class="chip" data-preset="reset">↺ Reset</button>
+  <span class="preset-lock-note">🔒 Presets are disabled in Sample Preview — you’re viewing the locked example job.</span>
 </div>
 
 <main class="layout">
@@ -1202,12 +1222,14 @@ document.querySelectorAll("[data-preset]").forEach(function(b){b.addEventListene
 /* ---------- Access gate: direct-pay + access code (in-memory, this visit only) ---------- */
 (function(){
   // Only SHA-256 hashes of the accepted codes ship — never the codes themselves.
-  // Accepts the paying access code and the feedback tester code.
+  // Accepts the paying access code, the feedback tester code, and SAMPLE602 (read-only preview).
   var ACCESS_HASHES = [
     "f64c6acdd5103a7c0575c2adb307b0cb14759a2e6b06ccb00dd0d88705d04296",
     "7e28b5e42b498c0472b7581242295ddeeba1e8a598c66604df59c40210f4d421"
   ];
+  var SAMPLE_HASH = "a0468dd90a0b99b6a263869bc10c62b558f310fb6b30f96b6365c7fba663816d"; // SAMPLE602
   var unlocked = false;
+  var sampleMode = false;
   function sha256Hex(str){
     if (window.crypto && crypto.subtle) {
       return crypto.subtle.digest("SHA-256", new TextEncoder().encode(str)).then(function(buf){
@@ -1222,19 +1244,65 @@ document.querySelectorAll("[data-preset]").forEach(function(b){b.addEventListene
   var err = document.getElementById("unlockErr");
   var closeBtn = document.getElementById("gateClose");
 
-  function unlock(){
+  function applySampleData(){
+    // Ensure the locked example is the complete sample job already described on the gate:
+    // SunState (Sample) / Alex Rivera / 600 sq ft Driveway & Concrete, Heavy, Phoenix tax.
+    // The calculator's defaults already load exactly that — re-assert the key fields
+    // in case anything was touched before the gate, then recalc.
+    try {
+      var cn = document.getElementById("clientName"); if (cn) cn.value = "Alex Rivera";
+      var cp = document.getElementById("clientPhone"); if (cp) cp.value = "(555) 014-7789";
+      var ce = document.getElementById("clientEmail"); if (ce) ce.value = "alex.rivera@example.com";
+      var ca = document.getElementById("clientAddr"); if (ca) ca.value = "4821 E Cactus Wren Rd, Phoenix, AZ 85032";
+      var nt = document.getElementById("notes"); if (nt) nt.value = "Quote valid for 14 days. Price includes pre-treatment, surface cleaning, and final rinse.";
+      if (typeof calc === "function") calc();
+    } catch(e){}
+  }
+  function lockForSample(){
+    sampleMode = true;
+    document.body.classList.add("sample-mode");
+    applySampleData();
+    // Disable every editable control in the calculator + Pro Settings.
+    // View actions stay live: PDF, Copy, Email, Install, opening Settings to look, and Pay/Renew.
+    var keepIds = ["pdfBtn","copyBtn","emailBtn","openPay","openSettings","openSettings2","closeSettings","doneSettings","sampleUnlockFull","accessCode"];
+    document.querySelectorAll(".layout input, .layout select, .layout textarea, .drawer input, .drawer select, .drawer textarea, .presets .chip").forEach(function(el){
+      if (keepIds.indexOf(el.id) !== -1) return;
+      el.disabled = true;
+      if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") el.readOnly = true;
+      el.setAttribute("aria-readonly","true");
+    });
+    // Segmented control + add-service + preset chips + add-on labels + logo upload
+    document.querySelectorAll("#propSeg button, #addService, .presets .chip, .swatch, .service-card .chip, .service-card .remove").forEach(function(el){ el.disabled = true; });
+    var addBtn = document.getElementById("addService"); if (addBtn) addBtn.textContent = "🔒 Sample Preview — services are locked in this example";
+    // Settings drawer action buttons that would mutate data
+    ["addAddonBtn","addCityBtn","resetSettings","removeLogo"].forEach(function(id){ var b = document.getElementById(id); if (b) b.disabled = true; });
+    var logoInput = document.getElementById("bizLogoInput"); if (logoInput) logoInput.disabled = true;
+    var fullBtn = document.getElementById("sampleUnlockFull");
+    if (fullBtn) fullBtn.addEventListener("click", function(){
+      gate.classList.remove("hidden");
+      window.scrollTo(0,0); gate.scrollTop = 0;
+      var inp = document.getElementById("accessCode"); if (inp) { inp.value = ""; inp.focus(); }
+    });
+  }
+  function unlock(isSample){
     unlocked = true;
     gate.classList.add("hidden");
     document.body.classList.remove("gate-locked");
     closeBtn.style.display = "inline-flex";
     err.style.display = "none";
-    if (typeof toast === "function") toast("Unlocked — welcome to SprayQuote");
+    if (isSample) {
+      lockForSample();
+      if (typeof toast === "function") toast("Sample Preview — read-only example with sample data. Numbers are locked.");
+    } else {
+      if (typeof toast === "function") toast("Unlocked — welcome to SprayQuote");
+    }
   }
   form.addEventListener("submit", function(e){
     e.preventDefault();
     var val = (input.value || "").trim().toUpperCase();
     sha256Hex(val).then(function(h){
-      if (ACCESS_HASHES.indexOf(h) !== -1) { unlock(); }
+      if (h === SAMPLE_HASH) { unlock(true); }
+      else if (ACCESS_HASHES.indexOf(h) !== -1) { unlock(false); }
       else { err.style.display = "block"; input.select(); }
     }).catch(function(){ err.style.display = "block"; });
   });
