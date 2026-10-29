@@ -467,6 +467,29 @@ body.is-standalone .install-mini [data-install]{display:none}
 .dgroup-body .field{min-width:0}
 @media (prefers-reduced-motion: reduce){.dgroup-chev{transition:none}}
 @media(max-width:480px){.dgroup-toggle{padding:13px 13px;gap:10px}.dgroup-body{padding:4px 13px 14px}.dgroup-title{font-size:20px}}
+/* ===== Collapsible estimator sections (in-memory open state only) ===== */
+.ecoll-toolbar{max-width:1180px;margin:14px auto 0;padding:0 20px;display:flex;align-items:center;justify-content:space-between;gap:10px 14px;flex-wrap:wrap}
+.ecoll-toolbar .ecoll-tb-label{font-size:12.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.ecoll-toolbar .ecoll-tb-actions{display:flex;gap:8px;flex-wrap:wrap}
+.ecoll-toggle-btn{margin-left:auto;flex-shrink:0;display:inline-flex;align-items:center;gap:7px;border:1.5px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:7px 11px;font:inherit;font-size:13px;font-weight:800;cursor:pointer;line-height:1;white-space:nowrap}
+.ecoll-toggle-btn:hover{border-color:var(--blue)}
+.ecoll-toggle-btn:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.ecoll-chev{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;font-size:15px;line-height:1;transition:transform .2s ease}
+.ecoll.open .ecoll-chev{transform:rotate(180deg)}
+.ecoll-body[hidden]{display:none!important}
+.ecoll-sum{font-family:"Barlow",system-ui,sans-serif;font-size:13px;font-weight:600;line-height:1.4;color:var(--muted);text-transform:none;letter-spacing:0}
+.presets-head .ecoll-toggle-btn,.basics-head .ecoll-toggle-btn{background:var(--panel)}
+.basics:not(.open){padding-bottom:14px}
+.presets:not(.open){padding-bottom:16px}
+.qsum:not(.open) .qsum-head{margin-bottom:0}
+.quote-label .ecoll-toggle-btn{background:var(--panel)}
+.ecoll-region{margin:2px 0 4px;min-width:0}
+.ecoll-region-head{display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap;margin:2px 0 12px}
+.ecoll-region-title{font-family:"Barlow Condensed",sans-serif;font-size:22px;text-transform:uppercase;letter-spacing:.03em;line-height:1;color:var(--ink)}
+h2.step-title .ecoll-sum{margin-right:2px}
+h2.step-title .ecoll-toggle-btn{font-family:"Barlow",system-ui,sans-serif;text-transform:none;letter-spacing:0}
+@media (prefers-reduced-motion: reduce){.ecoll-chev{transition:none}}
+@media(max-width:640px){.ecoll-toolbar{padding:0 16px}.ecoll-toggle-btn{padding:7px 9px;font-size:12.5px}}
 </style>
 </head>
 <body class="gate-locked">
@@ -638,6 +661,14 @@ body.is-standalone .install-mini [data-install]{display:none}
     </div>
   </div>
 </header>
+
+<div class="ecoll-toolbar" aria-label="Estimator section controls">
+  <span class="ecoll-tb-label">Estimator sections — open by default, collapse any to compact the page</span>
+  <span class="ecoll-tb-actions">
+    <button class="btn btn-ghost btn-small" id="ecollExpandAll" type="button" aria-label="Expand all estimator sections">Expand all</button>
+    <button class="btn btn-ghost btn-small" id="ecollCollapseAll" type="button" aria-label="Collapse all estimator sections">Collapse all</button>
+  </span>
+</div>
 
 <div class="presets" aria-label="Quick start job presets">
   <div class="presets-head"><span class="presets-title">⚡ Quick start</span><span class="presets-sub">Tap a job type — it loads the baseline below so you can tweak the numbers instead of starting from zero.</span></div>
@@ -2674,6 +2705,154 @@ calc();
         wrapper.classList.toggle("open",next);
       });
     });
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init); else init();
+})();
+</script>
+<script>
+/* ---------- Collapsible estimator sections (in-memory open state only) ---------- */
+(function(){
+  var registry=[]; var counter=0;
+  function makeToggle(title){
+    var btn=document.createElement("button");
+    btn.type="button"; btn.className="ecoll-toggle-btn";
+    btn.setAttribute("aria-expanded","true");
+    var lab=document.createElement("span"); lab.className="ecoll-btn-label"; lab.textContent="Hide";
+    var chev=document.createElement("span"); chev.className="ecoll-chev"; chev.setAttribute("aria-hidden","true"); chev.textContent="\u2304";
+    btn.appendChild(lab); btn.appendChild(chev);
+    btn._ecollLabel=lab; btn._ecollTitle=title;
+    return btn;
+  }
+  function register(container,btn,body,title){
+    counter++;
+    if(!body.id) body.id="ecoll-body-"+counter;
+    container.classList.add("ecoll","open");
+    body.classList.add("ecoll-body");
+    body.setAttribute("role","region");
+    body.setAttribute("aria-label",title);
+    btn.setAttribute("aria-controls",body.id);
+    btn.setAttribute("aria-label","Collapse "+title);
+    function setOpen(next){
+      btn.setAttribute("aria-expanded",next?"true":"false");
+      btn.setAttribute("aria-label",(next?"Collapse ":"Expand ")+title);
+      btn._ecollLabel.textContent=next?"Hide":"Show";
+      body.hidden=!next;
+      container.classList.toggle("open",next);
+    }
+    btn.addEventListener("click",function(){ setOpen(btn.getAttribute("aria-expanded")!=="true"); });
+    registry.push({setOpen:setOpen});
+  }
+  function wrapSiblings(container,nodes){
+    var body=document.createElement("div");
+    nodes.forEach(function(n){ body.appendChild(n); });
+    container.appendChild(body);
+    return body;
+  }
+  function elementChildren(el){ return Array.prototype.slice.call(el.children); }
+  function init(){
+    /* Quick Start */
+    var presets=document.querySelector(".presets");
+    if(presets){
+      var pHead=presets.querySelector(".presets-head");
+      var pNodes=elementChildren(presets).filter(function(n){ return n!==pHead; });
+      if(pHead&&pNodes.length){
+        var pBtn=makeToggle("Quick start"); pHead.appendChild(pBtn);
+        var pBody=wrapSiblings(presets,pNodes);
+        presets.setAttribute("data-ecoll","quick-start");
+        register(presets,pBtn,pBody,"Quick start");
+      }
+    }
+    /* Property basics */
+    var basics=document.querySelector(".panel.calc .basics");
+    if(basics){
+      var bHead=basics.querySelector(".basics-head");
+      var bNodes=elementChildren(basics).filter(function(n){ return n!==bHead; });
+      if(bHead&&bNodes.length){
+        var bSum=document.createElement("span"); bSum.className="ecoll-sum"; bSum.textContent="House size, floors, windows & surfaces";
+        var bTotal=bHead.querySelector(".basics-total");
+        if(bTotal) bHead.insertBefore(bSum,bTotal); else bHead.appendChild(bSum);
+        var bBtn=makeToggle("Property basics"); bHead.appendChild(bBtn);
+        var bBody=wrapSiblings(basics,bNodes);
+        basics.setAttribute("data-ecoll","property-basics");
+        register(basics,bBtn,bBody,"Property basics");
+      }
+    }
+    var panelBody=document.querySelector(".panel.calc .panel-body");
+    if(panelBody){
+      /* Services & add-ons: #services through the discount/city/deposit grid */
+      var svcStart=document.getElementById("services");
+      var discount=document.getElementById("discount");
+      var discountGrid=discount?discount.closest(".grid3"):null;
+      if(svcStart&&discountGrid){
+        var sNodes=[]; var cur=svcStart;
+        while(cur){ sNodes.push(cur); if(cur===discountGrid) break; cur=cur.nextElementSibling; }
+        if(sNodes.length>1){
+          var sRegion=document.createElement("div"); sRegion.className="ecoll-region"; sRegion.setAttribute("data-ecoll","services-addons");
+          panelBody.insertBefore(sRegion,svcStart);
+          var sHead=document.createElement("div"); sHead.className="ecoll-region-head";
+          var sTitle=document.createElement("span"); sTitle.className="ecoll-region-title"; sTitle.textContent="Services & add-ons";
+          var sSum=document.createElement("span"); sSum.className="ecoll-sum"; sSum.textContent="Services, travel, add-ons, discount, city tax & deposit";
+          sHead.appendChild(sTitle); sHead.appendChild(sSum);
+          var sBtn=makeToggle("Services and add-ons"); sHead.appendChild(sBtn);
+          sRegion.appendChild(sHead);
+          var sBody=wrapSiblings(sRegion,sNodes);
+          register(sRegion,sBtn,sBody,"Services and add-ons");
+        }
+      }
+      /* Client details + Save this quote: the two step headings inside the panel body */
+      var stepHeads=Array.prototype.slice.call(panelBody.querySelectorAll("h2.step-title"));
+      stepHeads.forEach(function(h2){
+        var txt=(h2.textContent||"");
+        var isClient=txt.indexOf("Who")!==-1;
+        var isSave=txt.indexOf("Save this quote")!==-1;
+        if(!isClient&&!isSave) return;
+        var title=isClient?"Client details":"Save this quote";
+        var summary=isClient?"Client name, contact & property address":"Keep this quote on this device";
+        var nodes=[]; var sib=h2.nextElementSibling;
+        while(sib){
+          if(sib.classList&&sib.classList.contains("step-title")) break;
+          if(sib.classList&&sib.classList.contains("divider")&&sib.nextElementSibling&&sib.nextElementSibling.classList&&sib.nextElementSibling.classList.contains("step-title")) break;
+          nodes.push(sib); sib=sib.nextElementSibling;
+        }
+        var region=document.createElement("div"); region.className="ecoll-region"; region.setAttribute("data-ecoll",isClient?"client-details":"save-quote");
+        panelBody.insertBefore(region,h2);
+        region.appendChild(h2);
+        var sum=document.createElement("span"); sum.className="ecoll-sum"; sum.textContent=summary;
+        h2.appendChild(sum);
+        var btn=makeToggle(title); h2.appendChild(btn);
+        var body=wrapSiblings(region,nodes);
+        register(region,btn,body,title);
+      });
+    }
+    /* Live quote preview */
+    var quoteAside=document.querySelector("aside.quote");
+    if(quoteAside){
+      var qLabel=quoteAside.querySelector(".quote-label");
+      var qNodes=elementChildren(quoteAside).filter(function(n){ return n!==qLabel; });
+      if(qLabel&&qNodes.length){
+        var qBtn=makeToggle("Live quote preview"); qLabel.appendChild(qBtn);
+        var qBody=wrapSiblings(quoteAside,qNodes);
+        quoteAside.setAttribute("data-ecoll","quote-preview");
+        register(quoteAside,qBtn,qBody,"Live quote preview");
+      }
+    }
+    /* Bottom live totals */
+    var qsum=document.querySelector(".totals-wrap .qsum");
+    if(qsum){
+      var tHead=qsum.querySelector(".qsum-head");
+      var tNodes=elementChildren(qsum).filter(function(n){ return n!==tHead; });
+      if(tHead&&tNodes.length){
+        var tBtn=makeToggle("Live totals"); tHead.appendChild(tBtn);
+        var tBody=wrapSiblings(qsum,tNodes);
+        qsum.setAttribute("data-ecoll","live-totals");
+        register(qsum,tBtn,tBody,"Live totals");
+      }
+    }
+    /* Expand / collapse all */
+    var ex=document.getElementById("ecollExpandAll");
+    var co=document.getElementById("ecollCollapseAll");
+    if(ex) ex.addEventListener("click",function(){ registry.forEach(function(r){ r.setOpen(true); }); });
+    if(co) co.addEventListener("click",function(){ registry.forEach(function(r){ r.setOpen(false); }); });
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init); else init();
 })();
