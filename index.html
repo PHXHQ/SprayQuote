@@ -101,10 +101,14 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--blue);border-col
 .service-card{border:1.5px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px;background:var(--panel2)}
 .service-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .service-top b{font-size:15.5px} .remove{background:none;border:0;color:var(--red);font-weight:700;cursor:pointer;font-size:13px}
-.addons{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.addon{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:11px 12px;cursor:pointer}
-.addon input{margin-top:3px;accent-color:var(--amber);width:18px;height:18px;flex-shrink:0}
-.addon b{font-size:14.5px;display:block;line-height:1.25} .addon span{font-size:13.5px;color:var(--muted);line-height:1.4}
+.addon-list{display:flex;flex-direction:column;gap:8px}
+.addon-row{display:flex;gap:10px;align-items:center;border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:10px 12px}
+.addon-row .addon-info{flex:1;min-width:0}
+.addon-row .addon-info b{font-size:14.5px;display:block;line-height:1.25}
+.addon-row .a-desc{font-size:13.5px;color:var(--muted);line-height:1.4;display:block}
+.addon-row .addon-amt{font-size:15px;white-space:nowrap}
+.addon-remove{background:none;border:0;color:var(--red);font-weight:700;cursor:pointer;font-size:13px;padding:4px 6px;white-space:nowrap}
+#addonSelect{border-style:dashed;border-color:var(--amber-dark)}
 .btn{border:0;border-radius:10px;padding:13px 16px;font-weight:800;font-size:15px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:background .15s ease,border-color .15s ease}
 .btn:active{transform:translateY(1px)}
 .btn-amber{background:var(--amber);color:#111;width:100%} .btn-amber:hover{background:var(--amber-dark)}
@@ -167,7 +171,7 @@ html[data-theme="dark"] .quote-doc{box-shadow:0 14px 40px rgba(0,0,0,.5)}
   .hero{grid-template-columns:1fr} .hero-img{min-height:210px;height:210px}
   .layout{grid-template-columns:1fr} .quote{position:static}
   .hero-copy h1{font-size:42px} .how-grid{grid-template-columns:1fr}
-  .grid2,.grid3{grid-template-columns:1fr} .addons{grid-template-columns:1fr}
+  .grid2,.grid3{grid-template-columns:1fr}
   .topbar-inner{padding:12px 16px} .brand{font-size:24px}
   .wordmark--header .wordmark-main{font-size:29px} .wordmark--header .wm-tagline{font-size:7.5px;letter-spacing:.28em}
   .wordmark--gate .wordmark-main{font-size:42px} .wordmark--gate .wm-tagline{font-size:9px;letter-spacing:.29em}
@@ -260,7 +264,7 @@ body.sample-mode .sample-banner{display:block}
 body.sample-mode .calc input,body.sample-mode .calc select,body.sample-mode .calc textarea,
 body.sample-mode .drawer input,body.sample-mode .drawer select,body.sample-mode .drawer textarea{pointer-events:none;background:var(--panel2)}
 body.sample-mode .calc input:disabled,body.sample-mode .calc select:disabled,body.sample-mode .calc textarea:disabled{opacity:1;color:var(--ink);-webkit-text-fill-color:var(--ink)}
-body.sample-mode .presets .chip,body.sample-mode #addService,body.sample-mode .seg button,body.sample-mode .addon,body.sample-mode .service-card .remove,body.sample-mode .service-card .chip,body.sample-mode .swatch{pointer-events:none;opacity:.55}
+body.sample-mode .presets .chip,body.sample-mode #addService,body.sample-mode .seg button,body.sample-mode .addon-remove,body.sample-mode .service-card .remove,body.sample-mode .service-card .chip,body.sample-mode .swatch{pointer-events:none;opacity:.55}
 body.sample-mode .preset-lock-note{display:block}
 .preset-lock-note{display:none;font-size:13px;color:var(--muted);font-weight:700;width:100%}
 /* Packages (Good/Better/Best), upsells, signature, actuals, saved quotes, customer view */
@@ -400,8 +404,8 @@ html[data-theme="dark"] .mock-check.on{background:#2a3a55}
 .service-card{padding:12px 14px;margin-bottom:10px}
 .svc-row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
 .svc-row2 .field{margin-bottom:0}
-.addon{padding:9px 11px}
-.addon b{font-size:14px}
+.addon-row{padding:9px 11px}
+.addon-row .addon-info b{font-size:14px}
 .drawer .profit,.drawer .actuals{margin-top:14px}
 .drawer .how{max-width:none;margin:0;padding:0}
 .drawer .how-inner{border:0;border-radius:0;padding:4px 0 0;background:transparent;box-shadow:none}
@@ -442,6 +446,27 @@ html[data-theme="dark"] .qsum-head h3{color:#7db4f0}
 .foot .installed-note{color:var(--ink)}
 body.is-standalone .install-mini [data-install]{display:none}
 .theme-toggle{white-space:nowrap}
+/* ===== Collapsible Pro Settings groups ===== */
+.dgroup{border:1px solid var(--line);border-radius:14px;background:var(--panel);margin:14px 0;overflow:hidden;min-width:0}
+.dgroup:first-child{margin-top:8px}
+.dgroup .dsec.dgroup-head{margin:0;display:block;font-family:inherit}
+.dgroup .dsec.dgroup-head::before{display:none;content:none}
+.dgroup-toggle{width:100%;display:flex;align-items:flex-start;gap:12px;background:var(--panel2);border:0;border-bottom:1px solid transparent;color:var(--ink);padding:14px 16px;text-align:left;cursor:pointer;font:inherit;min-width:0}
+.dgroup-toggle:hover{background:var(--panel2)}
+.dgroup.open .dgroup-toggle{border-bottom-color:var(--line)}
+.dgroup-toggle:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
+.dgroup-bar{width:20px;height:4px;border-radius:999px;background:var(--amber);flex-shrink:0;margin-top:10px}
+.dgroup-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.dgroup-title{font-family:"Barlow Condensed",sans-serif;font-size:21px;text-transform:uppercase;letter-spacing:.03em;line-height:1.05;color:var(--ink);overflow-wrap:anywhere}
+.dgroup-sum{font-family:"Barlow",system-ui,sans-serif;font-size:13.5px;font-weight:500;line-height:1.45;color:var(--muted);text-transform:none;letter-spacing:0;overflow-wrap:anywhere}
+.dgroup-chev{flex-shrink:0;width:28px;height:28px;border-radius:999px;border:1.5px solid var(--line);background:var(--panel);color:var(--ink);display:inline-flex;align-items:center;justify-content:center;font-size:16px;line-height:1;margin-top:2px;transition:transform .2s ease}
+.dgroup.open .dgroup-chev{transform:rotate(180deg)}
+.dgroup-body{padding:6px 16px 16px;min-width:0}
+.dgroup-body[hidden]{display:none!important}
+.dgroup-body .dhint{margin-top:6px}
+.dgroup-body .field{min-width:0}
+@media (prefers-reduced-motion: reduce){.dgroup-chev{transition:none}}
+@media(max-width:480px){.dgroup-toggle{padding:13px 13px;gap:10px}.dgroup-body{padding:4px 13px 14px}.dgroup-title{font-size:20px}}
 </style>
 </head>
 <body class="gate-locked">
@@ -461,7 +486,7 @@ body.is-standalone .install-mini [data-install]{display:none}
       <section class="showcase" aria-label="Preview of SprayQuote — calculator, customer quote, PDF and Pro View">
         <div class="showcase-head">
           <h2>See what you get <span>before you pay</span></h2>
-          <p>An example bundle quote — driveway and house wash with three add-ons, a bundle discount, travel, and a deposit — totalling <b id="scHeadTotal">$1,137</b>. Built live from the calculator’s own services and rates, so this page always matches the tool.</p>
+          <p>An example bundle quote — driveway and house wash with three add-ons, a bundle discount, travel, and a deposit — totalling <b id="scHeadTotal">$1,134</b>. Built live from the calculator’s own services and rates, so this page always matches the tool.</p>
         </div>
         <div class="showcase-grid">
           <article class="preview">
@@ -477,8 +502,8 @@ body.is-standalone .install-mini [data-install]{display:none}
               </div>
               <p class="mock-label" style="margin-top:10px">Add-ons &amp; upsells</p>
               <div class="mock-checks">
-                <div class="mock-check on"><b>☑ Oil stain treatment</b>$75 flat</div>
-                <div class="mock-check on"><b>☑ Rust removal</b>$89 flat</div>
+                <div class="mock-check on"><b>☑ Oil stain treatment</b>$0.12 / sq ft</div>
+                <div class="mock-check on"><b>☑ Rust removal</b>$0.15 / sq ft</div>
                 <div class="mock-check on"><b>☑ Exterior windows</b>$99 flat</div>
                 <div class="mock-check"><b>☐ Paver sealer</b>$0.85 / sq ft</div>
               </div>
@@ -496,12 +521,12 @@ body.is-standalone .install-mini [data-install]{display:none}
                   <div style="font-size:12.5px;color:#444">Prepared for<br><b style="color:#111;font-size:14px">Alex Rivera</b><br>4821 E Cactus Wren Rd, Phoenix, AZ 85032 · (555) 014-7789</div>
                   <div class="mock-line" data-sc-line="concrete"><div><b>Driveway &amp; Concrete</b><small>600 sq ft @ $0.28/sf • Heavy — oil / calcium • Oil spots by garage</small></div><b>$244</b></div>
                   <div class="mock-line" data-sc-line="house"><div><b>House Wash (Soft Wash)</b><small>2,000 sq ft @ $0.19/sf • Moderate • 2 stories ×1.25</small></div><b>$570</b></div>
-                  <div class="mock-line"><div><b>Oil stain + Rust + Windows</b><small>3 add-ons ticked — $75 + $89 + $99</small></div><b>$263</b></div>
+                  <div class="mock-line"><div><b>Oil stain + Rust + Windows</b><small id="scAddsDetail">3 add-ons — oil $72 + rust $90 (per sq ft on 600 sq ft) + windows $99</small></div><b id="scAddsTotal">$261</b></div>
                   <div class="mock-line"><div><b>Travel</b><small>10–20 miles</small></div><b>$25</b></div>
-                  <div style="display:flex;justify-content:space-between;font-size:12.5px;padding-top:6px"><span>Subtotal</span><b id="scSub">$1,102</b></div>
+                  <div style="display:flex;justify-content:space-between;font-size:12.5px;padding-top:6px"><span>Subtotal</span><b id="scSub">$1,100</b></div>
                   <div style="display:flex;justify-content:space-between;font-size:12.5px;padding-top:3px;color:#0f7a4d"><span>Bundle discount (5%)</span><b id="scDisc">−$55</b></div>
                   <div style="display:flex;justify-content:space-between;font-size:12.5px;padding-top:3px"><span id="scTaxLabel">Tax — Phoenix (8.6%)</span><b id="scTax">$90</b></div>
-                  <div class="mock-total"><span>TOTAL</span><span id="scTotal">$1,137</span></div>
+                  <div class="mock-total"><span>TOTAL</span><span id="scTotal">$1,134</span></div>
                   <div style="display:flex;justify-content:space-between;font-size:12.5px;padding-top:3px"><span>Deposit due to book (25%)</span><b id="scDep">$284</b></div>
                   <div style="font-size:11.5px;color:#666;background:#f7f7f5;border:1px solid #ececec;border-radius:6px;padding:7px 8px;margin-top:8px">Bundle visit — driveway + house wash same trip. Gate on east side; dogs inside. Price includes pre-treatment, surface cleaning, window rinse &amp; final rinse. Valid 14 days.</div>
                 </div>
@@ -595,7 +620,7 @@ body.is-standalone .install-mini [data-install]{display:none}
   <div class="sample-banner-inner">
     <div>
       <b>Sample Preview <span>• Read-Only</span></b>
-      <p>This is a complete filled-in example — a $1,137 bundle job for a sample customer: driveway + house wash, 3 add-ons ticked, travel, a 5% discount and a 25% deposit, with the customer quote and Pro View margins built from the same numbers. Everything is locked so the example can’t be changed. The full version lets you edit everything and send your own quotes.</p>
+      <p>This is a complete filled-in example — a $1,134 bundle job for a sample customer: driveway + house wash, 3 add-ons ticked, travel, a 5% discount and a 25% deposit, with the customer quote and Pro View margins built from the same numbers. Everything is locked so the example can’t be changed. The full version lets you edit everything and send your own quotes.</p>
     </div>
     <button class="btn btn-amber" id="sampleUnlockFull" type="button" style="width:auto">Unlock Full Version — $10/mo</button>
   </div>
@@ -632,34 +657,58 @@ body.is-standalone .install-mini [data-install]{display:none}
   <section class="panel calc" aria-label="Calculator">
     <div class="panel-head"><h2 class="step-title"><span class="step-num">1</span> Quick quote</h2><span style="display:flex;gap:10px;align-items:center"><span style="font-size:13px;color:var(--muted);font-weight:700">Live pricing</span><button class="btn btn-ghost btn-small" id="openSettings2" type="button">⚙ Pro Settings</button></span></div>
     <div class="panel-body">
-      <div class="basics" aria-label="Property basics — size and windows">
+      <div class="basics" aria-label="Property basics — general information about the house">
         <div class="basics-head"><span class="basics-title">🏠 Property basics — start here</span><span class="basics-total" id="basicsTotals">Add a service below to start</span></div>
         <div class="grid3">
           <div class="field">
-            <label for="homeSqft">Property size (sq ft)</label>
+            <label for="homeSqft">House size (sq ft)</label>
             <input type="number" id="homeSqft" min="0" max="50000" step="50" placeholder="e.g. 2,000">
+          </div>
+          <div class="field">
+            <label for="stories">Floors / stories</label>
+            <select id="stories"><option value="1">1 story</option><option value="1.25">2 stories</option><option value="1.5">3 stories</option></select>
           </div>
           <div class="field">
             <label for="winCount">Windows — how many?</label>
             <input type="number" id="winCount" min="0" max="300" step="1" value="0">
           </div>
+        </div>
+        <div class="grid3">
           <div class="field">
-            <span class="label">Windows — clean which sides?</span>
-            <div class="seg" id="winSeg">
-              <button class="active" data-win="outside" type="button">Outside</button>
-              <button data-win="inside" type="button">Inside</button>
-              <button data-win="both" type="button">Both</button>
-            </div>
+            <label for="driveSqft">Driveway (sq ft)</label>
+            <input type="number" id="driveSqft" min="0" max="50000" step="50" placeholder="e.g. 600">
+          </div>
+          <div class="field">
+            <label for="sideSqft">Sidewalk (sq ft)</label>
+            <input type="number" id="sideSqft" min="0" max="50000" step="50" placeholder="e.g. 200">
+          </div>
+          <div class="field">
+            <label for="patioSqft">Patio (sq ft)</label>
+            <input type="number" id="patioSqft" min="0" max="50000" step="50" placeholder="e.g. 400">
           </div>
         </div>
-        <p class="basics-note">Property size drives the first service below — change it here or on the service itself. Windows are priced per window and land on the quote as their own line: <span id="winRateNote">Outside $5 · Inside $7 · Both $10</span> per window (rates live in Pro Settings).</p>
-      </div>
-      <div class="field">
-        <span class="label">Property type</span>
-        <div class="seg" id="propSeg">
-          <button class="active" data-prop="residential">Residential</button>
-          <button data-prop="commercial">Commercial</button>
+        <div class="grid3">
+          <div class="field">
+            <label for="garageSqft">Garage floor (sq ft)</label>
+            <input type="number" id="garageSqft" min="0" max="50000" step="50" placeholder="e.g. 400">
+          </div>
+          <div class="field">
+            <label for="driveSurface">Driveway surface</label>
+            <select id="driveSurface"><option value="concrete">Concrete</option><option value="pavers">Pavers</option><option value="asphalt">Asphalt</option></select>
+          </div>
+          <div class="field">
+            <label for="sidingType">House siding</label>
+            <select id="sidingType"><option value="stucco">Stucco</option><option value="vinyl">Vinyl</option><option value="brick">Brick</option><option value="other">Other</option></select>
+          </div>
         </div>
+        <div class="field" style="margin-bottom:4px">
+          <span class="label">Property type</span>
+          <div class="seg" id="propSeg">
+            <button class="active" data-prop="residential">Residential</button>
+            <button data-prop="commercial">Commercial</button>
+          </div>
+        </div>
+        <p class="basics-note">General info about the house only — no pricing lives here. Every service below pulls what it needs from this panel automatically: house wash takes the house size, floors and siding; driveway takes the driveway size and surface; the window cleaning service takes the window count (inside / outside is picked on that service); sidewalk, patio and garage services take their own sizes. Change a number here and every service using it updates — you never type the same measurement twice.</p>
       </div>
 
       <div id="services"></div>
@@ -667,21 +716,16 @@ body.is-standalone .install-mini [data-install]{display:none}
 
       <div class="divider"></div>
 
-      <div class="grid2">
-        <div class="field">
-          <label for="stories">Stories (house / roof)</label>
-          <select id="stories"><option value="1">1 story — standard</option><option value="1.25">2 stories — +25%</option><option value="1.5">3 stories — +50%</option></select>
-        </div>
-        <div class="field">
-          <label for="travel">Travel distance</label>
-          <select id="travel"><option value="0">Local — included</option><option value="25">10–20 miles — +$25</option><option value="49">20–35 miles — +$49</option><option value="89">35+ miles — +$89</option></select>
-        </div>
+      <div class="field">
+        <label for="travel">Travel distance</label>
+        <select id="travel"><option value="0">Local — included</option><option value="25">10–20 miles — +$25</option><option value="49">20–35 miles — +$49</option><option value="89">35+ miles — +$89</option></select>
       </div>
 
       <div class="field">
-        <span class="label">Add-ons &amp; upsells</span>
-        <div class="addons" id="addons"></div>
-        <p style="font-size:13px;color:var(--muted);margin:8px 0 0">Add-on pricing — flat or per sq ft — is set in ⚙ Pro Settings.</p>
+        <label for="addonSelect">Add-ons — pick one to add it</label>
+        <select id="addonSelect" aria-label="Add an add-on to this quote"></select>
+        <div class="addon-list" id="addons" style="margin-top:9px"></div>
+        <p style="font-size:13px;color:var(--muted);margin:8px 0 0">Treatments — oil stain, rust, and efflorescence / calcium — price per sq ft of flatwork, so the price grows with the job. Every add-on rate, flat or per sq ft, is set in ⚙ Pro Settings.</p>
       </div>
 
       <div class="field" id="upsellField" style="display:none">
@@ -862,7 +906,7 @@ body.is-standalone .install-mini [data-install]{display:none}
 
 
     <h3 class="dsec">Add-ons</h3>
-    <p class="dhint">Price each add-on as a flat rate or per sq ft (per-sq-ft add-ons apply to flatwork: driveway, patio, pavers, parking). Rename, reprice, or add your own.</p>
+    <p class="dhint">The treatment add-ons — oil stain treatment, rust removal, and efflorescence / calcium — are priced per sq ft of flatwork, so their price scales with the size of the job instead of sitting at one flat fee. Check the per-sq-ft rates below and tune them to your market. Any add-on can be priced flat or per sq ft (per-sq-ft add-ons apply to flatwork: driveway, patio, pavers, parking). Rename, reprice, or add your own.</p>
     <div id="setAddons"></div>
     <div class="set-row">
       <div class="nm">Add your own add-on</div>
@@ -894,7 +938,7 @@ body.is-standalone .install-mini [data-install]{display:none}
         <div class="field"><label for="winRateIn">Windows — inside $/ea</label><input type="number" id="winRateIn" min="0" step="0.5" value="7"></div>
         <div class="field"><label for="winRateBoth">Windows — both sides $/ea</label><input type="number" id="winRateBoth" min="0" step="0.5" value="10"></div>
       </div>
-      <p style="font-size:12.5px;color:var(--muted);margin:0 0 6px">Per-window prices for the window count and inside / outside choice at the top of every quote.</p>
+      <p style="font-size:12.5px;color:var(--muted);margin:0 0 6px">Per-window prices for the Window Cleaning service. The window count comes from Property basics at the top of the quote; inside / outside is picked on the service itself.</p>
 
     <h3 class="dsec">Cities &amp; tax rates</h3>
     <p class="dhint">Tax follows the city picked on the quote and auto-matches the city in the client’s address. Rates are combined state, county, and city — edit any rate to match what you charge.</p>
@@ -1070,16 +1114,27 @@ var RATES = {
   parking:{label:"Parking Lot / Garage Flatwork", res:0.15, com:0.13, minRes:299, minCom:599, prod:1400, unit:"sq ft"},
   fence:{label:"Fence / Block Wall", res:0.26, com:0.18, minRes:149, minCom:349, prod:800, unit:"sq ft"},
   garage:{label:"Garage Floor", res:0.30, com:0.20, minRes:179, minCom:399, prod:850, unit:"sq ft"},
-  walkway:{label:"Sidewalk & Walkway", res:0.24, com:0.16, minRes:129, minCom:349, prod:950, unit:"sq ft"}
+  walkway:{label:"Sidewalk & Walkway", res:0.24, com:0.16, minRes:129, minCom:349, prod:950, unit:"sq ft"},
+  windows:{label:"Window Cleaning", res:0, com:0, minRes:0, minCom:0, prod:20, unit:"windows"}
 };
+/* Property basics is the single source of truth for house measurements.
+   Each service type pulls its size from one basics field — no re-entering. */
+var BASICS_FOR_TYPE={concrete:"driveSqft",house:"homeSqft",roof:"homeSqft",patio:"patioSqft",garage:"garageSqft",walkway:"sideSqft",pavers:"driveSqft"};
+var DRIVE_SURFACES={concrete:"Concrete",pavers:"Pavers",asphalt:"Asphalt"};
+var SIDING_TYPES={stucco:"Stucco",vinyl:"Vinyl",brick:"Brick",other:"Other siding"};
+function basicsVal(fieldId){ var el=document.getElementById(fieldId); return el?Math.max(0,parseInt(el.value)||0):0; }
+function pullSqftForType(type,fallback){ var f=BASICS_FOR_TYPE[type]; if(f){ var v=basicsVal(f); if(v>0) return v; } return fallback; }
+function pushSqftToBasics(s){ var f=BASICS_FOR_TYPE[s.type]; if(!f)return; var el=document.getElementById(f); if(el&&document.activeElement!==el) el.value=s.sqft?s.sqft:""; }
+function winCountVal(){ return basicsVal("winCount"); }
+function winRateFor(side){ var id=side==="inside"?"winRateIn":side==="both"?"winRateBoth":"winRateOut"; var el=document.getElementById(id); return el?(parseFloat(el.value)||0):0; }
 var ACCESS = {standard:{label:"Standard access",mult:1}, tight:{label:"Tight / gated access",mult:1.15}, difficult:{label:"Difficult access",mult:1.3}};
 var CONDS = {light:{label:"Light — dust & dirt",mult:1}, moderate:{label:"Moderate — visible buildup",mult:1.2}, heavy:{label:"Heavy — stains / oil / calcium",mult:1.45}, extreme:{label:"Extreme — years of neglect",mult:1.75}};
 var propType="residential", services=[], svcId=0, startTime=Date.now(), timerDone=false;
 var winSide="outside";
 var RATESET=JSON.parse(JSON.stringify(RATES));
 var ADDONS=[
-  {id:"oil",name:"Oil stain treatment",desc:"Spot degrease & dwell",type:"flat",amount:75,custom:false},
-  {id:"rust",name:"Rust removal",desc:"F9 BARC-style treatment",type:"flat",amount:89,custom:false},
+  {id:"oil",name:"Oil stain treatment",desc:"Spot degrease & dwell — priced per sq ft of flatwork",type:"sqft",amount:0.12,custom:false},
+  {id:"rust",name:"Rust removal",desc:"F9 BARC-style treatment — priced per sq ft of flatwork",type:"sqft",amount:0.15,custom:false},
   {id:"efflo",name:"Efflorescence / calcium",desc:"Specialty treatment for desert calcium buildup",type:"sqft",amount:0.09,custom:false},
   {id:"sealer",name:"Paver / concrete sealer",desc:"Protect the clean",type:"sqft",amount:0.85,custom:false},
   {id:"windows",name:"Exterior windows",desc:"Rinse & spot-free finish",type:"flat",amount:99,custom:false},
@@ -1100,7 +1155,9 @@ function fmtTime(sec){var m=Math.floor(sec/60),s=sec%60;return m+":"+(s<10?"0":"
 setInterval(function(){ if(!timerDone){ $("timer").textContent=fmtTime(Math.floor((Date.now()-startTime)/1000)); } },1000);
 
 function addService(type,sqft,cond){
-  svcId++; services.push({id:svcId,type:type||"concrete",sqft:sqft||600,cond:cond||"moderate",rate:null,access:"standard",note:""}); renderServices(); calc();
+  var t=type||"concrete";
+  svcId++; var s={id:svcId,type:t,sqft:sqft||600,cond:cond||"moderate",rate:null,access:"standard",note:"",winSide:"outside"};
+  services.push(s); pushSqftToBasics(s); renderServices(); calc();
 }
 function defaultRate(s){var r=RATESET[s.type];return propType==="commercial"?r.com:r.res;}
 function renderServices(){
@@ -1112,18 +1169,31 @@ function renderServices(){
     var card=document.createElement("div"); card.className="service-card";
     var opts=keys.map(function(k){return '<option value="'+k+'"'+(k===s.type?" selected":"")+'>'+RATESET[k].label+'</option>'}).join("");
     var conds=Object.keys(CONDS).map(function(k){return '<option value="'+k+'"'+(k===s.cond?" selected":"")+'>'+CONDS[k].label+' \u00d7'+CONDS[k].mult+'</option>'}).join("");
+    var bodyHtml;
+    if(s.type==="windows"){
+      if(!s.winSide)s.winSide="outside";
+      var wc=winCountVal(), wr=winRateFor(s.winSide);
+      var sideOpts=[["outside","Outside"],["inside","Inside"],["both","Both"]].map(function(o){return '<option value="'+o[0]+'"'+(o[0]===s.winSide?" selected":"")+'>'+o[1]+' — $'+winRateFor(o[0]).toFixed(2)+' / window</option>'}).join("");
+      bodyHtml='<div class="svc-row2"><div class="field"><label>Windows — from Property basics</label><div class="mock-field" style="margin:0"><span>'+wc+' window'+(wc===1?"":"s")+'</span><span>'+money(wc*wr)+'</span></div></div>'
+        +'<div class="field"><label>Clean which sides?</label><select data-f="winSide" data-id="'+s.id+'" aria-label="Window sides">'+sideOpts+'</select></div></div>'
+        +'<p style="font-size:12.5px;color:var(--muted);margin:8px 0 0">Count comes from Property basics — change it there once and this service follows.</p>';
+    } else {
+      var srcLabel={"homeSqft":"house size","driveSqft":"driveway size","sideSqft":"sidewalk size","patioSqft":"patio size","garageSqft":"garage size"}[BASICS_FOR_TYPE[s.type]]||"";
+      bodyHtml='<div class="svc-row2"><div class="field"><label>Size (sq ft)'+(srcLabel?' — from basics':'')+'</label><input type="number" min="0" max="50000" step="50" value="'+s.sqft+'" data-f="sqft" data-id="'+s.id+'"></div>'
+        +'<div class="field"><label>Condition</label><select data-f="cond" data-id="'+s.id+'">'+conds+'</select></div></div>';
+    }
     card.innerHTML='<div class="service-top"><b>Service '+(idx+1)+'</b>'+(services.length>1?'<button class="remove" data-remove="'+s.id+'">Remove \u2715</button>':"")+'</div>'
       +'<div class="field" style="margin-bottom:0"><label>Service</label><select data-f="type" data-id="'+s.id+'" aria-label="Service">'+opts+'</select></div>'
-      +'<div class="svc-row2"><div class="field"><label>Size (sq ft)</label><input type="number" min="0" max="50000" step="50" value="'+s.sqft+'" data-f="sqft" data-id="'+s.id+'"></div>'
-      +'<div class="field"><label>Condition</label><select data-f="cond" data-id="'+s.id+'">'+conds+'</select></div></div>';
+      +bodyHtml;
     wrap.appendChild(card);
   });
   wrap.querySelectorAll("select,input").forEach(function(el){
     el.addEventListener("input",function(){
       var s=services.find(function(x){return x.id==el.dataset.id}); if(!s)return;
-      if(el.dataset.f==="type"){s.type=el.value;s.rate=null;renderServices();}
+      if(el.dataset.f==="type"){s.type=el.value;s.rate=null;s.sqft=pullSqftForType(s.type,s.sqft);renderServices();}
       if(el.dataset.f==="cond")s.cond=el.value;
-      if(el.dataset.f==="sqft"){s.sqft=Math.max(0,parseInt(el.value)||0);}
+      if(el.dataset.f==="winSide")s.winSide=el.value;
+      if(el.dataset.f==="sqft"){s.sqft=Math.max(0,parseInt(el.value)||0);pushSqftToBasics(s);}
       calc();
     });
     el.addEventListener("change",function(){ calc(); });
@@ -1143,8 +1213,18 @@ function calc(){
   var travel=parseFloat($("travel").value)||0;
   var lines=[], subtotal=0, totalSq=0, hours=0;
   var showDetail=$("optDetail").checked, showSqft=$("optSqft").checked;
+  var winCountNow=winCountVal();
   services.forEach(function(s){
-    var r=RATESET[s.type]||RATESET[Object.keys(RATESET)[0]]; if(!r)return; var base=(s.rate!==null&&s.rate!==undefined&&s.rate>0)?s.rate:(isCom?r.com:r.res); var min=isCom?r.minCom:r.minRes;
+    var r=RATESET[s.type]||RATESET[Object.keys(RATESET)[0]]; if(!r)return;
+    if(s.type==="windows"){
+      var side=s.winSide||"outside", wr=winRateFor(side), wamt=winCountNow*wr;
+      var wdetail=winCountNow+" windows — "+(side==="both"?"inside & outside":side)+" @ $"+wr.toFixed(2)+"/window • count from Property basics";
+      if(winCountNow===0) wdetail="No window count yet — add it once in Property basics";
+      lines.push({title:r.label, detail:showDetail?wdetail:"", amt:wamt});
+      subtotal+=wamt; hours+=winCountNow*0.05;
+      return;
+    }
+    var base=(s.rate!==null&&s.rate!==undefined&&s.rate>0)?s.rate:(isCom?r.com:r.res); var min=isCom?r.minCom:r.minRes;
     var storyMult=(s.type==="house"||s.type==="roof")?stories:1;
     var accMult=(ACCESS[s.access]||ACCESS.standard).mult;
     var raw=s.sqft*base*CONDS[s.cond].mult*storyMult*accMult;
@@ -1152,6 +1232,8 @@ function calc(){
     var parts=[];
     if(showSqft)parts.push(s.sqft.toLocaleString()+" "+r.unit+" @ $"+base.toFixed(2)+"/sf");
     parts.push(CONDS[s.cond].label);
+    if(s.type==="concrete"){ var dsEl=$("driveSurface"); var dsv=dsEl?dsEl.value:"concrete"; if(DRIVE_SURFACES[dsv])parts.push(DRIVE_SURFACES[dsv]+" driveway"); }
+    if(s.type==="house"){ var sdEl=$("sidingType"); var sdv=sdEl?sdEl.value:"stucco"; if(SIDING_TYPES[sdv])parts.push(SIDING_TYPES[sdv]+" siding"); }
     if(storyMult>1)parts.push("stories ×"+storyMult);
     if(accMult>1)parts.push((ACCESS[s.access]||ACCESS.standard).label+" ×"+accMult);
     if(minApplied)parts.push("job minimum applied");
@@ -1160,6 +1242,7 @@ function calc(){
     subtotal+=amt; totalSq+=s.sqft; hours+=s.sqft/r.prod;
   });
   var flat=flatworkSqft();
+  if(window.__addonFlat!==flat){ renderAddons(); }
   ADDONS.forEach(function(a){
     if(!selectedAddons[a.id])return;
     if(a.type==="sqft"){ if(flat>0&&a.amount>0){var amt=flat*a.amount; lines.push({title:a.name,detail:flat.toLocaleString()+" sq ft @ $"+a.amount.toFixed(2)+"/sf",amt:amt}); subtotal+=amt;} }
@@ -1168,11 +1251,7 @@ function calc(){
   if(travel>0){lines.push({title:"Travel",detail:"Extended service area",amt:travel}); subtotal+=travel;}
   var fee=parseFloat($("serviceFee").value)||0;
   if(fee>0){lines.push({title:"Trip / Service Fee",detail:"Flat fee",amt:fee}); subtotal+=fee;}
-  var winCount=Math.max(0,parseInt($("winCount").value)||0);
-  if(winCount>0){
-    var winRate=winSide==="inside"?(parseFloat($("winRateIn").value)||0):winSide==="both"?(parseFloat($("winRateBoth").value)||0):(parseFloat($("winRateOut").value)||0);
-    if(winRate>0){ var winAmt=winCount*winRate; lines.push({title:"Window cleaning",detail:winCount+" windows — "+(winSide==="both"?"inside & outside":winSide)+" @ $"+winRate.toFixed(2)+"/window",amt:winAmt}); subtotal+=winAmt; hours+=winCount*0.05; }
-  }
+  var winCount=winCountNow;
   hours=Math.max(0.75,hours+0.5); // setup/teardown
   var discVal=parseFloat($("discount").value)||0; var taxPct=cityRate(); var depPct=parseFloat($("deposit").value)||0;
   var disc=$("discountType").value==="flat"?Math.min(discVal,subtotal):subtotal*discVal/100; var taxed=subtotal-disc; var tax=taxed*taxPct/100; var total=taxed+tax; var dep=total*depPct/100;
@@ -1212,18 +1291,17 @@ function calc(){
   $("pChem").textContent=money(chem); $("pLabor").textContent=money(labor);
   $("pHourly").textContent=money(Math.round(total)/Math.max(dispHours,0.1))+" / hr";
   $("pMargin").textContent=margin+"%  ("+money(marginDollars)+")";
-  // Property basics mirror + bottom quick-quote summary
-  var hsEl=$("homeSqft"); if(hsEl&&document.activeElement!==hsEl){ hsEl.value=services.length?services[0].sqft:""; }
+  // Property basics is the single source of truth — keep its fields mirrored
+  // from the services that use them (editing either side updates the other).
+  services.forEach(function(s){ pushSqftToBasics(s); });
   var btEl=$("basicsTotals"); if(btEl){ btEl.textContent=services.length?("Total sized: "+totalSq.toLocaleString()+" sq ft across "+services.length+" service"+(services.length===1?"":"s")):"Add a service below to start"; }
-  var wrNote=$("winRateNote"); if(wrNote){ var ro=parseFloat($("winRateOut").value)||0, ri=parseFloat($("winRateIn").value)||0, rb=parseFloat($("winRateBoth").value)||0; wrNote.textContent="Outside $"+ro+" \u00b7 Inside $"+ri+" \u00b7 Both $"+rb; }
   var qsL=$("qsLines");
   if(qsL){
     if(lines.length){ qsL.innerHTML=lines.map(function(){return '<div class="qs-row"><span></span><b></b></div>';}).join(""); var qrows=qsL.querySelectorAll(".qs-row"); lines.forEach(function(l,i){ qrows[i].querySelector("span").textContent=l.title; qrows[i].querySelector("b").textContent=money(l.amt); }); }
     else qsL.innerHTML='<p style="color:var(--muted);margin:0">Nothing on the quote yet.</p>';
   }
   var qsC=$("qsCovers");
-  if(qsC){ var cparts=[]; services.forEach(function(s){ var rr=RATESET[s.type]; if(rr) cparts.push(rr.label+" \u2014 "+s.sqft.toLocaleString()+" sq ft"); });
-    if(winCount>0) cparts.push(winCount+" windows ("+(winSide==="both"?"inside & outside":winSide)+")");
+  if(qsC){ var cparts=[]; services.forEach(function(s){ var rr=RATESET[s.type]; if(!rr)return; if(s.type==="windows"){ var sd=s.winSide||"outside"; cparts.push(rr.label+" \u2014 "+winCount+" windows ("+(sd==="both"?"inside & outside":sd)+")"); } else cparts.push(rr.label+" \u2014 "+s.sqft.toLocaleString()+" sq ft"); });
     var an=Object.keys(selectedAddons).filter(function(k){return selectedAddons[k];}).length; if(an>0) cparts.push(an+" add-on"+(an===1?"":"s"));
     qsC.textContent=cparts.length?("Covers: "+cparts.join(" \u2022 ")):"Nothing added yet \u2014 set the property basics above, then pick a service."; }
   return {lines:lines,subtotal:subtotal,disc:disc,tax:tax,total:total,dep:dep,taxPct:taxPct,city:selectedCity};
@@ -1415,24 +1493,85 @@ function downloadPDF(){
 $("pdfBtn").addEventListener("click",downloadPDF);
 $("addService").addEventListener("click",function(){ if(services.length>=4){toast("Max 4 services per quote — start a second quote for bigger bids");return;} addService("house",1800,"light"); });
 $("propSeg").querySelectorAll("button").forEach(function(b){b.addEventListener("click",function(){$("propSeg").querySelectorAll("button").forEach(function(x){x.classList.remove("active")});b.classList.add("active");propType=b.dataset.prop;services.forEach(function(s){if(s.rate===null||s.rate===undefined){}});renderServices();calc();})});
-function setWinSeg(){ var w=$("winSeg"); if(w) w.querySelectorAll("button").forEach(function(x){ x.classList.toggle("active",x.dataset.win===winSide); }); }
-$("winSeg").querySelectorAll("button").forEach(function(b){ b.addEventListener("click",function(){ winSide=b.dataset.win; setWinSeg(); calc(); }); });
-$("homeSqft").addEventListener("input",function(){ var v=Math.max(0,parseInt(this.value)||0); if(services.length){ services[0].sqft=v; renderServices(); } calc(); });
+function setWinSeg(){ /* Legacy no-op: inside / outside now lives on the Window Cleaning service itself, not in Property basics. */ }
+/* Property basics fields feed every service that uses them — one edit updates all. */
+["homeSqft","driveSqft","sideSqft","patioSqft","garageSqft"].forEach(function(fid){
+  var el=$(fid); if(!el)return;
+  el.addEventListener("input",function(){
+    var v=Math.max(0,parseInt(el.value)||0);
+    services.forEach(function(s){ if(BASICS_FOR_TYPE[s.type]===fid) s.sqft=v; });
+    renderServices(); calc();
+  });
+});
+$("winCount").addEventListener("input",function(){ renderServices(); calc(); });
+["driveSurface","sidingType"].forEach(function(id){ var el=$(id); if(el){ el.addEventListener("input",calc); el.addEventListener("change",calc); } });
 ["stories","travel","discount","discountType","serviceFee","jobDate","deposit","clientName","clientPhone","clientEmail","clientAddr","notes","bizName","bizPhone","bizEmail","bizWebsite","bizTag","termsText","validDays","payTerms","pCrew","pLaborRate","pChemPct","winCount","winRateOut","winRateIn","winRateBoth"].forEach(function(id){$(id).addEventListener("input",calc);$(id).addEventListener("change",calc);});
 ["optDetail","optSqft","optTerms"].forEach(function(id){$(id).addEventListener("change",calc);});
 
 /* ---------- Pro Settings: add-ons, cities, rates, drawer ---------- */
-function addonPriceText(a){ return a.type==="sqft" ? ("+$"+a.amount.toFixed(2)+" / sq ft on flatwork") : ("$"+Math.round(a.amount)+" flat"); }
+function addonPriceText(a){
+  if(a.type==="sqft"){
+    var f=flatworkSqft();
+    return "$"+a.amount.toFixed(2)+" / sq ft on flatwork"+(f>0?(" — "+money(f*a.amount)+" on this job ("+f.toLocaleString()+" sq ft)"):" — needs flatwork on the quote to price");
+  }
+  return "$"+Math.round(a.amount)+" flat";
+}
+function addonCalcAmt(a){
+  if(a.type==="sqft"){ var f=flatworkSqft(); return f>0?f*a.amount:0; }
+  return a.amount||0;
+}
+var addonSelBound=false;
 function renderAddons(){
-  var wrap=$("addons"); wrap.innerHTML="";
-  ADDONS.forEach(function(a){
-    var label=document.createElement("label"); label.className="addon";
-    label.innerHTML='<input type="checkbox"'+(selectedAddons[a.id]?" checked":"")+'><span><b></b><span class="a-desc"></span></span>';
-    label.querySelector("b").textContent=a.name;
-    label.querySelector(".a-desc").textContent=(a.desc?a.desc+" — ":"")+addonPriceText(a);
-    label.querySelector("input").addEventListener("change",function(ev){ selectedAddons[a.id]=ev.target.checked; calc(); });
-    wrap.appendChild(label);
-  });
+  window.__addonFlat=flatworkSqft();
+  var wrap=$("addons");
+  if(wrap){
+    wrap.innerHTML="";
+    var chosen=ADDONS.filter(function(a){ return selectedAddons[a.id]; });
+    if(!chosen.length){
+      wrap.innerHTML='<p style="font-size:13.5px;color:var(--muted);margin:2px 0 0">No add-ons on this quote yet — pick one from the menu above.</p>';
+    }
+    chosen.forEach(function(a){
+      var row=document.createElement("div"); row.className="addon-row";
+      row.innerHTML='<span class="addon-info"><b></b><span class="a-desc"></span></span><b class="addon-amt"></b><button type="button" class="addon-remove">Remove \u2715</button>';
+      row.querySelector(".addon-info b").textContent=a.name;
+      var desc;
+      if(a.type==="sqft"){
+        var f=flatworkSqft();
+        desc=f>0?(f.toLocaleString()+" sq ft flatwork @ $"+a.amount.toFixed(2)+"/sf — scales with the job"):"Per sq ft of flatwork — add a flatwork service to price it";
+        if(a.desc) desc=a.desc.split(" — ")[0]+" • "+desc;
+      } else {
+        desc=(a.desc?a.desc+" — ":"")+"flat rate";
+      }
+      row.querySelector(".a-desc").textContent=desc;
+      row.querySelector(".addon-amt").textContent=money(addonCalcAmt(a));
+      var btn=row.querySelector(".addon-remove");
+      btn.setAttribute("aria-label","Remove "+a.name+" from this quote");
+      if(document.body.classList.contains("sample-mode")) btn.disabled=true;
+      btn.addEventListener("click",function(){ selectedAddons[a.id]=false; renderAddons(); calc(); toast(a.name+" removed from the quote"); });
+      wrap.appendChild(row);
+    });
+  }
+  var sel=$("addonSelect");
+  if(sel){
+    sel.innerHTML="";
+    var ph=document.createElement("option"); ph.value=""; ph.textContent="Choose an add-on to add…"; sel.appendChild(ph);
+    ADDONS.forEach(function(a){
+      if(selectedAddons[a.id])return;
+      var o=document.createElement("option"); o.value=a.id;
+      o.textContent="+ "+a.name+" — "+addonPriceText(a);
+      sel.appendChild(o);
+    });
+    sel.value="";
+    if(!addonSelBound){
+      addonSelBound=true;
+      sel.addEventListener("change",function(){
+        var id=sel.value; if(!id)return;
+        var a=findAddon(id); sel.value="";
+        if(!a||selectedAddons[a.id])return;
+        selectedAddons[a.id]=true; renderAddons(); calc(); toast(a.name+" added to the quote");
+      });
+    }
+  }
 }
 function cityRate(){ for(var i=0;i<CITIES.length;i++){ if(CITIES[i].name===selectedCity) return CITIES[i].rate; } return 0; }
 function renderCities(){
@@ -1447,11 +1586,16 @@ function renderSettings(){
   var rw=$("setRates"); rw.innerHTML="";
   Object.keys(RATESET).forEach(function(k){
     var r=RATESET[k]; var row=document.createElement("div"); row.className="set-row";
+    if(k==="windows"){
+      row.innerHTML='<div class="nm"><input type="text" data-slabel="'+k+'" aria-label="Service name" style="flex:1;min-width:0;padding:8px 9px;font-size:15px;border-radius:8px;border:1.5px solid var(--line);background:var(--panel);color:var(--ink)"><button type="button" class="xbtn" data-sdel="'+k+'">Remove \u2715</button></div>'
+        +'<p style="font-size:13px;color:var(--muted);margin:0">Priced per window, not per sq ft — set the Outside / Inside / Both $/window under “Quote extras” below. The count comes from Property basics; inside / outside is picked on the service.</p>';
+    } else {
     row.innerHTML='<div class="nm"><input type="text" data-slabel="'+k+'" aria-label="Service name" style="flex:1;min-width:0;padding:8px 9px;font-size:15px;border-radius:8px;border:1.5px solid var(--line);background:var(--panel);color:var(--ink)"><button type="button" class="xbtn" data-sdel="'+k+'">Remove \u2715</button></div><div class="set-grid">'
       +'<div><label>Res $/sf</label><input type="number" step="0.01" min="0" value="'+r.res+'" data-rate="'+k+'" data-k="res"></div>'
       +'<div><label>Com $/sf</label><input type="number" step="0.01" min="0" value="'+r.com+'" data-rate="'+k+'" data-k="com"></div>'
       +'<div><label>Res min $</label><input type="number" step="1" min="0" value="'+r.minRes+'" data-rate="'+k+'" data-k="minRes"></div>'
       +'<div><label>Com min $</label><input type="number" step="1" min="0" value="'+r.minCom+'" data-rate="'+k+'" data-k="minCom"></div></div>';
+    }
     rw.appendChild(row);
   });
   rw.querySelectorAll("[data-rate]").forEach(function(inp){ inp.addEventListener("input",function(){ var v=parseFloat(inp.value); if(!isNaN(v)&&v>=0){ RATESET[inp.dataset.rate][inp.dataset.k]=v; renderServices(); calc(); } }); });
@@ -1530,7 +1674,7 @@ $("addAddonBtn").addEventListener("click",function(){
   ADDONS.push({id:id,name:name,desc:"Your custom add-on",type:type,amount:amt,custom:true});
   selectedAddons[id]=true;
   $("newAddonName").value=""; $("newAddonAmt").value="";
-  renderSettings(); renderAddons(); calc(); toast("Add-on added — ticked on this quote, managed in Settings");
+  renderSettings(); renderAddons(); calc(); toast("Add-on added — it's on this quote, managed in Settings");
 });
 $("addCityBtn").addEventListener("click",function(){
   var name=$("newCityName").value.trim(); var rate=parseFloat($("newCityRate").value);
@@ -1576,7 +1720,7 @@ var PRESETS={
   roofhouse:function(){propType="residential";setPropSeg();services=[];addService("roof",1800,"moderate");addService("house",2000,"light");},
   patio:function(){propType="residential";setPropSeg();services=[];addService("patio",800,"moderate");},
   commercial:function(){propType="commercial";setPropSeg();services=[];addService("parking",8000,"moderate");},
-  reset:function(){propType="residential";setPropSeg();services=[];selectedAddons={};renderAddons();var wq=$("winCount");if(wq)wq.value=0;winSide="outside";setWinSeg();addService("concrete",600,"moderate");}
+  reset:function(){propType="residential";setPropSeg();services=[];selectedAddons={};renderAddons();var wq=$("winCount");if(wq)wq.value=0;["homeSqft","driveSqft","sideSqft","patioSqft","garageSqft"].forEach(function(fid){var be=$(fid);if(be)be.value="";});addService("concrete",600,"moderate");}
 };
 function setPropSeg(){$("propSeg").querySelectorAll("button").forEach(function(x){x.classList.toggle("active",x.dataset.prop===propType)})}
 document.querySelectorAll("[data-preset]").forEach(function(b){b.addEventListener("click",function(){PRESETS[b.dataset.preset]();calc();window.scrollTo({top:document.querySelector(".layout").offsetTop-10,behavior:"smooth"});toast("Preset loaded — tweak the numbers, then download the PDF");})});
@@ -1612,6 +1756,7 @@ function getPayLinks(){
   return out;
 }
 function svcAmountFor(type, sqft, condKey){
+  if (type === "windows") { return winCountVal() * winRateFor("outside"); }
   var r = RATESET[type]; var isCom = propType === "commercial";
   var base = isCom ? r.com : r.res; var min = isCom ? r.minCom : r.minRes;
   var stories = parseFloat($("stories").value) || 1;
@@ -1635,7 +1780,8 @@ function tierExtras(tier){
     var fl = tierFlags.svcType[k];
     if (fl && fl[tier] && !services.some(function(s){ return s.type === k; })) {
       var sq = TIER_SQFT[k] || 600;
-      lines.push({ title:RATESET[k].label, detail:"Included in the " + tier + " package • approx. " + sq.toLocaleString() + " sq ft", amt:svcAmountFor(k, sq, "moderate") });
+      var det = k === "windows" ? ("Included in the " + tier + " package • " + winCountVal() + " windows from Property basics") : ("Included in the " + tier + " package • approx. " + sq.toLocaleString() + " sq ft");
+      lines.push({ title:RATESET[k].label, detail:det, amt:svcAmountFor(k, sq, "moderate") });
     }
   });
   return lines;
@@ -1740,7 +1886,8 @@ function renderTierEditor(){
   ADDONS.forEach(function(a){ row(a.name, selectedAddons[a.id] ? "Already in Good (the base quote)" : addonPriceText(a), a.id, "addon", !!selectedAddons[a.id]); });
   Object.keys(RATESET).forEach(function(k){
     var present = services.some(function(s){ return s.type === k; });
-    row(RATESET[k].label, present ? "Already in Good (the base quote)" : "Adds approx. " + (TIER_SQFT[k] || 600).toLocaleString() + " sq ft at your rate", k, "svc", present);
+    var sub = k === "windows" ? "Adds window cleaning — count from Property basics" : "Adds approx. " + (TIER_SQFT[k] || 600).toLocaleString() + " sq ft at your rate";
+    row(RATESET[k].label, present ? "Already in Good (the base quote)" : sub, k, "svc", present);
   });
 }
 function renderTierEditorMaybe(){
@@ -1788,7 +1935,7 @@ function saveNow(){
   store.settings = collectSettings(); persist();
 }
 function multsOf(o){ var m = {}; Object.keys(o).forEach(function(k){ m[k] = o[k].mult; }); return m; }
-var FIELD_IDS = ["stories","travel","discount","discountType","serviceFee","jobDate","deposit","clientName","clientPhone","clientEmail","clientAddr","notes","bizName","bizPhone","bizEmail","bizWebsite","bizTag","termsText","validDays","payTerms","pCrew","pLaborRate","pChemPct","payCashApp","payPayPal","payVenmo","payGeneric","reviewLink","bookingLink","actHours","actChem","homeSqft","winCount","winRateOut","winRateIn","winRateBoth"];
+var FIELD_IDS = ["stories","travel","discount","discountType","serviceFee","jobDate","deposit","clientName","clientPhone","clientEmail","clientAddr","notes","bizName","bizPhone","bizEmail","bizWebsite","bizTag","termsText","validDays","payTerms","pCrew","pLaborRate","pChemPct","payCashApp","payPayPal","payVenmo","payGeneric","reviewLink","bookingLink","actHours","actChem","homeSqft","winCount","winRateOut","winRateIn","winRateBoth","driveSqft","sideSqft","patioSqft","garageSqft","driveSurface","sidingType"];
 function collectSettings(){
   var f = {};
   FIELD_IDS.forEach(function(id){ var el = $(id); if (el) f[id] = el.value; });
@@ -1908,7 +2055,7 @@ calc = function(){
 /* The main script registered its static field listeners with the ORIGINAL calc
    function by value, so they would bypass the wrapper above. Re-point them at
    the wrapper (closures elsewhere resolve calc by name and already get it). */
-["stories","travel","discount","discountType","serviceFee","jobDate","deposit","clientName","clientPhone","clientEmail","clientAddr","notes","bizName","bizPhone","bizEmail","bizWebsite","bizTag","termsText","validDays","payTerms","pCrew","pLaborRate","pChemPct","winCount","winRateOut","winRateIn","winRateBoth"].forEach(function(id){
+["stories","travel","discount","discountType","serviceFee","jobDate","deposit","clientName","clientPhone","clientEmail","clientAddr","notes","bizName","bizPhone","bizEmail","bizWebsite","bizTag","termsText","validDays","payTerms","pCrew","pLaborRate","pChemPct","winCount","winRateOut","winRateIn","winRateBoth","driveSurface","sidingType"].forEach(function(id){
   var el = $(id); if (!el) return;
   el.removeEventListener("input", _baseCalc); el.removeEventListener("change", _baseCalc);
   el.addEventListener("input", calc); el.addEventListener("change", calc);
@@ -2027,8 +2174,9 @@ calc();
   function applySampleData(){
     // Locked example = a complete, filled-in bundle job (not a single bare line):
     // SunState (Sample) for Alex Rivera, Phoenix — Driveway 600 sf Heavy ($244) +
-    // House Wash 2,000 sf Moderate / 2 stories ($570) + 3 add-ons ticked ($263) +
-    // travel $25, 5% bundle discount, Phoenix tax 8.6%, 25% deposit. Total $1,137.
+    // House Wash 2,000 sf Moderate / 2 stories ($570) + 3 add-ons ticked ($261 —
+    // oil & rust now price per sq ft of the 600 sf driveway) +
+    // travel $25, 5% bundle discount, Phoenix tax 8.6%, 25% deposit. Total $1,134.
     // Everything is set through the calculator's own state, so calc(), the quote
     // doc, the PDF/copy/email text and Pro View all build from these same numbers.
     try {
@@ -2091,7 +2239,7 @@ calc();
       el.setAttribute("aria-readonly","true");
     });
     // Segmented control + add-service + preset chips + add-on labels + logo upload
-    document.querySelectorAll("#propSeg button, #winSeg button, #addService, .presets .chip, .swatch, .service-card .chip, .service-card .remove").forEach(function(el){ el.disabled = true; });
+    document.querySelectorAll("#propSeg button, #winSeg button, #addService, .presets .chip, .swatch, .service-card .chip, .service-card .remove, .addon-remove").forEach(function(el){ el.disabled = true; });
     var addBtn = document.getElementById("addService"); if (addBtn) addBtn.textContent = "🔒 Sample Preview — services are locked in this example";
     // Settings drawer action buttons that would mutate data
     ["addAddonBtn","addCityBtn","resetSettings","removeLogo"].forEach(function(id){ var b = document.getElementById(id); if (b) b.disabled = true; });
@@ -2368,7 +2516,7 @@ calc();
         for(var j=0;j<ADDONS.length;j++){ if(ADDONS[j].id===id&&ADDONS[j].amount>0) adds.push(ADDONS[j]); }
       });
     }
-    var addsTotal=adds.reduce(function(a,x){return a+(x.type==="flat"?x.amount:0);},0);
+    var addsTotal=adds.reduce(function(a,x){return a+(x.type==="flat"?x.amount:x.amount*600);},0);
     var travel=25, sub=a1+a2+addsTotal+travel;
     var disc=sub*0.05, tax=(sub-disc)*phxRate/100, total=sub-disc+tax, dep=total*0.25;
     var body=document.getElementById("scCalcBody");
@@ -2381,7 +2529,7 @@ calc();
       h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><p class="mock-label">Travel</p><div class="mock-field" style="margin:0"><span>10\u201320 mi \u2014 $25</span></div></div><div><p class="mock-label">Line notes</p><div class="mock-field" style="margin:0"><span>Oil spots, patio\u2026</span></div></div></div>';
       if(adds.length){
         h+='<p class="mock-label" style="margin-top:10px">Add-ons &amp; upsells</p><div class="mock-checks">';
-        adds.forEach(function(a){ h+='<div class="mock-check on"><b>\u2611 '+esc(a.name)+'</b>'+(a.type==="flat"?("$"+Math.round(a.amount)+" flat"):("$"+a.amount.toFixed(2)+" / sq ft"))+'</div>'; });
+        adds.forEach(function(a){ h+='<div class="mock-check on"><b>\u2611 '+esc(a.name)+'</b>'+(a.type==="flat"?("$"+Math.round(a.amount)+" flat"):("$"+a.amount.toFixed(2)+" / sq ft \u2014 "+money(Math.round(a.amount*600))+" on 600 sq ft"))+'</div>'; });
         if(typeof ADDONS!=="undefined"){ for(var k=0;k<ADDONS.length;k++){ if(ADDONS[k].id==="sealer"&&ADDONS[k].amount>0){ h+='<div class="mock-check"><b>\u2610 '+esc(ADDONS[k].name)+'</b>$'+ADDONS[k].amount.toFixed(2)+' / sq ft</div>'; } } }
         h+='</div>';
       }
@@ -2397,6 +2545,11 @@ calc();
     }
     setLine("concrete",a1,"600 sq ft @ $"+(RATESET.concrete?RATESET.concrete.res.toFixed(2):"")+"/sf \u2022 Heavy \u2022 Oil spots by garage");
     setLine("house",a2,"2,000 sq ft @ $"+(RATESET.house?RATESET.house.res.toFixed(2):"")+"/sf \u2022 Moderate \u2022 2 stories \u00d71.25");
+    if(adds.length){
+      setText("scAddsTotal",money(Math.round(addsTotal)));
+      var det=document.getElementById("scAddsDetail");
+      if(det) det.textContent=adds.length+" add-ons \u2014 "+adds.map(function(a){ return a.type==="flat"?(a.name.split(" ")[0].toLowerCase()+" "+money(Math.round(a.amount))):(a.name.split(" ")[0].toLowerCase()+" "+money(Math.round(a.amount*600))+" (per sq ft on 600 sq ft)"); }).join(" + ");
+    }
     setText("scSub",money(Math.round(sub)));
     setText("scDisc","\u2212"+money(Math.round(disc)));
     setText("scTax",money(Math.round(tax)));
@@ -2407,6 +2560,7 @@ calc();
     var strip=document.getElementById("scSvcStrip");
     if(strip){
       strip.innerHTML=Object.keys(RATESET).map(function(k){
+        if(k==="windows") return "<span>"+esc(RATESET[k].label)+" \u00b7 per window</span>";
         return "<span>"+esc(RATESET[k].label)+" \u00b7 $"+RATESET[k].res.toFixed(2)+"/sf \u00b7 min "+money(RATESET[k].minRes)+"</span>";
       }).join("");
     }
@@ -2436,6 +2590,92 @@ calc();
     });
   });
   paint();
+})();
+</script>
+<script>
+/* ---------- Collapsible Pro Settings groups (in-memory open state only) ---------- */
+(function(){
+  var summaries={
+    "Company profile":"Name, contact, logo & brand color on every quote",
+    "Service rates & minimums":"Per-sq-ft rates and job minimums for each service",
+    "Add-ons":"Flat and per-sq-ft add-on pricing",
+    "Package tiers \u2014 Better & Best":"What Better & Best add to the base quote",
+    "Package tiers — Better & Best":"What Better & Best add to the base quote",
+    "Quote extras":"Trip fee, job date & per-window prices",
+    "Cities & tax rates":"Combined tax % for each city you serve",
+    "Condition & access multipliers":"Extra charge for buildup and tight access",
+    "Quote defaults":"Validity, terms & what prints on the quote",
+    "Your payment links \u2014 deposits":"Your own pay links shown for deposits",
+    "Your payment links — deposits":"Your own pay links shown for deposits",
+    "Reviews & booking":"Review and booking calendar links",
+    "Job cost assumptions \u2014 Pro View":"Crew, labor & chemical % behind Pro View",
+    "Job cost assumptions — Pro View":"Crew, labor & chemical % behind Pro View",
+    "Pro View \u2014 margins":"Estimated margin, $/hr and after-job actuals",
+    "Pro View — margins":"Estimated margin, $/hr and after-job actuals",
+    "How pricing works":"How rates, minimums & add-ons add up"
+  };
+  function init(){
+    var body=document.querySelector("#settingsDrawer .drawer-body");
+    if(!body||body.querySelector(".dgroup"))return;
+    var children=Array.prototype.slice.call(body.childNodes);
+    var groups=[]; var current=null;
+    children.forEach(function(node){
+      if(node.nodeType===1&&node.classList&&node.classList.contains("dsec")){
+        current={head:node,nodes:[]}; groups.push(current);
+      }else if(current){
+        current.nodes.push(node);
+      }
+    });
+    if(!groups.length)return;
+    groups.forEach(function(g,idx){
+      var title=(g.head.textContent||"").trim();
+      var wrapper=document.createElement("div");
+      wrapper.className="dgroup";
+      wrapper.setAttribute("data-settings-group",title);
+      var bodyId="dgroup-body-"+(idx+1);
+      var btnId="dgroup-toggle-"+(idx+1);
+      var isOpen=idx===0;
+      // Reuse the original h3 as the header container so heading semantics stay.
+      g.head.classList.add("dgroup-head");
+      g.head.innerHTML="";
+      var btn=document.createElement("button");
+      btn.type="button";
+      btn.className="dgroup-toggle";
+      btn.id=btnId;
+      btn.setAttribute("aria-expanded",isOpen?"true":"false");
+      btn.setAttribute("aria-controls",bodyId);
+      btn.setAttribute("aria-label",(isOpen?"Collapse ":"Expand ")+title+" settings");
+      var bar=document.createElement("span"); bar.className="dgroup-bar"; bar.setAttribute("aria-hidden","true");
+      var textWrap=document.createElement("span"); textWrap.className="dgroup-text";
+      var titleEl=document.createElement("span"); titleEl.className="dgroup-title"; titleEl.textContent=title;
+      var sumEl=document.createElement("span"); sumEl.className="dgroup-sum"; sumEl.textContent=summaries[title]||"Settings in this section";
+      textWrap.appendChild(titleEl); textWrap.appendChild(sumEl);
+      var chev=document.createElement("span"); chev.className="dgroup-chev"; chev.setAttribute("aria-hidden","true"); chev.textContent="\u2304";
+      btn.appendChild(bar); btn.appendChild(textWrap); btn.appendChild(chev);
+      g.head.appendChild(btn);
+      var panel=document.createElement("div");
+      panel.className="dgroup-body";
+      panel.id=bodyId;
+      panel.setAttribute("role","region");
+      panel.setAttribute("aria-labelledby",btnId);
+      if(!isOpen)panel.hidden=true;
+      if(isOpen)wrapper.classList.add("open");
+      g.nodes.forEach(function(n){ panel.appendChild(n); });
+      // Insert wrapper where the heading was, then move heading + panel inside.
+      body.insertBefore(wrapper,g.head);
+      wrapper.appendChild(g.head);
+      wrapper.appendChild(panel);
+      btn.addEventListener("click",function(){
+        var open=btn.getAttribute("aria-expanded")==="true";
+        var next=!open;
+        btn.setAttribute("aria-expanded",next?"true":"false");
+        btn.setAttribute("aria-label",(next?"Collapse ":"Expand ")+title+" settings");
+        panel.hidden=!next;
+        wrapper.classList.toggle("open",next);
+      });
+    });
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init); else init();
 })();
 </script>
 </body>
