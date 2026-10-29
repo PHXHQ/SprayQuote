@@ -2,7 +2,7 @@
    Lives at the repo root so its scope covers the whole app.
    Strategy: network-first for the page (quotes/rates code is never stale when
    online), cache-first for static assets, runtime cache for fonts. */
-var CACHE = "sprayquote-v11";
+var CACHE = "sprayquote-v12";
 var CORE = [
   "./index.html",
   "./",
