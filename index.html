@@ -490,6 +490,35 @@ h2.step-title .ecoll-sum{margin-right:2px}
 h2.step-title .ecoll-toggle-btn{font-family:"Barlow",system-ui,sans-serif;text-transform:none;letter-spacing:0}
 @media (prefers-reduced-motion: reduce){.ecoll-chev{transition:none}}
 @media(max-width:640px){.ecoll-toolbar{padding:0 16px}.ecoll-toggle-btn{padding:7px 9px;font-size:12.5px}}
+/* ===== v17 additions ===== */
+.q-jump{border-top:2px solid #121417;margin-top:8px;padding-top:12px}
+.q-jump a{font-weight:800;color:var(--blue-dark);text-decoration:none;font-size:15px}
+.q-goodtoknow{font-size:13px;color:#5a5a5a;background:#f7f7f5;border:1px solid #ececec;padding:10px 12px;border-radius:8px;margin-top:12px;line-height:1.5}
+.q-goodtoknow b{display:block;color:#333;margin-bottom:3px}
+.q-goodtoknow ul{margin:0;padding-left:18px}
+.q-jobmin-note{display:none;font-size:13.5px;font-weight:700;color:#0f7a4d;background:#eafaf1;border:1px solid #bfe8cf;padding:9px 12px;border-radius:8px;margin-top:12px;line-height:1.45}
+html[data-theme="dark"] .q-jobmin-note{background:#123324;color:#8fe3b2;border-color:#1e5238}
+.q-asphalt-note{display:none;font-size:13.5px;font-weight:700;color:#8f5f00;background:#fff6da;border:1px solid #f0d48a;padding:9px 12px;border-radius:8px;margin-top:12px;line-height:1.45}
+.q-asphalt-note a{color:var(--blue-dark);text-decoration:underline}
+.coated-banner{display:none;font-size:13.5px;font-weight:700;color:#8f5f00;background:#fff6da;border:1px solid #f0d48a;padding:9px 12px;border-radius:8px;margin-top:10px;line-height:1.45}
+.qs-jobmin{display:none;font-size:14px;font-weight:700;color:#0f7a4d;margin:0 0 10px}
+html[data-theme="dark"] .qs-jobmin{color:#8fe3b2}
+.paver-opts{display:none;border:1px dashed var(--amber-dark);border-radius:10px;padding:6px 12px;margin:0 0 10px;background:var(--panel)}
+.status-tag{display:inline-block;font-size:11.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;border-radius:999px;padding:3px 9px;margin-left:8px;vertical-align:middle}
+.status-Open{background:#e8f1fc;color:#155a9e}.status-Sent{background:#fff6da;color:#8f5f00}.status-Won{background:#eafaf1;color:#0f7a4d}.status-Lost{background:#fdecec;color:#c2410c}
+html[data-theme="dark"] .status-Open{background:#22344f;color:#7db4f0}html[data-theme="dark"] .status-Sent{background:#3a2f10;color:#f2b63c}html[data-theme="dark"] .status-Won{background:#123324;color:#8fe3b2}html[data-theme="dark"] .status-Lost{background:#3d1a10;color:#f0937a}
+.saved-item select.status-sel{width:auto;padding:7px 9px;font-size:13.5px;border-radius:8px}
+.photo-grid{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.photo-thumb{position:relative;width:104px;height:104px;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:var(--panel2)}
+.photo-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.photo-thumb button{position:absolute;top:4px;right:4px;width:26px;height:26px;border-radius:50%;border:0;background:rgba(0,0,0,.75);color:#fff;font-weight:800;cursor:pointer;line-height:1}
+.photo-err{display:none;color:var(--red);font-weight:700;font-size:14px;margin:8px 0 0}
+body.sample-mode #photoGrid button,body.sample-mode .photo-thumb button{pointer-events:none;opacity:.55}
+#photosSection{scroll-margin-top:14px}
+.embed-code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.45}
+.addon-row{flex-wrap:wrap}
+.addon-row .addon-info{flex:1 1 150px}
+.addon-row .addon-amt{margin-left:auto}
 </style>
 </head>
 <body class="gate-locked">
@@ -734,6 +763,11 @@ h2.step-title .ecoll-toggle-btn{font-family:"Barlow",system-ui,sans-serif;text-t
             <select id="sidingType"><option value="stucco">Stucco</option><option value="vinyl">Vinyl</option><option value="brick">Brick</option><option value="other">Other</option></select>
           </div>
         </div>
+        <div class="paver-opts" id="paverOptions">
+          <span class="label" style="margin-top:6px">Pavers — price the full system</span>
+          <label class="toggle-row" for="paverResandOn"><input type="checkbox" id="paverResandOn"><span><b>Paver joint re-sand</b><span>Per sq ft of driveway — rate in ⚙ Pro Settings (default $0.50)</span></span></label>
+          <label class="toggle-row" for="paverSealerOn"><input type="checkbox" id="paverSealerOn"><span><b>Paver sealer</b><span>Per sq ft of driveway — rate in ⚙ Pro Settings (default $1.00)</span></span></label>
+        </div>
         <div class="field" style="margin-bottom:4px">
           <span class="label">Property type</span>
           <div class="seg" id="propSeg">
@@ -750,13 +784,13 @@ h2.step-title .ecoll-toggle-btn{font-family:"Barlow",system-ui,sans-serif;text-t
       <div class="divider"></div>
 
       <div class="field">
-        <label for="travel">Travel distance</label>
-        <select id="travel"><option value="0">Local — included</option><option value="25">10–20 miles — +$25</option><option value="49">20–35 miles — +$49</option><option value="89">35+ miles — +$89</option></select>
+        <label class="toggle-row" for="travelOn"><input type="checkbox" id="travelOn"><span><b>Out-of-area trip fee</b><span>Off by default — turn it on only for out-of-area jobs. Adds one travel line of <b id="travelFeeLabel">$25</b> (10–20 mi). Set the amount in ⚙ Pro Settings.</span></span></label>
       </div>
 
       <div class="field">
         <label for="addonSelect">Add-ons — pick one to add it</label>
         <select id="addonSelect" aria-label="Add an add-on to this quote"></select>
+        <p id="coatedAddonNote" style="display:none;font-size:13px;font-weight:700;color:var(--amber-dark);margin:8px 0 0">Coated garage floor on this quote: acid-based add-ons (efflorescence / calcium and rust removal) are disabled — coated surfaces need a manual quote for chemical work. Oil / degreaser treatment stays available.</p>
         <div class="addon-list" id="addons" style="margin-top:9px"></div>
         <p style="font-size:13px;color:var(--muted);margin:8px 0 0">Treatments are their own lines, priced by what they actually treat: oil stain and efflorescence / calcium price per sq ft of <b>treated area only</b> (set the treated sq ft on the add-on’s row — never the whole driveway), and rust prices flat <b>per stain</b> (set the stain count on its row). Every add-on rate is set in ⚙ Pro Settings.</p>
       </div>
@@ -793,6 +827,15 @@ h2.step-title .ecoll-toggle-btn{font-family:"Barlow",system-ui,sans-serif;text-t
       <button class="btn btn-dark btn-small" id="saveQuoteBtn" type="button" style="width:100%">💾 Save this quote on this device</button>
       <div id="savedList" style="margin-top:12px"></div>
 
+      <div id="photosSection">
+      <div class="divider"></div>
+      <h2 class="step-title" style="margin:0 0 6px"><span class="step-num">4</span> Photos</h2>
+      <p style="font-size:13px;color:var(--muted);margin:0 0 10px">Add up to 4 before / after photos. They are shrunk on this device, saved with the quote, and included on a Photos page in the PDF. <b>Photos stay on this device and are not sent in share links.</b></p>
+      <input type="file" id="photoInput" accept="image/*" multiple aria-label="Upload up to 4 quote photos">
+      <p class="photo-err" id="photoErr"></p>
+      <div class="photo-grid" id="photoGrid"></div>
+      </div>
+
       <p style="text-align:center;margin:18px 0 0;font-size:14.5px"><a href="#liveTotals" style="font-weight:800;color:var(--blue-dark)">↓ Live totals are at the bottom of the page — jump to your total</a></p>
 
     </div>
@@ -816,15 +859,12 @@ h2.step-title .ecoll-toggle-btn{font-family:"Barlow",system-ui,sans-serif;text-t
       <div class="q-body">
         <div class="q-client">Prepared for<br><b id="qClient">Your Customer</b><br><span id="qClientSub"></span></div>
         <div id="qLines"></div>
-        <div class="totals">
-          <div class="q-row"><span>Subtotal</span><b id="qSub">$0</b></div>
-          <div class="q-row discount-row" id="qDiscRow" style="display:none"><span>Discount</span><b id="qDisc">−$0</b></div>
-          <div class="q-row" id="qTaxRow" style="display:none"><span id="qTaxLabel">Tax</span><b id="qTax">$0</b></div>
-          <div class="q-row grand"><span>TOTAL</span><span id="qTotal">$0</span></div>
-          <div class="q-row" id="qDepRow" style="display:none;color:#555"><span>Deposit due to book</span><b id="qDep">$0</b></div>
-        </div>
+        <div class="q-jump"><a href="#liveTotals">↓ Jump to your total — full totals are in the Quick quote panel at the bottom</a></div>
         <div class="q-paylinks" id="qPayLinks"></div>
         <div class="q-note" id="qNote">Quote valid for 14 days.</div>
+        <div class="q-jobmin-note" id="qJobMinNote"></div>
+        <div class="q-asphalt-note" id="qAsphaltNote">Asphalt surface: price provisional pending photo review. <a href="#photosSection">Upload photos for final pricing ↓</a></div>
+        <div class="q-goodtoknow" id="qGoodToKnow"><b>Good to know</b><ul><li>Baked-in or old stains may improve but may not fully lift.</li><li>Efflorescence may return if the moisture or irrigation source persists.</li></ul></div>
         <div style="font-size:12.5px;color:#6f6f6f;margin-top:12px">To accept, reply to this quote or call <span id="qCall">us</span>. <span id="qValid">Valid for 14 days.</span> <span id="qPayTerms">Payment due in full on completion.</span></div>
         <div class="q-links" id="qLinks"></div>
         <div class="q-terms" id="qTerms"></div>
@@ -862,9 +902,10 @@ h2.step-title .ecoll-toggle-btn{font-family:"Barlow",system-ui,sans-serif;text-t
     <div class="qsum-head"><h3>⚡ Quick quote — live totals</h3><span>Your baseline — what this quote covers</span></div>
     <p class="qsum-covers" id="qsCovers">Nothing added yet — set the property basics above, then pick a service.</p>
     <div class="qsum-lines" id="qsLines"></div>
+    <p class="qs-jobmin" id="qsJobMinNote"></p>
     <div class="qq-strip" aria-live="polite">
       <div class="qq-total"><span>Total</span><b id="qqTotal">$0</b></div>
-      <div class="qq-sub">Subtotal <b id="qqSub">$0</b> &nbsp;•&nbsp; Tax <b id="qqTax">$0</b> &nbsp;•&nbsp; Deposit <b id="qqDep">$0</b><br>Updates live as you build the quote above — or grab the PDF right from here.</div>
+      <div class="qq-sub">Subtotal <b id="qqSub">$0</b><span id="qqDiscWrap" style="display:none"> &nbsp;•&nbsp; Discount <b id="qqDisc">$0</b></span> &nbsp;•&nbsp; Tax <b id="qqTax">$0</b> &nbsp;•&nbsp; Deposit <b id="qqDep">$0</b><br>Updates live as you build the quote above — or grab the PDF right from here.</div>
       <button class="btn btn-amber" id="qqPdf" type="button" style="width:auto;margin-left:auto">📄 PDF</button>
     </div>
     <div class="qsum-stats">
@@ -943,6 +984,14 @@ h2.step-title .ecoll-toggle-btn{font-family:"Barlow",system-ui,sans-serif;text-t
     <p class="dhint">The treatment add-ons price by what they treat (v16): oil stain treatment at $0.12 and efflorescence / calcium at $0.20 per sq ft of <b>treated area only</b> — the treated sq ft is entered on the add-on’s row on the quote, never priced on the whole flatwork — and rust removal at a flat $60 <b>per stain</b>, priced by stain count. Sealer still prices per sq ft of flatwork. Any add-on can be priced flat, per sq ft of flatwork, per treated sq ft, or per stain. Rename, reprice, or add your own.</p>
     <div id="setAddons"></div>
     <div class="set-row">
+      <div class="nm">Paver system rates — driveway on pavers</div>
+      <div class="set-grid g2">
+        <div><label for="paverResandRate">Re-sand $/sq ft</label><input type="number" id="paverResandRate" min="0" step="0.05" value="0.50"></div>
+        <div><label for="paverSealerRate">Sealer $/sq ft</label><input type="number" id="paverSealerRate" min="0" step="0.05" value="1.00"></div>
+      </div>
+      <p style="font-size:12.5px;color:var(--muted);margin:8px 0 0">Shown as toggleable lines on the quote whenever the driveway surface is pavers. The $0.50 re-sand default is a placeholder — calibrate it to your market. The $1.00 sealer default is the midpoint of the national seal-only range ($0.50–$1.50). The “Containment &amp; recovery” add-on above defaults to $0 — set your rate, it varies by job.</p>
+    </div>
+    <div class="set-row">
       <div class="nm">Add your own add-on</div>
       <div class="field" style="margin-bottom:8px"><label for="newAddonName">Add-on name</label><input type="text" id="newAddonName" placeholder="e.g. Solar panel rinse"></div>
       <div class="set-grid g2">
@@ -967,6 +1016,11 @@ h2.step-title .ecoll-toggle-btn{font-family:"Barlow",system-ui,sans-serif;text-t
         <div class="field"><label for="serviceFee">Trip / service fee $</label><input type="number" id="serviceFee" min="0" step="1" value="0"></div>
         <div class="field"><label for="jobDate">Preferred job date</label><input type="date" id="jobDate"></div>
       </div>
+<div class="grid2">
+        <div class="field"><label for="travelFeeAmt">Out-of-area trip fee $</label><input type="number" id="travelFeeAmt" min="0" step="1" value="25"></div>
+        <div class="field"><label for="jobMin">Job minimum $</label><input type="number" id="jobMin" min="0" step="1" value="150"></div>
+      </div>
+      <p style="font-size:12.5px;color:var(--muted);margin:0 0 6px">The out-of-area trip fee is added only when the “Out-of-area trip fee” toggle is switched on in the quote (default off, 10–20 mi). The job minimum floors any quote whose discounted subtotal falls below it — tax is then charged on the floored amount. It is separate from the per-service Window Cleaning minimum.</p>
 <div class="grid3">
         <div class="field"><label for="winRateOut">Windows — outside $/ea</label><input type="number" id="winRateOut" min="0" step="0.5" value="7"></div>
         <div class="field"><label for="winRateIn">Windows — inside $/ea</label><input type="number" id="winRateIn" min="0" step="0.5" value="7"></div>
@@ -1034,6 +1088,11 @@ h2.step-title .ecoll-toggle-btn{font-family:"Barlow",system-ui,sans-serif;text-t
     <p class="dhint">Your review link and booking calendar link appear on the quote, the PDF, and the customer link view.</p>
     <div class="field"><label for="reviewLink">Review link (e.g. Google reviews)</label><input type="text" id="reviewLink" placeholder="https://g.page/r/…"></div>
     <div class="field"><label for="bookingLink">Booking calendar link</label><input type="text" id="bookingLink" placeholder="https://calendly.com/… or your booking page"></div>
+
+    <h3 class="dsec">Embed on your website</h3>
+    <p class="dhint">Two snippets you can paste into your own website. They are a button and an embed — not a customer self-quoting backend: the button opens your booking page, and the embed shows the full SprayQuote tool.</p>
+    <div class="field"><label for="embedBtnCode">A — “Get a Quote” button (uses your booking link)</label><textarea class="embed-code" id="embedBtnCode" rows="3" readonly></textarea><button class="btn btn-ghost btn-small" id="copyEmbedBtn" type="button" style="margin-top:8px">Copy button snippet</button></div>
+    <div class="field"><label for="embedFrameCode">B — Full-tool embed (iframe)</label><textarea class="embed-code" id="embedFrameCode" rows="3" readonly></textarea><button class="btn btn-ghost btn-small" id="copyEmbedFrame" type="button" style="margin-top:8px">Copy embed snippet</button></div>
 
     <h3 class="dsec">Job cost assumptions — Pro View</h3>
     <p class="dhint">Feeds the margin math in Pro View. Never prints on the customer quote.</p>
@@ -1176,8 +1235,10 @@ var ADDONS=[
   {id:"rust",name:"Rust removal",desc:"F9 BARC-style treatment — flat rate per stain",type:"stain",amount:60,qtyDefault:1,custom:false},
   {id:"efflo",name:"Efflorescence / calcium",desc:"Specialty treatment for desert calcium — per sq ft of treated area only",type:"treated",amount:0.20,qtyDefault:100,custom:false},
   {id:"sealer",name:"Paver / concrete sealer",desc:"Protect the clean",type:"sqft",amount:0.85,custom:false},
-  {id:"gutter",name:"Gutter brightening",desc:"Tiger stripe removal",type:"flat",amount:149,custom:false}
+  {id:"gutter",name:"Gutter brightening",desc:"Tiger stripe removal",type:"flat",amount:149,custom:false},
+  {id:"containment",name:"Containment & recovery",desc:"For commercial grease / acid / dumpster-pad jobs",type:"flat",amount:0,custom:false}
 ];
+function garageCoated(){ return services.some(function(s){ return s.type==="garage" && s.coated; }); }
 var selectedAddons={};
 /* Per-add-on quantities for the v16 treatment pricing: treated sq ft for
    "treated" add-ons (oil, efflorescence), stain count for "stain" add-ons
@@ -1235,6 +1296,10 @@ function renderServices(){
       bodyHtml='<div class="svc-row2"><div class="field"><label>Size (sq ft)'+(srcLabel?' — from basics':'')+'</label><input type="number" min="0" max="50000" step="50" value="'+s.sqft+'" data-f="sqft" data-id="'+s.id+'"></div>'
         +'<div class="field"><label>Condition</label><select data-f="cond" data-id="'+s.id+'">'+conds+'</select></div></div>';
     }
+    if(s.type==="garage"){
+      bodyHtml+='<label class="toggle-row" style="margin-top:10px"><input type="checkbox" data-f="coated" data-id="'+s.id+'"'+(s.coated?" checked":"")+'><span><b>Floor coated/epoxy?</b><span>Check if this garage floor has a coating or epoxy finish</span></span></label>'
+        +(s.coated?'<div class="coated-banner" style="display:block">Coated floor: acid treatments excluded — coated surfaces need a manual quote for chemical work.</div>':"");
+    }
     card.innerHTML='<div class="service-top"><b>Service '+(idx+1)+'</b>'+(services.length>1?'<button class="remove" data-remove="'+s.id+'">Remove \u2715</button>':"")+'</div>'
       +'<div class="field" style="margin-bottom:0"><label>Service</label><select data-f="type" data-id="'+s.id+'" aria-label="Service">'+opts+'</select></div>'
       +bodyHtml;
@@ -1247,6 +1312,7 @@ function renderServices(){
       if(el.dataset.f==="cond")s.cond=el.value;
       if(el.dataset.f==="winSide")s.winSide=el.value;
       if(el.dataset.f==="sqft"){s.sqft=Math.max(0,parseInt(el.value)||0);pushSqftToBasics(s);}
+      if(el.dataset.f==="coated"){s.coated=el.checked; if(el.checked){ var rm=[]; ["efflo","rust"].forEach(function(aid){ if(selectedAddons[aid]){ selectedAddons[aid]=false; rm.push(aid); } }); if(rm.length) toast("Acid-based add-ons removed — coated floor"); } renderServices(); renderAddons();}
       calc();
     });
     el.addEventListener("change",function(){ calc(); });
@@ -1263,7 +1329,11 @@ function flatworkSqft(){ return services.filter(function(s){return ["concrete","
 function calc(){
   var isCom = propType==="commercial";
   var stories=parseFloat($("stories").value)||1;
-  var travel=parseFloat($("travel").value)||0;
+  var travelOnEl=$("travelOn");
+  var travelFeeEl=$("travelFeeAmt");
+  var travelFee=travelFeeEl?(parseFloat(travelFeeEl.value)||0):25;
+  var travel=(travelOnEl&&travelOnEl.checked)?travelFee:0;
+  var tfl=$("travelFeeLabel"); if(tfl) tfl.textContent=money(travelFee);
   var lines=[], subtotal=0, totalSq=0, hours=0;
   var showDetail=$("optDetail").checked, showSqft=$("optSqft").checked;
   var winCountNow=winCountVal();
@@ -1293,9 +1363,21 @@ function calc(){
     if(accMult>1)parts.push((ACCESS[s.access]||ACCESS.standard).label+" ×"+accMult);
     if(minApplied)parts.push("job minimum applied");
     if(s.note&&s.note.trim())parts.push(s.note.trim());
-    lines.push({title:r.label, detail:showDetail?parts.join(" • "):"", amt:amt});
+    var lineTitle=r.label;
+    if(s.type==="concrete"&&$("driveSurface")&&$("driveSurface").value==="asphalt"){ lineTitle=r.label+" (provisional)"; if(showDetail) parts.push("provisional pending photo review"); }
+    lines.push({title:lineTitle, detail:showDetail?parts.join(" • "):"", amt:amt});
     subtotal+=amt; totalSq+=s.sqft; hours+=s.sqft/r.prod;
   });
+  var driveSurfEl=$("driveSurface"); var driveSurf=driveSurfEl?driveSurfEl.value:"concrete";
+  var poEl=$("paverOptions"); if(poEl) poEl.style.display=driveSurf==="pavers"?"block":"none";
+  if(driveSurf==="pavers"){
+    var driveSq=0; services.forEach(function(s2){ if(s2.type==="concrete"||s2.type==="pavers") driveSq=Math.max(driveSq,s2.sqft); }); if(!driveSq) driveSq=basicsVal("driveSqft");
+    var rsEl=$("paverResandRate"), rsRate=rsEl?(parseFloat(rsEl.value)||0):0.5;
+    var psEl=$("paverSealerRate"), psRate=psEl?(parseFloat(psEl.value)||0):1;
+    var rOn=$("paverResandOn"), sOn=$("paverSealerOn");
+    if(rOn&&rOn.checked&&driveSq>0&&rsRate>0){ var ra2=driveSq*rsRate; lines.push({title:"Paver joint re-sand",detail:driveSq.toLocaleString()+" sq ft @ $"+rsRate.toFixed(2)+"/sf",amt:ra2}); subtotal+=ra2; }
+    if(sOn&&sOn.checked&&driveSq>0&&psRate>0){ var pa2=driveSq*psRate; lines.push({title:"Paver sealer",detail:driveSq.toLocaleString()+" sq ft @ $"+psRate.toFixed(2)+"/sf",amt:pa2}); subtotal+=pa2; }
+  }
   var flat=flatworkSqft();
   if(window.__addonFlat!==flat){ renderAddons(); }
   ADDONS.forEach(function(a){
@@ -1303,9 +1385,10 @@ function calc(){
     if(a.type==="treated"){ var tq=addonQtyFor(a); if(tq>0&&a.amount>0){var tamt=tq*a.amount; lines.push({title:a.name,detail:tq.toLocaleString()+" sq ft treated @ $"+a.amount.toFixed(2)+"/sf — treated area only",amt:tamt}); subtotal+=tamt;} }
     else if(a.type==="stain"){ var sc=addonQtyFor(a); if(sc>0&&a.amount>0){var samt=sc*a.amount; lines.push({title:a.name,detail:sc+" stain"+(sc===1?"":"s")+" @ $"+a.amount.toFixed(2)+" per stain",amt:samt}); subtotal+=samt;} }
     else if(a.type==="sqft"){ if(flat>0&&a.amount>0){var amt=flat*a.amount; lines.push({title:a.name,detail:flat.toLocaleString()+" sq ft @ $"+a.amount.toFixed(2)+"/sf",amt:amt}); subtotal+=amt;} }
+    else if(a.id==="containment"){ lines.push({title:a.name,detail:(a.amount>0)?"Flat rate — commercial grease / acid / dumpster-pad jobs":"Rate to be set — varies by job (commercial grease / acid / dumpster-pad)",amt:a.amount||0}); subtotal+=a.amount||0; }
     else if(a.amount>0){ lines.push({title:a.name,detail:"Flat rate add-on",amt:a.amount}); subtotal+=a.amount; }
   });
-  if(travel>0){lines.push({title:"Travel",detail:"Extended service area",amt:travel}); subtotal+=travel;}
+  if(travel>0){lines.push({title:"Travel",detail:"Out-of-area trip fee • 10–20 mi",amt:travel}); subtotal+=travel;}
   var fee=parseFloat($("serviceFee").value)||0;
   if(fee>0){lines.push({title:"Trip / Service Fee",detail:"Flat fee",amt:fee}); subtotal+=fee;}
   var winCount=winCountNow;
@@ -1314,7 +1397,12 @@ function calc(){
   var manualDisc=$("discountType").value==="flat"?Math.min(discVal,subtotal):subtotal*discVal/100;
   var bundlePct=bundlePctFor(services.length);
   var bundleDisc=subtotal*bundlePct/100;
-  var disc=Math.min(subtotal,manualDisc+bundleDisc); var taxed=subtotal-disc; var tax=taxed*taxPct/100; var total=taxed+tax; var dep=total*depPct/100;
+  var disc=Math.min(subtotal,manualDisc+bundleDisc); var taxed=subtotal-disc;
+  var jobMinEl=$("jobMin"); var jobMin=jobMinEl?(parseFloat(jobMinEl.value)||0):150;
+  var jobMinApplied=false;
+  if(subtotal>0&&jobMin>0&&taxed<jobMin){ jobMinApplied=true; taxed=jobMin; }
+  var tax=taxed*taxPct/100; var total=taxed+tax; var dep=total*depPct/100;
+  var asphaltProv=(driveSurf==="asphalt"&&services.some(function(s){return s.type==="concrete";}));
 
   // Quote doc
   $("qBiz").textContent=$("bizName").value||"Your Company";
@@ -1336,12 +1424,16 @@ function calc(){
   $("qClientSub").textContent=subParts.length?subParts.join(" • "):"";
   $("qNote").textContent=$("notes").value||"Quote valid for 14 days.";
   $("qLines").innerHTML=lines.map(function(l){return '<div class="line-item"><div><b>'+l.title+'</b>'+(l.detail?'<small>'+l.detail+'</small>':"")+'</div><div class="line-amt">'+money(l.amt)+'</div></div>'}).join("")||'<p style="color:#888;font-size:14px">Add a service to build your quote.</p>';
-  $("qSub").textContent=money(subtotal);
-  $("qDiscRow").style.display=disc>0?"flex":"none"; $("qDisc").textContent="−"+money(disc);
-  var discLbl=$("qDiscRow").querySelector("span"); if(discLbl) discLbl.textContent=bundlePct>0?("Discount — includes "+bundlePct+"% bundle ("+services.length+" services)"):"Discount";
-  $("qTaxLabel").textContent=selectedCity?("Tax — "+selectedCity+" ("+taxPct+"%)"):"Tax"; $("qTaxRow").style.display=tax>0?"flex":"none"; $("qTax").textContent=money(tax);
-  $("qTotal").textContent=money(total);
-  $("qDepRow").style.display=dep>0?"flex":"none"; $("qDep").textContent=money(dep);
+  var qqT=$("qqTotal"); if(qqT) qqT.textContent=money(total);
+  var qqS=$("qqSub"); if(qqS) qqS.textContent=money(subtotal);
+  var qqTx=$("qqTax"); if(qqTx) qqTx.textContent=money(tax);
+  var qqDp=$("qqDep"); if(qqDp) qqDp.textContent=money(dep);
+  var qqDw=$("qqDiscWrap"); if(qqDw){ qqDw.style.display=disc>0?"inline":"none"; var qqD=$("qqDisc"); if(qqD) qqD.textContent="−"+money(disc); }
+  var jmNote="Job minimum "+money(jobMin)+" applied";
+  var qjm=$("qJobMinNote"); if(qjm){ qjm.style.display=jobMinApplied?"block":"none"; qjm.textContent=jobMinApplied?jmNote:""; }
+  var sjm=$("qsJobMinNote"); if(sjm){ sjm.style.display=jobMinApplied?"block":"none"; sjm.textContent=jobMinApplied?jmNote:""; }
+  var qaN=$("qAsphaltNote"); if(qaN) qaN.style.display=asphaltProv?"block":"none";
+  var canN=$("coatedAddonNote"); if(canN) canN.style.display=garageCoated()?"block":"none";
   // Hero stats + profit
   var stEl=$("statTotal"); if(stEl) stEl.textContent=money(total); $("statTime").textContent="~"+hours.toFixed(1)+" hr";
   $("statRate").textContent=totalSq?"$"+(subtotal/totalSq).toFixed(2):"$0.00";
@@ -1365,7 +1457,7 @@ function calc(){
   if(qsC){ var cparts=[]; services.forEach(function(s){ var rr=RATESET[s.type]; if(!rr)return; if(s.type==="windows"){ var sd=s.winSide||"outside"; cparts.push(rr.label+" \u2014 "+winCount+" windows ("+(sd==="both"?"inside & outside":sd)+")"); } else cparts.push(rr.label+" \u2014 "+s.sqft.toLocaleString()+" sq ft"); });
     var an=Object.keys(selectedAddons).filter(function(k){return selectedAddons[k];}).length; if(an>0) cparts.push(an+" add-on"+(an===1?"":"s"));
     qsC.textContent=cparts.length?("Covers: "+cparts.join(" \u2022 ")):"Nothing added yet \u2014 set the property basics above, then pick a service."; }
-  return {lines:lines,subtotal:subtotal,disc:disc,tax:tax,total:total,dep:dep,taxPct:taxPct,city:selectedCity,bundlePct:bundlePct};
+  return {lines:lines,subtotal:subtotal,disc:disc,tax:tax,total:total,dep:dep,taxPct:taxPct,city:selectedCity,bundlePct:bundlePct,jobMinApplied:jobMinApplied,jobMin:jobMin,asphaltProv:asphaltProv,taxed:taxed};
 }
 
 function quoteText(){
@@ -1378,6 +1470,9 @@ function quoteText(){
   r.lines.forEach(function(l){out.push("• "+l.title+" — "+money(l.amt)); if(l.detail)out.push("  "+l.detail);});
   out.push(""); out.push("Subtotal: "+money(r.subtotal)); if(r.disc>0)out.push("Discount: −"+money(r.disc)); if(r.tax>0)out.push("Tax ("+(r.city||"City")+" "+r.taxPct+"%): "+money(r.tax));
   out.push("TOTAL: "+money(r.total)); if(r.dep>0)out.push("Deposit to book: "+money(r.dep));
+  if(r.jobMinApplied)out.push("Job minimum "+money(r.jobMin)+" applied");
+  if(r.asphaltProv)out.push("Asphalt surface: price provisional pending photo review.");
+  out.push(""); out.push("Good to know:"); out.push("- Baked-in or old stains may improve but may not fully lift."); out.push("- Efflorescence may return if the moisture or irrigation source persists.");
   out.push(""); out.push($("notes").value||""); out.push($("qValid").textContent+" "+$("payTerms").value);
   if($("optTerms").checked&&$("termsText").value.trim()){out.push(""); out.push("Terms: "+$("termsText").value.trim());}
   if(window.__tier&&window.__tier!=="good") out.push("Package selected: "+window.__tier.toUpperCase());
@@ -1501,8 +1596,15 @@ function downloadPDF(){
   trow("Subtotal",money(r.subtotal),false,10.5,[20,20,20]);
   if(r.disc>0) trow("Discount","-"+money(r.disc),false,10.5,[15,122,77]);
   if(r.tax>0) trow("Tax — "+(r.city||"")+" ("+r.taxPct+"%)",money(r.tax),false,10.5,[20,20,20]);
+  if(r.jobMinApplied) trow("Job minimum "+money(r.jobMin)+" applied","",false,10.5,[15,122,77]);
   trow("TOTAL",money(r.total),true,15,[17,17,17]);
   if(r.dep>0) trow("Deposit due to book",money(r.dep),false,10.5,[85,85,85]);
+  if(r.asphaltProv){ need(6); doc.setFont("helvetica","bold"); doc.setFontSize(9.5); doc.setTextColor(143,95,0); doc.text("Asphalt surface: price provisional pending photo review.",M,y); y+=6; }
+  need(16);
+  doc.setFont("helvetica","bold"); doc.setFontSize(9.5); doc.setTextColor(90,90,90); doc.text("Good to know",M,y); y+=4.6;
+  doc.setFont("helvetica","normal"); doc.setFontSize(9);
+  doc.text("• Baked-in or old stains may improve but may not fully lift.",M,y); y+=4.4;
+  doc.text("• Efflorescence may return if the moisture or irrigation source persists.",M,y); y+=6;
   // Notes box
   var note=($("notes").value||"").trim();
   if(note){
@@ -1548,6 +1650,20 @@ function downloadPDF(){
     doc.setDrawColor(150,150,150); doc.setLineWidth(0.3); doc.line(M,y+21,W-M,y+21);
     y+=27;
   }
+  if(window.__photos&&window.__photos.length){
+    doc.addPage(); var py=18;
+    doc.setFont("helvetica","bold"); doc.setFontSize(15); doc.setTextColor(20,20,20);
+    doc.text("Photos",M,py); py+=8;
+    window.__photos.forEach(function(ph){
+      var src=(typeof ph==="string")?ph:ph.src; if(!src)return;
+      var pw=(typeof ph==="object"&&ph.w)?ph.w:1200, phh=(typeof ph==="object"&&ph.h)?ph.h:900;
+      var dw=CW, dh=CW*phh/Math.max(pw,1);
+      var maxH=110; if(dh>maxH){ dh=maxH; dw=dh*Math.max(pw,1)/phh; }
+      if(py+dh>282){ doc.addPage(); py=18; }
+      try{ doc.addImage(src,"JPEG",M,py,dw,dh); }catch(e){}
+      py+=dh+8;
+    });
+  }
   doc.save("quote-"+$("qNum").textContent+".pdf");
   markDone(); toast(bizLogo?"Quote PDF downloaded — logo included":"Quote PDF downloaded");
 }
@@ -1566,7 +1682,7 @@ function setWinSeg(){ /* Legacy no-op: inside / outside now lives on the Window 
 });
 $("winCount").addEventListener("input",function(){ renderServices(); calc(); });
 ["driveSurface","sidingType"].forEach(function(id){ var el=$(id); if(el){ el.addEventListener("input",calc); el.addEventListener("change",calc); } });
-["stories","travel","discount","discountType","serviceFee","jobDate","deposit","clientName","clientPhone","clientEmail","clientAddr","notes","bizName","bizPhone","bizEmail","bizWebsite","bizTag","termsText","validDays","payTerms","pCrew","pLaborRate","pChemPct","winCount","winRateOut","winRateIn","winRateBoth","bundlePct2","bundlePct3"].forEach(function(id){$(id).addEventListener("input",calc);$(id).addEventListener("change",calc);});
+["stories","travelOn","travelFeeAmt","jobMin","paverResandRate","paverSealerRate","paverResandOn","paverSealerOn","discount","discountType","serviceFee","jobDate","deposit","clientName","clientPhone","clientEmail","clientAddr","notes","bizName","bizPhone","bizEmail","bizWebsite","bizTag","termsText","validDays","payTerms","pCrew","pLaborRate","pChemPct","winCount","winRateOut","winRateIn","winRateBoth","bundlePct2","bundlePct3"].forEach(function(id){var _el=$(id); if(_el){_el.addEventListener("input",calc);_el.addEventListener("change",calc);}});
 ["optDetail","optSqft","optTerms"].forEach(function(id){$(id).addEventListener("change",calc);});
 
 /* ---------- Pro Settings: add-ons, cities, rates, drawer ---------- */
@@ -1653,6 +1769,7 @@ function renderAddons(){
       if(selectedAddons[a.id])return;
       var o=document.createElement("option"); o.value=a.id;
       o.textContent="+ "+a.name+" — "+addonPriceText(a);
+      if(typeof garageCoated==="function"&&garageCoated()&&(a.id==="efflo"||a.id==="rust")){ o.disabled=true; o.textContent="+ "+a.name+" — unavailable: coated floor, acid treatments excluded"; }
       sel.appendChild(o);
     });
     sel.value="";
@@ -1714,6 +1831,7 @@ function renderSettings(){
       +'<div class="set-grid g2"><div><label>Priced as</label><select data-atype="'+a.id+'"><option value="flat"'+(a.type==="flat"?" selected":"")+'>Flat rate</option><option value="sqft"'+(a.type==="sqft"?" selected":"")+'>Per sq ft (flatwork)</option><option value="treated"'+(a.type==="treated"?" selected":"")+'>Per sq ft — treated area only</option><option value="stain"'+(a.type==="stain"?" selected":"")+'>Flat per stain</option></select></div>'
       +'<div><label>'+(a.type==="sqft"?"$ per sq ft":a.type==="treated"?"$ per treated sq ft":a.type==="stain"?"$ per stain":"$ flat amount")+'</label><input type="number" step="'+((a.type==="sqft"||a.type==="treated")?"0.01":"1")+'" min="0" value="'+a.amount+'" data-aamt="'+a.id+'"></div></div>';
     row.querySelector("[data-aname]").value=a.name;
+    if(a.id==="containment"){ var cn2=document.createElement("p"); cn2.style.cssText="font-size:12.5px;color:var(--muted);margin:8px 0 0"; cn2.textContent="Set your rate — varies by job. For commercial grease / acid / dumpster-pad jobs."; row.appendChild(cn2); }
     aw.appendChild(row);
   });
   aw.querySelectorAll("[data-aname]").forEach(function(inp){ inp.addEventListener("input",function(){ var a=findAddon(inp.dataset.aname); if(a){ a.name=inp.value; renderAddons(); calc(); } }); });
@@ -1801,6 +1919,10 @@ $("resetSettings").addEventListener("click",function(){
   var wrB=$("winRateBoth"); if(wrB) wrB.value="12";
   var bP2=$("bundlePct2"); if(bP2) bP2.value="10";
   var bP3=$("bundlePct3"); if(bP3) bP3.value="15";
+  var jmR=$("jobMin"); if(jmR) jmR.value="150";
+  var tfR=$("travelFeeAmt"); if(tfR) tfR.value="25";
+  var prR=$("paverResandRate"); if(prR) prR.value="0.5";
+  var psR2=$("paverSealerRate"); if(psR2) psR2.value="1";
   var found=false; CITIES.forEach(function(c){ if(c.name===selectedCity)found=true; }); if(!found)selectedCity="Phoenix";
   renderSettings(); renderCities(); renderAddons(); renderServices(); calc();
   toast("Rates, add-ons & taxes reset to defaults");
@@ -1895,10 +2017,14 @@ function tierTotals(r, extras){
   var manualDisc = $("discountType").value === "flat" ? Math.min(dv, sub) : sub * dv / 100;
   var bundleDisc = sub * (typeof bundlePctFor === "function" ? bundlePctFor(services.length) : 0) / 100;
   var disc = Math.min(sub, manualDisc + bundleDisc);
-  var tax = (sub - disc) * r.taxPct / 100;
-  var total = sub - disc + tax;
+  var taxedAmt = sub - disc;
+  var jmEl2 = $("jobMin"); var jmVal = jmEl2 ? (parseFloat(jmEl2.value) || 0) : 150;
+  var jmApp = false;
+  if (sub > 0 && jmVal > 0 && taxedAmt < jmVal) { jmApp = true; taxedAmt = jmVal; }
+  var tax = taxedAmt * r.taxPct / 100;
+  var total = taxedAmt + tax;
   var dep = total * (parseFloat($("deposit").value) || 0) / 100;
-  return { subtotal:sub, disc:disc, tax:tax, total:total, dep:dep };
+  return { subtotal:sub, disc:disc, tax:tax, total:total, dep:dep, jobMinApplied:jmApp, jobMin:jmVal };
 }
 function renderTierCards(r, cards){
   var w = $("tierCards"); if (!w) return;
@@ -1945,7 +2071,7 @@ function renderUpsells(){
   var f = $("upsellField"), w = $("upsellSelect"); if (!f || !w) return;
   var want = {};
   services.forEach(function(s){ (UPSELL[s.type] || []).forEach(function(id){ want[id] = 1; }); });
-  var opts = ADDONS.filter(function(a){ return want[a.id] && !selectedAddons[a.id] && a.amount > 0; });
+  var opts = ADDONS.filter(function(a){ return want[a.id] && !selectedAddons[a.id] && a.amount > 0 && !((typeof garageCoated==="function"&&garageCoated()) && (a.id==="efflo"||a.id==="rust")); });
   if (!opts.length) { f.style.display = "none"; return; }
   f.style.display = "block"; w.innerHTML = "";
   var ph = document.createElement("option"); ph.value = ""; ph.textContent = "Choose an upsell to add…"; w.appendChild(ph);
@@ -2030,7 +2156,7 @@ var LS_KEY = "sprayquote-device-v1";
 var store = { settings:null, quotes:[] };
 try { var rawLs = localStorage.getItem(LS_KEY); if (rawLs) { var parsed = JSON.parse(rawLs); if (parsed) store = parsed; } } catch(e){}
 var saveTimer = null;
-function persist(){ try { localStorage.setItem(LS_KEY, JSON.stringify(store)); } catch(e){} }
+function persist(){ try { localStorage.setItem(LS_KEY, JSON.stringify(store)); window.__persistOk=true; return true; } catch(e){ window.__persistOk=false; return false; } }
 function scheduleSave(){
   if (document.body.classList.contains("sample-mode")) return;
   clearTimeout(saveTimer); saveTimer = setTimeout(saveNow, 700);
@@ -2040,7 +2166,7 @@ function saveNow(){
   store.settings = collectSettings(); persist();
 }
 function multsOf(o){ var m = {}; Object.keys(o).forEach(function(k){ m[k] = o[k].mult; }); return m; }
-var FIELD_IDS = ["stories","travel","discount","discountType","serviceFee","jobDate","deposit","clientName","clientPhone","clientEmail","clientAddr","notes","bizName","bizPhone","bizEmail","bizWebsite","bizTag","termsText","validDays","payTerms","pCrew","pLaborRate","pChemPct","payCashApp","payPayPal","payVenmo","payGeneric","reviewLink","bookingLink","actHours","actChem","homeSqft","winCount","winRateOut","winRateIn","winRateBoth","bundlePct2","bundlePct3","driveSqft","sideSqft","patioSqft","garageSqft","driveSurface","sidingType"];
+var FIELD_IDS = ["stories","discount","discountType","serviceFee","jobDate","deposit","clientName","clientPhone","clientEmail","clientAddr","notes","bizName","bizPhone","bizEmail","bizWebsite","bizTag","termsText","validDays","payTerms","pCrew","pLaborRate","pChemPct","payCashApp","payPayPal","payVenmo","payGeneric","reviewLink","bookingLink","actHours","actChem","homeSqft","winCount","winRateOut","winRateIn","winRateBoth","bundlePct2","bundlePct3","driveSqft","sideSqft","patioSqft","garageSqft","driveSurface","sidingType","jobMin","travelFeeAmt","paverResandRate","paverSealerRate"];
 function collectSettings(){
   var f = {};
   FIELD_IDS.forEach(function(id){ var el = $(id); if (el) f[id] = el.value; });
@@ -2101,7 +2227,14 @@ function renderSavedList(){
     var hasAct = q.state && q.state.fields && ((q.state.fields.actHours || "") !== "" || (q.state.fields.actChem || "") !== "");
     d.innerHTML = '<div class="si-main"><b></b><span></span></div>';
     d.querySelector("b").textContent = q.name;
-    d.querySelector("span").textContent = q.dateStr + " • " + money(q.total) + (hasAct ? " • actuals saved" : "");
+    if (!q.status) q.status = "Open";
+    var tag = document.createElement("span"); tag.className = "status-tag status-" + q.status; tag.textContent = q.status;
+    d.querySelector(".si-main").appendChild(tag);
+    d.querySelector("span:not(.status-tag)").textContent = q.dateStr + " • " + money(q.total) + (hasAct ? " • actuals saved" : "");
+    var statusSel = document.createElement("select"); statusSel.className = "status-sel"; statusSel.setAttribute("aria-label", "Quote status for " + q.name);
+    ["Open","Sent","Won","Lost"].forEach(function(st){ var o = document.createElement("option"); o.value = st; o.textContent = st; if (st === q.status) o.selected = true; statusSel.appendChild(o); });
+    statusSel.addEventListener("change", function(){ q.status = statusSel.value; persist(); renderSavedList(); toast("Status updated: " + q.status); });
+    d.appendChild(statusSel);
     var load = document.createElement("button"); load.className = "btn btn-dark btn-small"; load.textContent = "Load";
     load.addEventListener("click", function(){
       applySettings(JSON.parse(JSON.stringify(q.state)));
@@ -2144,14 +2277,17 @@ calc = function(){
     var banner = document.createElement("div"); banner.className = "q-note"; banner.style.marginTop = "10px";
     banner.textContent = "Package: " + tier.toUpperCase() + " — everything in Good, plus " + (c.lines.length ? c.lines.map(function(l){ return l.title; }).join(", ") : "no extras ticked yet") + ".";
     ql.appendChild(banner);
-    $("qSub").textContent = money(c.subtotal);
-    $("qDiscRow").style.display = c.disc > 0 ? "flex" : "none"; $("qDisc").textContent = "−" + money(c.disc);
-    $("qTaxRow").style.display = c.tax > 0 ? "flex" : "none"; $("qTax").textContent = money(c.tax);
-    $("qTotal").textContent = money(c.total);
-    $("qDepRow").style.display = c.dep > 0 ? "flex" : "none"; $("qDep").textContent = money(c.dep);
+    var _qqT=$("qqTotal"); if(_qqT)_qqT.textContent=money(c.total);
+    var _qqS=$("qqSub"); if(_qqS)_qqS.textContent=money(c.subtotal);
+    var _qqTx=$("qqTax"); if(_qqTx)_qqTx.textContent=money(c.tax);
+    var _qqDp=$("qqDep"); if(_qqDp)_qqDp.textContent=money(c.dep);
+    var _qqDw=$("qqDiscWrap"); if(_qqDw){ _qqDw.style.display=c.disc>0?"inline":"none"; var _qqD=$("qqDisc"); if(_qqD)_qqD.textContent="−"+money(c.disc); }
+    var _jmN="Job minimum "+money(c.jobMin||150)+" applied";
+    var _qjm=$("qJobMinNote"); if(_qjm){ _qjm.style.display=c.jobMinApplied?"block":"none"; _qjm.textContent=c.jobMinApplied?_jmN:""; }
+    var _sjm=$("qsJobMinNote"); if(_sjm){ _sjm.style.display=c.jobMinApplied?"block":"none"; _sjm.textContent=c.jobMinApplied?_jmN:""; }
     var stEl2 = $("statTotal"); if (stEl2) stEl2.textContent = money(c.total);
     renderQuoteLinks(c);
-    out = { lines:r.lines.concat(c.lines), subtotal:c.subtotal, disc:c.disc, tax:c.tax, total:c.total, dep:c.dep, taxPct:r.taxPct, city:r.city };
+    out = { lines:r.lines.concat(c.lines), subtotal:c.subtotal, disc:c.disc, tax:c.tax, total:c.total, dep:c.dep, taxPct:r.taxPct, city:r.city, jobMinApplied:c.jobMinApplied, jobMin:c.jobMin, asphaltProv:r.asphaltProv };
   }
   renderActuals(out);
   scheduleSave();
@@ -2161,7 +2297,7 @@ calc = function(){
 /* The main script registered its static field listeners with the ORIGINAL calc
    function by value, so they would bypass the wrapper above. Re-point them at
    the wrapper (closures elsewhere resolve calc by name and already get it). */
-["stories","travel","discount","discountType","serviceFee","jobDate","deposit","clientName","clientPhone","clientEmail","clientAddr","notes","bizName","bizPhone","bizEmail","bizWebsite","bizTag","termsText","validDays","payTerms","pCrew","pLaborRate","pChemPct","winCount","winRateOut","winRateIn","winRateBoth","bundlePct2","bundlePct3","driveSurface","sidingType"].forEach(function(id){
+["stories","travelOn","travelFeeAmt","jobMin","paverResandRate","paverSealerRate","paverResandOn","paverSealerOn","discount","discountType","serviceFee","jobDate","deposit","clientName","clientPhone","clientEmail","clientAddr","notes","bizName","bizPhone","bizEmail","bizWebsite","bizTag","termsText","validDays","payTerms","pCrew","pLaborRate","pChemPct","winCount","winRateOut","winRateIn","winRateBoth","bundlePct2","bundlePct3","driveSurface","sidingType"].forEach(function(id){
   var el = $(id); if (!el) return;
   el.removeEventListener("input", _baseCalc); el.removeEventListener("change", _baseCalc);
   el.addEventListener("input", calc); el.addEventListener("change", calc);
@@ -2219,7 +2355,7 @@ $("saveQuoteBtn").addEventListener("click", function(){
   var name = ($("clientName").value.trim() || "Untitled job") + " — " + ($("clientAddr").value.trim() || "no address");
   var d = new Date();
   if (!store.quotes) store.quotes = [];
-  store.quotes.unshift({ id:"q" + Date.now(), name:name, dateStr:d.toLocaleDateString("en-US", { month:"short", day:"numeric", year:"numeric" }), total:r.total, state:st });
+  store.quotes.unshift({ id:"q" + Date.now(), name:name, dateStr:d.toLocaleDateString("en-US", { month:"short", day:"numeric", year:"numeric" }), total:r.total, status:"Open", state:st });
   if (store.quotes.length > 30) store.quotes.length = 30;
   store.settings = st; persist(); renderSavedList();
   toast("Quote saved on this device — total " + money(r.total));
@@ -2280,6 +2416,26 @@ function migrateStateV16(s){
   if (changed) persist();
 })();
 
+/* ----- v17 migration: add the Containment & recovery add-on to stored
+   settings/quotes that predate it, and default every saved quote's status
+   to Open. ----- */
+(function(){
+  var changed = false;
+  function mig17(s){
+    if (!s || s.__v17) return;
+    try {
+      if (s.addons && typeof FACTORY !== "undefined") {
+        var has = false; s.addons.forEach(function(a){ if (a.id === "containment") has = true; });
+        if (!has) { var fc = null; FACTORY.addons.forEach(function(fa){ if (fa.id === "containment") fc = fa; }); if (fc) s.addons.push(JSON.parse(JSON.stringify(fc))); }
+      }
+    } catch(e){}
+    s.__v17 = true; changed = true;
+  }
+  if (store.settings) mig17(store.settings);
+  if (store.quotes) store.quotes.forEach(function(q){ if (q.state) mig17(q.state); if (!q.status) { q.status = "Open"; changed = true; } });
+  if (changed) persist();
+})();
+
 /* ----- Restore on-device settings, then render ----- */
 if (store.settings) applySettings(store.settings);
 renderSavedList();
@@ -2304,6 +2460,7 @@ calc();
   function forgetUnlock(){ try { localStorage.removeItem(UNLOCK_KEY); } catch(e){} }
   var unlocked = false;
   var sampleMode = false;
+  var sampleStash = null;
   function sha256Hex(str){
     if (window.crypto && crypto.subtle) {
       return crypto.subtle.digest("SHA-256", new TextEncoder().encode(str)).then(function(buf){
@@ -2342,7 +2499,14 @@ calc();
       var nt = document.getElementById("notes"); if (nt) nt.value = "Bundle visit — driveway + full house wash on the same trip. Gate on east side; dogs inside. Water spigot at front. Price includes pre-treatment, surface cleaning, window rinse, and final rinse.";
       var st = document.getElementById("stories"); if (st) st.value = "1.25";
       var wcEl = document.getElementById("winCount"); if (wcEl) wcEl.value = "20";
-      var tv = document.getElementById("travel"); if (tv) tv.value = "25";
+      var tOn = document.getElementById("travelOn"); if (tOn) tOn.checked = true;
+      var tFee = document.getElementById("travelFeeAmt"); if (tFee) tFee.value = "25";
+      var jMinEl = document.getElementById("jobMin"); if (jMinEl) jMinEl.value = "150";
+      var dsf = document.getElementById("driveSurface"); if (dsf) dsf.value = "concrete";
+      var sdt = document.getElementById("sidingType"); if (sdt) sdt.value = "stucco";
+      var prOn = document.getElementById("paverResandOn"); if (prOn) prOn.checked = false;
+      var psOn = document.getElementById("paverSealerOn"); if (psOn) psOn.checked = false;
+      if (typeof window !== "undefined") window.__tier = "good";
       var dc = document.getElementById("discount"); if (dc) dc.value = "0";
       var dt = document.getElementById("discountType"); if (dt) dt.value = "pct";
       var dp = document.getElementById("deposit"); if (dp) dp.value = "25";
@@ -2358,11 +2522,19 @@ calc();
       // totals are the same on every device regardless of saved custom rates.
       try {
         if (typeof RATESET !== "undefined" && typeof FACTORY !== "undefined") {
-          ["concrete","house","windows"].forEach(function(k){ if (FACTORY.rates[k] && RATESET[k]) { RATESET[k].res = FACTORY.rates[k].res; RATESET[k].com = FACTORY.rates[k].com; RATESET[k].minRes = FACTORY.rates[k].minRes; RATESET[k].minCom = FACTORY.rates[k].minCom; } });
+          // Recreate any built-in service a stored settings set may be missing
+          // (a missing "windows" entry is what used to turn Service 3 into a
+          // duplicate driveway on returning devices), then pin v16 prices.
+          Object.keys(FACTORY.rates).forEach(function(k){ if (!RATESET[k]) RATESET[k] = JSON.parse(JSON.stringify(FACTORY.rates[k])); });
+          ["concrete","house","windows"].forEach(function(k){ if (FACTORY.rates[k] && RATESET[k]) { RATESET[k].res = FACTORY.rates[k].res; RATESET[k].com = FACTORY.rates[k].com; RATESET[k].minRes = FACTORY.rates[k].minRes; RATESET[k].minCom = FACTORY.rates[k].minCom; RATESET[k].label = FACTORY.rates[k].label; } });
         }
         if (typeof ADDONS !== "undefined" && typeof FACTORY !== "undefined") {
+          ["oil","rust","efflo"].forEach(function(aid){ var found = false; ADDONS.forEach(function(a){ if (a.id === aid) found = true; }); if (!found) { FACTORY.addons.forEach(function(fa){ if (fa.id === aid) ADDONS.push(JSON.parse(JSON.stringify(fa))); }); } });
           ADDONS.forEach(function(a){ FACTORY.addons.forEach(function(fa){ if (fa.id === a.id) { a.type = fa.type; a.amount = fa.amount; a.qtyDefault = fa.qtyDefault; } }); });
         }
+        if (typeof selectedCity !== "undefined") selectedCity = "Phoenix";
+        if (typeof renderCities === "function") renderCities();
+        if (typeof window !== "undefined") window.__photos = [];
         var wro = document.getElementById("winRateOut"); if (wro) wro.value = "7";
         var wri = document.getElementById("winRateIn"); if (wri) wri.value = "7";
         var wrb = document.getElementById("winRateBoth"); if (wrb) wrb.value = "12";
@@ -2398,6 +2570,15 @@ calc();
   function lockForSample(){
     sampleMode = true;
     document.body.classList.add("sample-mode");
+    // Stash the visitor's own stored quote BEFORE the baked sample loads, so
+    // sample mode never persists over it and leaving sample mode restores it.
+    if (!sampleStash) {
+      try {
+        if (typeof store !== "undefined" && store.settings) sampleStash = JSON.parse(JSON.stringify(store.settings));
+        else if (typeof collectSettings === "function") sampleStash = JSON.parse(JSON.stringify(collectSettings()));
+      } catch(e){ sampleStash = null; }
+    }
+    // ALWAYS load the baked sample definition, ignoring any stored quote lines.
     applySampleData();
     // Disable every editable control in the calculator + Pro Settings.
     // View actions stay live: PDF, Copy, Email, Install, opening Settings to look, and Pay/Renew.
@@ -2431,6 +2612,23 @@ calc();
       lockForSample();
       if (typeof toast === "function") toast("Sample Preview — read-only example with sample data. Numbers are locked.");
     } else {
+      if (sampleMode) {
+        // Leaving sample mode: unlock every control and restore the visitor's
+        // own stored quote that was stashed on sample entry.
+        sampleMode = false;
+        document.body.classList.remove("sample-mode");
+        document.querySelectorAll(".layout input, .layout select, .layout textarea, .drawer input, .drawer select, .drawer textarea, .presets .chip").forEach(function(el){ el.disabled = false; el.readOnly = false; el.removeAttribute("aria-readonly"); });
+        document.querySelectorAll("#propSeg button, #winSeg button, #addService, .presets .chip, .swatch, .service-card .chip, .service-card .remove, .addon-remove").forEach(function(el){ el.disabled = false; });
+        ["addAddonBtn","addCityBtn","resetSettings","removeLogo"].forEach(function(id){ var b = document.getElementById(id); if (b) b.disabled = false; });
+        var logoIn2 = document.getElementById("bizLogoInput"); if (logoIn2) logoIn2.disabled = false;
+        var addBtn2 = document.getElementById("addService"); if (addBtn2) addBtn2.textContent = "+ Add a service to this quote";
+        if (sampleStash && typeof applySettings === "function") {
+          var stashCopy = JSON.parse(JSON.stringify(sampleStash));
+          applySettings(stashCopy);
+          if (typeof window.__applyV17State === "function") window.__applyV17State(stashCopy);
+        }
+        if (typeof calc === "function") calc();
+      }
       if (typeof toast === "function") toast("Unlocked — welcome to SprayQuote");
     }
   }
@@ -2593,6 +2791,26 @@ calc();
     var clone = document.getElementById("quoteDoc").cloneNode(true);
     clone.removeAttribute("id");
     docSlot.appendChild(clone);
+    // The side preview no longer carries a totals block (totals live in the
+    // bottom panel), so the customer view builds its own totals here.
+    try {
+      var rr = (typeof calc === "function") ? calc() : null;
+      if (rr) {
+        var tdiv = document.createElement("div"); tdiv.className = "totals";
+        var rows = '<div class="q-row"><span>Subtotal</span><b>' + money(rr.subtotal) + '</b></div>';
+        if (rr.disc > 0) rows += '<div class="q-row discount-row"><span>Discount</span><b>−' + money(rr.disc) + '</b></div>';
+        if (rr.jobMinApplied) rows += '<div class="q-row"><span>Job minimum ' + money(rr.jobMin) + ' applied</span><b></b></div>';
+        if (rr.tax > 0) rows += '<div class="q-row"><span>Tax — ' + (rr.city || "") + ' (' + rr.taxPct + '%)</span><b>' + money(rr.tax) + '</b></div>';
+        rows += '<div class="q-row grand"><span>TOTAL</span><span>' + money(rr.total) + '</span></div>';
+        if (rr.dep > 0) rows += '<div class="q-row"><span>Deposit due to book</span><b>' + money(rr.dep) + '</b></div>';
+        tdiv.innerHTML = rows;
+        var qb = clone.querySelector(".q-body");
+        var jump = clone.querySelector(".q-jump");
+        if (qb && jump) qb.insertBefore(tdiv, jump); else if (qb) qb.appendChild(tdiv);
+        if (jump) jump.style.display = "none";
+        var phLink = clone.querySelector(".q-asphalt-note a"); if (phLink) phLink.style.display = "none";
+      }
+    } catch(e){}
     cardsSlot.innerHTML = "";
     var cards = window.__tierCards || {};
     [["good","Good"],["better","Better"],["best","Best"]].forEach(function(pair){
@@ -2785,6 +3003,7 @@ calc();
     "Your payment links \u2014 deposits":"Your own pay links shown for deposits",
     "Your payment links — deposits":"Your own pay links shown for deposits",
     "Reviews & booking":"Review and booking calendar links",
+    "Embed on your website":"Copy a quote button or full-tool embed for your site",
     "Job cost assumptions \u2014 Pro View":"Crew, labor & chemical % behind Pro View",
     "Job cost assumptions — Pro View":"Crew, labor & chemical % behind Pro View",
     "Pro View \u2014 margins":"Estimated margin, $/hr and after-job actuals",
@@ -3001,6 +3220,113 @@ calc();
     if(co) co.addEventListener("click",function(){ registry.forEach(function(r){ r.setOpen(false); }); });
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init); else init();
+})();
+</script>
+<script>
+/* ---------- v17: photos, embed snippets, checkbox/photo state in settings ---------- */
+(function(){
+  window.__photos = window.__photos || [];
+  function $(id){ return document.getElementById(id); }
+  function isSample(){ return document.body.classList.contains("sample-mode"); }
+  function photoErr(msg){ var e=$("photoErr"); if(e){ e.textContent=msg||""; e.style.display=msg?"block":"none"; } }
+  window.__renderPhotos = function(){
+    var g=$("photoGrid"); if(!g) return; g.innerHTML="";
+    (window.__photos||[]).forEach(function(ph,i){
+      var src=(typeof ph==="string")?ph:ph.src; if(!src) return;
+      var d=document.createElement("div"); d.className="photo-thumb";
+      var img=document.createElement("img"); img.src=src; img.alt="Quote photo "+(i+1);
+      var b=document.createElement("button"); b.type="button"; b.textContent="✕"; b.setAttribute("aria-label","Remove photo "+(i+1));
+      if(isSample()) b.disabled=true;
+      b.addEventListener("click",function(){ if(isSample())return; window.__photos.splice(i,1); window.__renderPhotos(); if(typeof saveNow==="function") saveNow(); if(typeof toast==="function") toast("Photo removed"); });
+      d.appendChild(img); d.appendChild(b); g.appendChild(d);
+    });
+  };
+  var pIn=$("photoInput");
+  if(pIn){
+    if(isSample()) pIn.disabled=true;
+    pIn.addEventListener("change",function(){
+      var files=Array.prototype.slice.call(pIn.files||[]); pIn.value="";
+      if(!files.length) return;
+      photoErr("");
+      files.forEach(function(f){
+        if(window.__photos.length>=4){ photoErr("Up to 4 photos per quote — remove one before adding more."); return; }
+        if(!/^image\//.test(f.type||"")){ photoErr("That file is not an image — pick a photo file."); return; }
+        var reader=new FileReader();
+        reader.onload=function(){
+          var img=new Image();
+          img.onload=function(){
+            var max=1200, w=img.naturalWidth||max, h=img.naturalHeight||max;
+            var sc=Math.min(1, max/Math.max(w,h));
+            var cw=Math.max(1,Math.round(w*sc)), ch=Math.max(1,Math.round(h*sc));
+            var cv=document.createElement("canvas"); cv.width=cw; cv.height=ch;
+            var ctx=cv.getContext("2d"); ctx.fillStyle="#ffffff"; ctx.fillRect(0,0,cw,ch); ctx.drawImage(img,0,0,cw,ch);
+            var data=cv.toDataURL("image/jpeg",0.8);
+            window.__photos.push({src:data,w:cw,h:ch});
+            window.__renderPhotos();
+            if(typeof saveNow==="function") saveNow();
+            if(window.__persistOk===false){
+              window.__photos.pop(); window.__renderPhotos();
+              photoErr("Storage on this device is full — that photo could not be saved. Remove a photo or an old saved quote and try again.");
+              if(typeof saveNow==="function") saveNow();
+            } else if(typeof toast==="function") toast("Photo added — it will appear on the PDF Photos page");
+          };
+          img.onerror=function(){ photoErr("Couldn't read that image — try a different photo."); };
+          img.src=reader.result;
+        };
+        reader.readAsDataURL(f);
+      });
+    });
+  }
+  window.__applyV17State = function(s){
+    if(!s) return;
+    try{
+      if(s.checks){
+        var t=$("travelOn"); if(t) t.checked=!!s.checks.travelOn;
+        var r=$("paverResandOn"); if(r) r.checked=!!s.checks.paverResandOn;
+        var v=$("paverSealerOn"); if(v) v.checked=!!s.checks.paverSealerOn;
+      }
+      if(s.photos && !isSample()){ window.__photos=s.photos.slice(0,4); window.__renderPhotos(); }
+    }catch(e){}
+  };
+  if(typeof collectSettings==="function"){
+    var _collect=collectSettings;
+    collectSettings=function(){
+      var s=_collect();
+      s.checks={ travelOn:($("travelOn")?$("travelOn").checked:false), paverResandOn:($("paverResandOn")?$("paverResandOn").checked:false), paverSealerOn:($("paverSealerOn")?$("paverSealerOn").checked:false) };
+      s.photos=(window.__photos||[]).slice(0,4);
+      return s;
+    };
+  }
+  if(typeof applySettings==="function"){
+    var _apply=applySettings;
+    applySettings=function(s){ _apply(s); window.__applyV17State(s); if(typeof calc==="function") calc(); };
+  }
+  if(typeof encodeState==="function"){
+    var _enc=encodeState;
+    encodeState=function(st){ var c=JSON.parse(JSON.stringify(st||{})); delete c.photos; return _enc(c); };
+  }
+  try{
+    if(typeof store!=="undefined"&&store.settings&&!isSample()) window.__applyV17State(store.settings);
+    else if(isSample()){ window.__photos=[]; }
+  }catch(e){}
+  window.__renderPhotos();
+  function updEmbed(){
+    var bk=($("bookingLink")&&$("bookingLink").value||"").trim();
+    var href=bk?(/^https?:\/\//i.test(bk)?bk:"https://"+bk):"https://PHXHQ.github.io/SprayQuote/";
+    var a=$("embedBtnCode"); if(a) a.value='<a href="'+href+'" style="display:inline-block;background:#f5a800;color:#111;font-family:Arial,sans-serif;font-weight:bold;font-size:16px;padding:14px 22px;border-radius:10px;text-decoration:none">Get a Quote</a>';
+    var f=$("embedFrameCode"); if(f) f.value='<iframe src="https://PHXHQ.github.io/SprayQuote/" width="100%" height="900" style="border:0;border-radius:12px" title="SprayQuote — exterior cleaning quote calculator" loading="lazy"></iframe>';
+  }
+  function copyVal(id,msg){
+    var el=$(id); if(!el) return;
+    function ok(){ if(typeof toast==="function") toast(msg); }
+    function fb(){ el.select(); try{ document.execCommand("copy"); ok(); }catch(e){ if(typeof toast==="function") toast("Copy blocked — select the snippet text and copy it manually"); } }
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(el.value).then(ok).catch(fb); else fb();
+  }
+  var bkEl=$("bookingLink"); if(bkEl) bkEl.addEventListener("input",updEmbed);
+  var cb=$("copyEmbedBtn"); if(cb) cb.addEventListener("click",function(){ copyVal("embedBtnCode","Button snippet copied — paste it into your website"); });
+  var cf=$("copyEmbedFrame"); if(cf) cf.addEventListener("click",function(){ copyVal("embedFrameCode","Embed snippet copied — paste it into your website"); });
+  updEmbed();
+  if(typeof calc==="function") calc();
 })();
 </script>
 </body>
