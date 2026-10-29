@@ -272,9 +272,7 @@ body.sample-mode .preset-lock-note{display:block}
 .tier-card.sel{border-color:var(--amber);background:#fff6da}
 html[data-theme="dark"] .tier-card.sel{background:#2a3a55}
 .tier-note{font-size:13px;color:var(--muted);margin:8px 0 0;line-height:1.5}
-.upsell-chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:4px}
-.upsell-chip{border:1.5px dashed var(--amber-dark);background:var(--panel);color:var(--ink);border-radius:999px;padding:8px 12px;font-weight:700;font-size:13.5px;cursor:pointer}
-.upsell-chip:hover{background:#fff6da}html[data-theme="dark"] .upsell-chip:hover{background:#2a3a55}
+#upsellSelect{border-style:dashed;border-color:var(--amber-dark)}
 .tier-edit-row{display:flex;gap:8px;align-items:center;border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:9px 11px;margin-bottom:7px;flex-wrap:wrap}
 .tier-edit-row .nm{flex:1;min-width:130px;font-weight:700;font-size:14px}
 .tier-edit-row .nm span{display:block;font-weight:500;font-size:12.5px;color:var(--muted)}
@@ -304,7 +302,7 @@ html[data-theme="dark"] .tier-card.sel{background:#2a3a55}
 .cust-inner{max-width:640px;margin:0 auto}
 .cust-inner h2{font-family:"Barlow Condensed",sans-serif;text-transform:uppercase;font-size:30px;margin:0 0 4px}
 .cust-inner .sub{color:var(--muted);margin:0 0 14px;font-size:15px}
-body.sample-mode .tier-card,body.sample-mode .sig-wrap,body.sample-mode .upsell-chip,body.sample-mode .tier-edit-row input{pointer-events:none;opacity:.55}
+body.sample-mode .tier-card,body.sample-mode .sig-wrap,body.sample-mode .tier-edit-row input{pointer-events:none;opacity:.55}
 /* Gate showcase — previews of the tool behind the paywall */
 .showcase{margin:0 0 20px}
 .showcase-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-end;flex-wrap:wrap;margin-bottom:12px}
@@ -353,7 +351,7 @@ html[data-theme="dark"] .mock-check.on{background:#2a3a55}
 @media(max-width:760px){.showcase-grid{grid-template-columns:1fr}.showcase-head h2{font-size:27px}}
 @media(max-width:640px){.gate-steps,.pay-grid{grid-template-columns:1fr}.gate-head h1{font-size:32px}.gate-body{padding:18px 16px 22px}.gate-head{padding:20px 18px}}
 @media print{ .drawer,.scrim,.install-bar,.install-mini,.theme-toggle,.modal-scrim,.gate{display:none!important} }
-@media print{ .topbar,.hero,.presets,.calc,.how,.foot,.q-actions,.profit,.quote-label{display:none!important} .layout{display:block;padding:0} .quote-doc{box-shadow:none;border:0} }
+@media print{ .topbar,.hero,.presets,.calc,.how,.foot,.q-actions,.profit,.quote-label,.totals-wrap{display:none!important} .layout{display:block;padding:0} .quote-doc{box-shadow:none;border:0} }
 /* Step headings + live-quote label */
 .step-title{font-family:"Barlow Condensed",sans-serif;font-size:26px;text-transform:uppercase;letter-spacing:.03em;line-height:1;display:flex;align-items:center;gap:10px}
 .step-num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:9px;background:var(--blue);color:#fff;font-size:19px;font-weight:800;flex-shrink:0;line-height:1}
@@ -394,10 +392,6 @@ html[data-theme="dark"] .mock-check.on{background:#2a3a55}
 }
 
 /* ===== Simple estimator layout: quick quote up top, backend in Pro Settings ===== */
-.quickbar{max-width:1180px;margin:16px auto 0;padding:0 20px}
-.quickbar-inner{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;box-shadow:var(--shadow)}
-.quickbar-inner .qb-txt{flex:1;min-width:200px;font-size:15px;color:var(--muted)}
-.quickbar-inner .qb-txt b{color:var(--ink);font-size:16px}
 .qq-strip{position:sticky;top:8px;z-index:6;background:var(--onyx);color:#fff;border-radius:12px;padding:12px 14px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
 .qq-strip .qq-total{font-family:"Barlow Condensed",sans-serif;font-size:30px;line-height:1}
 .qq-strip .qq-total span{display:block;font-family:"Barlow",sans-serif;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#c9ced4}
@@ -432,7 +426,10 @@ html[data-theme="dark"] .presets-title{color:#7db4f0}
 .preset-card{text-align:left;border-radius:12px;padding:12px 14px;display:block;height:100%}
 .preset-card b{display:block;font-size:15.5px;line-height:1.25;margin-bottom:3px}
 .preset-card span{font-size:13px;color:var(--muted);font-weight:600;line-height:1.4;display:block}
-.qsum{border:2px solid var(--blue);border-radius:14px;padding:16px;margin-top:22px;background:var(--panel2)}
+.totals-wrap{max-width:1180px;margin:0 auto 26px;padding:0 20px;scroll-margin-top:12px}
+.qsum{border:2px solid var(--blue);border-radius:14px;padding:16px;background:var(--panel2);box-shadow:var(--shadow)}
+.qsum-stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.qsum-stats .stat{background:var(--panel)}
 .qsum-head{display:flex;gap:8px 12px;align-items:baseline;flex-wrap:wrap;margin-bottom:6px}
 .qsum-head h3{font-family:"Barlow Condensed",sans-serif;font-size:26px;text-transform:uppercase;letter-spacing:.03em;margin:0;line-height:1;color:var(--blue-dark)}
 html[data-theme="dark"] .qsum-head h3{color:#7db4f0}
@@ -617,18 +614,6 @@ body.is-standalone .install-mini [data-install]{display:none}
   </div>
 </header>
 
-<div class="quickbar">
-  <div class="quickbar-inner">
-    <div class="qb-txt"><b>Live totals.</b> Start with the property basics at the top of the quote — size and windows — then pick your services. The total builds live; the quick-quote summary waits at the bottom of the page.</div>
-    <div class="hero-stats">
-      <div class="stat"><b class="timer" id="timer">0:00</b><span>Time on this quote</span></div>
-      <div class="stat"><b id="statTotal">$0</b><span>Current total</span></div>
-      <div class="stat"><b id="statTime">~0.0 hr</b><span>Est. job time</span></div>
-      <div class="stat"><b id="statRate">$0.00</b><span>Blended / sq ft</span></div>
-    </div>
-  </div>
-</div>
-
 <div class="presets" aria-label="Quick start job presets">
   <div class="presets-head"><span class="presets-title">⚡ Quick start</span><span class="presets-sub">Tap a job type — it loads the baseline below so you can tweak the numbers instead of starting from zero.</span></div>
   <div class="preset-grid">
@@ -700,9 +685,9 @@ body.is-standalone .install-mini [data-install]{display:none}
       </div>
 
       <div class="field" id="upsellField" style="display:none">
-        <span class="label">Suggested add-ons for this job — tap to add</span>
-        <div class="upsell-chips" id="upsellChips"></div>
-        <p style="font-size:12.5px;color:var(--muted);margin:7px 0 0">Suggestions only — nothing is ever added until you tap it.</p>
+        <label for="upsellSelect">Suggested add-ons for this job — pick one to add it</label>
+        <select id="upsellSelect" aria-label="Add an upsell to this quote"></select>
+        <p style="font-size:12.5px;color:var(--muted);margin:7px 0 0">Suggestions only — nothing is ever added until you pick it from the menu.</p>
       </div>
 
 
@@ -730,16 +715,7 @@ body.is-standalone .install-mini [data-install]{display:none}
       <button class="btn btn-dark btn-small" id="saveQuoteBtn" type="button" style="width:100%">💾 Save this quote on this device</button>
       <div id="savedList" style="margin-top:12px"></div>
 
-      <div class="qsum" aria-label="Quick quote summary">
-        <div class="qsum-head"><h3>⚡ Quick quote</h3><span>Your baseline — what this quote covers</span></div>
-        <p class="qsum-covers" id="qsCovers">Nothing added yet — set the property basics above, then pick a service.</p>
-        <div class="qsum-lines" id="qsLines"></div>
-        <div class="qq-strip" aria-live="polite">
-          <div class="qq-total"><span>Total</span><b id="qqTotal">$0</b></div>
-          <div class="qq-sub">Subtotal <b id="qqSub">$0</b> &nbsp;•&nbsp; Tax <b id="qqTax">$0</b> &nbsp;•&nbsp; Deposit <b id="qqDep">$0</b><br>The full customer quote is on the right — download it as a PDF right from here.</div>
-          <button class="btn btn-amber" id="qqPdf" type="button" style="width:auto;margin-left:auto">📄 PDF</button>
-        </div>
-      </div>
+      <p style="text-align:center;margin:18px 0 0;font-size:14.5px"><a href="#liveTotals" style="font-weight:800;color:var(--blue-dark)">↓ Live totals are at the bottom of the page — jump to your total</a></p>
 
     </div>
   </section>
@@ -803,7 +779,23 @@ body.is-standalone .install-mini [data-install]{display:none}
     </aside>
 </main>
 
-
+<div class="totals-wrap" id="liveTotals">
+  <div class="qsum" aria-label="Quick quote summary — live totals">
+    <div class="qsum-head"><h3>⚡ Quick quote — live totals</h3><span>Your baseline — what this quote covers</span></div>
+    <p class="qsum-covers" id="qsCovers">Nothing added yet — set the property basics above, then pick a service.</p>
+    <div class="qsum-lines" id="qsLines"></div>
+    <div class="qq-strip" aria-live="polite">
+      <div class="qq-total"><span>Total</span><b id="qqTotal">$0</b></div>
+      <div class="qq-sub">Subtotal <b id="qqSub">$0</b> &nbsp;•&nbsp; Tax <b id="qqTax">$0</b> &nbsp;•&nbsp; Deposit <b id="qqDep">$0</b><br>Updates live as you build the quote above — or grab the PDF right from here.</div>
+      <button class="btn btn-amber" id="qqPdf" type="button" style="width:auto;margin-left:auto">📄 PDF</button>
+    </div>
+    <div class="qsum-stats">
+      <div class="stat"><b class="timer" id="timer">0:00</b><span>Time on this quote</span></div>
+      <div class="stat"><b id="statTime">~0.0 hr</b><span>Est. job time</span></div>
+      <div class="stat"><b id="statRate">$0.00</b><span>Blended / sq ft</span></div>
+    </div>
+  </div>
+</div>
 
 <footer class="foot">
   <span><b style="color:var(--ink)">SprayQuote</b> — built for exterior cleaning contractors who quote from the truck, not the office.</span>
@@ -1211,7 +1203,7 @@ function calc(){
   $("qTotal").textContent=money(total);
   $("qDepRow").style.display=dep>0?"flex":"none"; $("qDep").textContent=money(dep);
   // Hero stats + profit
-  $("statTotal").textContent=money(total); $("statTime").textContent="~"+hours.toFixed(1)+" hr";
+  var stEl=$("statTotal"); if(stEl) stEl.textContent=money(total); $("statTime").textContent="~"+hours.toFixed(1)+" hr";
   $("statRate").textContent=totalSq?"$"+(subtotal/totalSq).toFixed(2):"$0.00";
   var dispHours=Math.round(hours*10)/10;
   var crew=parseFloat($("pCrew").value)||2, laborRate=parseFloat($("pLaborRate").value)||22, chemPct=(parseFloat($("pChemPct").value)||0)/100;
@@ -1699,19 +1691,31 @@ function renderQuoteLinks(r){
 }
 var UPSELL = { concrete:["oil","sealer","windows","efflo"], house:["windows","gutter"], roof:["gutter","windows"], patio:["sealer","efflo"], pavers:["sealer","efflo"], parking:["oil"], fence:["efflo"], garage:["oil"], walkway:["efflo","sealer"] };
 function renderUpsells(){
-  var f = $("upsellField"), w = $("upsellChips"); if (!f || !w) return;
+  var f = $("upsellField"), w = $("upsellSelect"); if (!f || !w) return;
   var want = {};
   services.forEach(function(s){ (UPSELL[s.type] || []).forEach(function(id){ want[id] = 1; }); });
-  var chips = ADDONS.filter(function(a){ return want[a.id] && !selectedAddons[a.id] && a.amount > 0; });
-  if (!chips.length) { f.style.display = "none"; return; }
+  var opts = ADDONS.filter(function(a){ return want[a.id] && !selectedAddons[a.id] && a.amount > 0; });
+  if (!opts.length) { f.style.display = "none"; return; }
   f.style.display = "block"; w.innerHTML = "";
-  chips.forEach(function(a){
-    var b = document.createElement("button"); b.type = "button"; b.className = "upsell-chip";
-    b.textContent = "+ " + a.name + " — " + addonPriceText(a);
-    b.addEventListener("click", function(){ selectedAddons[a.id] = true; renderAddons(); calc(); toast(a.name + " added to the quote"); });
-    w.appendChild(b);
+  var ph = document.createElement("option"); ph.value = ""; ph.textContent = "Choose an upsell to add…"; w.appendChild(ph);
+  opts.forEach(function(a){
+    var o = document.createElement("option"); o.value = a.id;
+    o.textContent = "+ " + a.name + " — " + addonPriceText(a);
+    w.appendChild(o);
   });
+  w.value = "";
 }
+(function(){
+  var sel = $("upsellSelect"); if (!sel) return;
+  sel.addEventListener("change", function(){
+    var id = sel.value; if (!id) return;
+    var a = null;
+    ADDONS.forEach(function(x){ if (x.id === id) a = x; });
+    sel.value = "";
+    if (!a || selectedAddons[a.id]) return;
+    selectedAddons[a.id] = true; renderAddons(); calc(); toast(a.name + " added to the quote");
+  });
+})();
 function renderTierEditor(){
   var w = $("tierEditor"); if (!w) return; w.innerHTML = "";
   function row(name, sub, key, kind, disabled){
@@ -1892,7 +1896,7 @@ calc = function(){
     $("qTaxRow").style.display = c.tax > 0 ? "flex" : "none"; $("qTax").textContent = money(c.tax);
     $("qTotal").textContent = money(c.total);
     $("qDepRow").style.display = c.dep > 0 ? "flex" : "none"; $("qDep").textContent = money(c.dep);
-    $("statTotal").textContent = money(c.total);
+    var stEl2 = $("statTotal"); if (stEl2) stEl2.textContent = money(c.total);
     renderQuoteLinks(c);
     out = { lines:r.lines.concat(c.lines), subtotal:c.subtotal, disc:c.disc, tax:c.tax, total:c.total, dep:c.dep, taxPct:r.taxPct, city:r.city };
   }
