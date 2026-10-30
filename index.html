@@ -564,6 +564,47 @@ body.sample-mode #photoGrid button,body.sample-mode .photo-thumb button{pointer-
 .addon-row{flex-wrap:wrap}
 .addon-row .addon-info{flex:1 1 150px}
 .addon-row .addon-amt{margin-left:auto}
+/* ===== v23 — Contractor Quote Sheet (internal only, never a customer surface) ===== */
+.sheet-view{position:fixed;inset:0;z-index:96;background:var(--bg);overflow-y:auto;padding:20px 14px 44px;display:none}
+.sheet-view.open{display:block}
+.sheet-inner{max-width:880px;margin:0 auto}
+.sheet-actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.sheet-doc{background:#fff;color:#141414;border:1px solid #d9d9d9;border-radius:6px;box-shadow:0 14px 40px rgba(0,0,0,.18);overflow:hidden;font-variant-numeric:tabular-nums}
+.sheet-head{background:#14365a;color:#fff;padding:18px 22px;border-bottom:5px solid var(--amber);display:flex;justify-content:space-between;gap:10px 16px;flex-wrap:wrap;align-items:flex-start}
+.sheet-head h2{font-family:"Barlow Condensed",sans-serif;font-size:30px;text-transform:uppercase;line-height:1;margin:0;letter-spacing:.03em}
+.sheet-head .sheet-biz{font-size:13.5px;opacity:.88;margin-top:4px}
+.sheet-lock{background:var(--amber);color:#111;font-weight:800;font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:6px 10px;border-radius:999px;white-space:nowrap}
+.sheet-sec{padding:16px 22px 6px}
+.sheet-sec h3{font-family:"Barlow Condensed",sans-serif;font-size:21px;text-transform:uppercase;letter-spacing:.03em;margin:0 0 8px;line-height:1.05;border-bottom:2px solid #121417;padding-bottom:6px}
+.sheet-kv{display:flex;justify-content:space-between;gap:14px;font-size:14.5px;padding:4px 0}
+.sheet-kv span{color:#555}
+.sheet-kv b{text-align:right}
+.sheet-line{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-top:1px solid #eee;font-size:14.5px}
+.sheet-line b{font-size:15px}
+.sheet-line small{display:block;color:#666;font-weight:500;margin-top:1px}
+.sheet-line .sl-amt{font-weight:800;white-space:nowrap}
+.sheet-chem{border:1px solid #e4e4e4;border-radius:10px;padding:12px 14px;margin:0 0 12px;background:#fcfcf9}
+.sheet-chem .sc-name{font-size:16px;font-weight:800;line-height:1.3}
+.sheet-chem .sc-name span{font-weight:600;color:#555;font-size:13.5px}
+.sheet-chem .sc-type{display:inline-block;font-size:12.5px;font-weight:800;background:#eef3f9;border:1px solid #d3e0ee;border-radius:999px;padding:3px 9px;margin-top:6px}
+.sheet-chem .sc-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 18px;margin-top:10px;font-size:14px}
+.sheet-chem .sc-grid .lab{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#777;display:block}
+.sheet-chem .sc-flag{font-size:13px;font-weight:700;color:#8f5f00;background:#fff6da;border:1px solid #f0d48a;border-radius:8px;padding:7px 9px;margin-top:9px;line-height:1.45}
+.sheet-chem .sc-amtin{display:flex;gap:7px;align-items:center}
+.sheet-chem .sc-amtin input{width:92px;padding:8px 9px;font-size:15px;border:1.5px solid #cfd8e3;border-radius:8px;background:#fff;color:#141414}
+.sheet-totals{border-top:2px solid #121417;margin-top:6px;padding-top:8px}
+.sheet-totals .sheet-kv{font-size:15px}
+.sheet-totals .sheet-grand{font-size:22px;font-weight:800}
+.sheet-pickup{font-size:14px;font-weight:700;background:#eef3f9;border:1px solid #d3e0ee;border-radius:10px;padding:11px 13px;line-height:1.55;margin:0 0 16px}
+.sheet-note{font-size:13px;color:#666;line-height:1.5;margin:0 0 14px}
+@media(max-width:640px){.sheet-chem .sc-grid{grid-template-columns:1fr}.sheet-sec{padding:14px 16px 4px}.sheet-head{padding:16px}}
+@media print{
+  body.sheet-printing>*{display:none!important}
+  body.sheet-printing>#sheetView{display:block!important;position:static;overflow:visible;padding:0;background:#fff}
+  body.sheet-printing .sheet-actions{display:none!important}
+  body.sheet-printing .sheet-doc{box-shadow:none;border:0}
+  body.sheet-printing .sheet-chem .sc-amtin input{border:0;padding:0;width:auto}
+}
 </style>
 </head>
 <body class="gate-locked">
@@ -929,6 +970,7 @@ body.sample-mode #photoGrid button,body.sample-mode .photo-thumb button{pointer-
       <button class="btn btn-dark" id="emailBtn">✉️ Email quote</button>
       <button class="btn btn-ghost" id="copyBtn" style="background:var(--panel)">📋 Copy quote text</button>
       <button class="btn btn-ghost full" id="shareBtn" style="background:var(--panel)">🔗 Copy customer link — totals only, no costs or margins</button>
+      <button class="btn btn-ghost full" id="sheetBtn" type="button" style="background:var(--panel)">🧾 Contractor quote sheet — internal, everything in one place</button>
     </div>
 
     <div class="sig-wrap" id="sigWrap">
@@ -1253,6 +1295,17 @@ body.sample-mode #photoGrid button,body.sample-mode .photo-thumb button{pointer-
 
     <p class="sub" style="margin-top:16px">Once installed, it opens full-screen and works offline.</p>
     <div class="modal-foot"><button class="btn btn-amber" id="closeInstall" type="button">Got it</button></div>
+  </div>
+</div>
+
+<div class="sheet-view" id="sheetView" role="dialog" aria-modal="true" aria-label="Contractor quote sheet — internal">
+  <div class="sheet-inner">
+    <div class="sheet-actions">
+      <button class="btn btn-amber" id="sheetPrint" type="button" style="width:auto">🖨 Print sheet</button>
+      <button class="btn btn-ghost" id="sheetClose" type="button" style="background:var(--panel)">✕ Close</button>
+    </div>
+    <div class="sheet-doc" id="sheetDoc"></div>
+    <p style="font-size:13px;color:var(--muted);margin:12px 2px 0;line-height:1.5">Internal only — this sheet never appears on the customer quote preview, PDF, copy text, or share link. Amounts used are editable here and on each treatment&rsquo;s chemical row; costs update from the retail Price in your chemical library.</p>
   </div>
 </div>
 
@@ -3976,6 +4029,189 @@ if(typeof encodeState==="function"){
   try{ if(typeof store!=="undefined" && store.settings) applyChemState(store.settings); }catch(e){}
   renderChemLib(); renderChemBands(); decorateChemPanels();
   if(typeof calc==="function") calc();
+})();
+</script>
+<script>
+/* ---------- v23: Contractor Quote Sheet (internal only) ----------
+   The contractor's full version of the quote in one view: job + client
+   details, services with quantities / rates / line totals, every suggested
+   chemical with type, dilution, published quantity RANGE (v22 math), the
+   editable amount used (defaults to the high estimate), retail unit price
+   and cost range, the quote totals plus the Pro View figures, after-the-job
+   actuals, and the AZ Cleaning Supplies pickup block.
+   INTERNAL-ONLY LOCK (unchanged): this view is built only when the
+   contractor opens it. It is never part of the customer quote preview, the
+   PDF, the copy text, or the #q= share link — those are built from calc()
+   line items and quoteText(), which never carry chemical data, and
+   encodeState() strips all chemical state from share links. */
+var SHEET_DIL = {
+  oil:"Water:product \u2014 very heavily soiled: straight (undiluted); heavily soiled 1:1\u20135:1; moderately soiled 10:1; lightly soiled 20:1; neutralizer 8:1.",
+  rust:"By surface \u2014 porous (concrete / brick / pavers) 1:2; semi-porous (stucco / plastic / vinyl / asphalt / stone) 1:1\u20132:1; non-porous (sealed concrete / coatings / clay pavers / tile / metal) 2:1. Coverage: 400\u2013800 sq ft per gallon of MIXED (diluted) product.",
+  efflo:"Water:product \u2014 thick calcium / coating prep 1:1\u20134:1; medium 4:1\u20138:1; light 8:1\u201312:1; powdery 12:1; general 8:1. Coverage: 200\u2013400 sq ft/gal on porous masonry; up to 1,200 sq ft/gal on sealed / non-porous.",
+  house:"Dosed per mix per label \u2014 no published per-area rate.",
+  windows:"1/4 fl oz per gallon of water.",
+  sealer:"Ready to use \u2014 do not dilute."
+};
+function sheetJobDate(){
+  var jd = $("jobDate"); if(!jd || !jd.value) return "Not set";
+  var p = jd.value.split("-"); if(p.length !== 3) return jd.value;
+  var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  var d = new Date(parseInt(p[0],10), parseInt(p[1],10)-1, parseInt(p[2],10));
+  return months[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
+}
+function renderSheet(){
+  var doc = $("sheetDoc"); if(!doc) return;
+  var r = calc();
+  var info = (typeof chemEstimate === "function") ? chemEstimate() : {chem:0, fuel:0, lines:[]};
+  var sample = document.body.classList.contains("sample-mode");
+  var h = "";
+  /* Header + job / client details */
+  h += '<div class="sheet-head"><div><h2>Contractor Quote Sheet</h2>'
+     + '<div class="sheet-biz">' + escChem($("bizName").value || "Your Company") + ' \u00b7 Quote ' + escChem(($("qNum")||{}).textContent || "") + '</div></div>'
+     + '<span class="sheet-lock">Internal \u2014 not on customer quote</span></div>';
+  h += '<div class="sheet-sec"><h3>Job &amp; client</h3>'
+     + '<div class="sheet-kv"><span>Client</span><b>' + escChem($("clientName").value.trim() || "\u2014") + '</b></div>'
+     + '<div class="sheet-kv"><span>Property address</span><b>' + escChem($("clientAddr").value.trim() || "\u2014") + '</b></div>'
+     + ($("clientPhone").value.trim() ? '<div class="sheet-kv"><span>Phone</span><b>' + escChem($("clientPhone").value.trim()) + '</b></div>' : "")
+     + ($("clientEmail").value.trim() ? '<div class="sheet-kv"><span>Email</span><b>' + escChem($("clientEmail").value.trim()) + '</b></div>' : "")
+     + '<div class="sheet-kv"><span>Job date</span><b>' + escChem(sheetJobDate()) + '</b></div></div>';
+  /* Services — quantities, rates, line totals (amounts straight from calc()) */
+  h += '<div class="sheet-sec"><h3>Services</h3>';
+  if(!r.lines.length){
+    h += '<p class="sheet-note">No services on this quote yet.</p>';
+  } else {
+    r.lines.forEach(function(l, i){
+      var qty = "", rate = "";
+      if(i < services.length){
+        var s = services[i], rs = RATESET[s.type];
+        if(s.type === "windows"){
+          var side = s.winSide || "outside";
+          qty = winCountVal() + " windows (" + (side === "both" ? "inside & outside" : side) + ")";
+          rate = "$" + winRateFor(side).toFixed(2) + " / window";
+        } else if(rs){
+          var base = (s.rate !== null && s.rate !== undefined && s.rate > 0) ? s.rate : (propType === "commercial" ? rs.com : rs.res);
+          qty = s.sqft.toLocaleString() + " " + rs.unit;
+          rate = "$" + base.toFixed(2) + " / " + rs.unit.replace(/s$/, "");
+        }
+      }
+      var sub = [];
+      if(qty) sub.push("Qty: " + qty);
+      if(rate) sub.push("Rate: " + rate);
+      if(l.detail) sub.push(l.detail);
+      if(!qty && !rate && !l.detail) sub.push("Flat line");
+      h += '<div class="sheet-line"><div><b>' + escChem(l.title) + '</b><small>' + escChem(sub.join(" \u2022 ")) + '</small></div><div class="sl-amt">' + money(l.amt) + '</div></div>';
+    });
+  }
+  h += '</div>';
+  /* Chemicals — every suggested product, from the same v22 math the panels use */
+  h += '<div class="sheet-sec"><h3>Chemicals &amp; products needed</h3>';
+  if(!info.lines.length){
+    h += '<p class="sheet-note">No treatments on this quote \u2014 no chemicals suggested.</p>';
+  }
+  info.lines.forEach(function(l){
+    var st = treatState(l.tkey), c = chemById(st.chemId) || chemRec(l.tkey), uc = unitCost(c);
+    var ci = CHEM_INFO[l.tkey] || {spec:"", flag:""};
+    var rangeTxt = l.range ? (trimNum(l.range.low) + "\u2013" + trimNum(l.range.high) + " " + l.unit) : ((l.tkey === "rust" || l.tkey === "efflo") ? "Range calculates from the treated area \u2014 see Dilution" : "No published coverage range \u2014 contractor estimate");
+    var costTxt = l.range ? (money2(l.costLow) + "\u2013" + money2(l.costHigh)) : money2(l.cost);
+    h += '<div class="sheet-chem"><div class="sc-name">' + escChem(l.chemName) + ' <span>\u2014 ' + escChem(l.label) + '</span></div>'
+       + '<span class="sc-type">Type: ' + escChem(l.type || "Chemical treatment") + '</span>'
+       + '<div class="sc-grid">'
+       + '<div><span class="lab">Dilution</span>' + escChem(SHEET_DIL[l.tkey] || "Per label") + '</div>'
+       + '<div><span class="lab">Quantity range</span>' + escChem(rangeTxt) + '</div>'
+       + '<div><span class="lab">Amount used (editable)</span><span class="sc-amtin"><input type="number" min="0" step="0.05" data-sheet-amt="' + l.tkey + '" value="' + trimNum(l.amt) + '" aria-label="Amount used \u2014 ' + escChem(l.label) + '"' + (sample ? " disabled" : "") + '> ' + escChem(l.unit) + '</span></div>'
+       + '<div><span class="lab">Retail price</span>' + money2(uc) + ' / ' + escChem(l.unit) + '</div>'
+       + '<div><span class="lab">Cost' + (l.range ? " range" : "") + '</span><b>' + costTxt + '</b></div>'
+       + '</div>'
+       + (ci.flag ? '<div class="sc-flag">' + escChem(ci.flag) + '</div>' : "")
+       + '</div>';
+  });
+  /* Joint Sand — suggested whenever the re-sand panel is active (no library price) */
+  var rOn = $("paverResandOn"), dsEl = $("driveSurface");
+  if(rOn && rOn.checked && dsEl && dsEl.value === "pavers"){
+    var bags = sandBagsFor(paverAreaFor());
+    h += '<div class="sheet-chem"><div class="sc-name">Joint Sand (50-lb bags) <span>\u2014 Paver joint re-sand</span></div>'
+       + '<span class="sc-type">Type: Joint sand \u2014 50-lb bag</span>'
+       + '<div class="sc-grid">'
+       + '<div><span class="lab">Coverage</span>300\u2013400 sq ft per 50-lb bag at 1/4-inch joints</div>'
+       + '<div><span class="lab">Quantity range</span>' + (bags ? (bags.low + "\u2013" + bags.high + " bags") : "Set the paver area to calculate") + '</div>'
+       + '<div><span class="lab">Amount to pick up</span>' + (bags ? (bags.high + " bags (high estimate)") : "\u2014") + '</div>'
+       + '<div><span class="lab">Price</span>No price in the chemical library \u2014 bags are for ordering only; re-sand cost stays on the re-sand rate line. No chemical cost added.</div>'
+       + '</div></div>';
+  }
+  h += '<p class="sheet-note">All suggested products are carried at AZ Cleaning Supplies (pickup block below). Costs use the retail Price basis from your chemical library.</p></div>';
+  /* Cost summary — quote totals + Pro View figures */
+  h += '<div class="sheet-sec"><h3>Cost summary</h3><div class="sheet-totals">'
+     + '<div class="sheet-kv"><span>Subtotal</span><b>' + money(r.subtotal) + '</b></div>'
+     + '<div class="sheet-kv"><span>Discount</span><b>' + (r.disc > 0 ? "\u2212" + money(r.disc) : money(0)) + '</b></div>'
+     + '<div class="sheet-kv"><span>Tax' + (r.taxPct ? " (" + escChem(r.city || "City") + " " + r.taxPct + "%)" : "") + '</span><b>' + money(r.tax) + '</b></div>'
+     + '<div class="sheet-kv sheet-grand"><span>TOTAL</span><b>' + money(r.total) + '</b></div>'
+     + '<div class="sheet-kv"><span>Deposit to book</span><b>' + money(r.dep) + '</b></div>'
+     + '</div>'
+     + '<div style="border-top:1px dashed #ccc;margin-top:10px;padding-top:8px">'
+     + '<div class="sheet-kv"><span>Pro View \u2014 Est. chemicals</span><b>' + money2(info.chem) + '</b></div>';
+  info.lines.forEach(function(l){
+    h += '<div class="sheet-kv" style="font-size:13.5px"><span style="padding-left:14px">' + escChem(l.label) + ' \u2014 ' + escChem(l.chemName) + '</span><b>' + (l.range ? (money2(l.costLow) + "\u2013" + money2(l.costHigh)) : money2(l.cost)) + '</b></div>';
+  });
+  if(info.fuel > 0) h += '<div class="sheet-kv"><span>Pro View \u2014 Est. fuel</span><b>' + money2(info.fuel) + '</b></div>';
+  h += '<div class="sheet-kv"><span>Pro View \u2014 Est. time</span><b>' + escChem(($("pTime")||{}).textContent || "\u2014") + '</b></div>'
+     + '<div class="sheet-kv"><span>Pro View \u2014 Est. labor</span><b>' + escChem(($("pLabor")||{}).textContent || "\u2014") + '</b></div>'
+     + '<div class="sheet-kv"><span>Pro View \u2014 Est. gross margin</span><b>' + escChem(($("pMargin")||{}).textContent || "\u2014") + '</b></div>'
+     + '</div></div>';
+  /* After-the-job actuals */
+  h += '<div class="sheet-sec"><h3>After the job \u2014 actuals</h3>';
+  var ah = parseFloat(($("actHours")||{}).value);
+  if(isNaN(ah) || ah <= 0){
+    h += '<p class="sheet-note" style="font-size:14.5px;color:#141414"><b>Actuals not yet entered.</b> Record actual hours, chemical amounts, and fuel in the After-the-job panel in Pro Settings once the job is done, and they will show here.</p>';
+  } else {
+    var acChem = parseFloat(($("actChem")||{}).value) || 0;
+    var acFuel = parseFloat(($("actFuel")||{}).value) || 0;
+    h += '<div class="sheet-kv"><span>Actual chemicals</span><b>' + money2(acChem) + '</b></div>'
+       + (acFuel > 0 ? '<div class="sheet-kv"><span>Actual fuel</span><b>' + money2(acFuel) + '</b></div>' : "")
+       + '<div class="sheet-kv"><span>Actual time on site</span><b>' + ah + ' hrs</b></div>'
+       + '<div class="sheet-kv"><span>Actual margin</span><b>' + escChem(($("actMargin")||{}).textContent || "\u2014") + '</b></div>'
+       + '<div class="sheet-kv"><span>Actual $ / hour (gross)</span><b>' + escChem(($("actHourly")||{}).textContent || "\u2014") + '</b></div>'
+       + '<div class="sheet-kv"><span>Margin variance vs. estimate</span><b>' + escChem(($("actVar")||{}).textContent || "\u2014") + '</b></div>';
+  }
+  h += '</div>';
+  /* Pickup block */
+  h += '<div class="sheet-sec"><h3>Product pickup</h3><div class="sheet-pickup">' + escChem(PICKUP_TXT) + '</div></div>';
+  doc.innerHTML = h;
+  /* Editable amounts on the sheet write back to the same per-treatment state
+     the chemical panels use, so both surfaces stay in sync. */
+  doc.querySelectorAll("[data-sheet-amt]").forEach(function(inp){
+    inp.addEventListener("change", function(){
+      var st = treatState(inp.dataset.sheetAmt);
+      if(inp.value === ""){ st.manual = false; st.amt = null; }
+      else { var v = parseFloat(inp.value); st.amt = isNaN(v) ? 0 : v; st.manual = true; }
+      renderSheet();
+      if(typeof scheduleSave === "function") scheduleSave();
+    });
+  });
+}
+function openSheet(){
+  renderSheet();
+  $("sheetView").classList.add("open");
+  document.body.style.overflow = "hidden";
+  $("sheetView").scrollTop = 0;
+}
+function closeSheet(){
+  $("sheetView").classList.remove("open");
+  if(!$("settingsDrawer").classList.contains("open")) document.body.style.overflow = "";
+}
+(function(){
+  var b = $("sheetBtn"); if(b) b.addEventListener("click", openSheet);
+  var c = $("sheetClose"); if(c) c.addEventListener("click", closeSheet);
+  var p = $("sheetPrint");
+  if(p) p.addEventListener("click", function(){
+    document.body.classList.add("sheet-printing");
+    var done = function(){ document.body.classList.remove("sheet-printing"); window.removeEventListener("afterprint", done); };
+    window.addEventListener("afterprint", done);
+    setTimeout(done, 2000);
+    try { window.print(); } catch(e){ done(); }
+  });
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape" && $("sheetView").classList.contains("open")) closeSheet();
+  });
 })();
 </script>
 </body>
