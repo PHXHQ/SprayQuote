@@ -316,6 +316,11 @@ html[data-theme="dark"] .tier-card.sel{background:#2a3a55}
 .chem-controls .chem-sev-wrap select{width:118px}
 .chem-linecost{font-weight:800;font-size:14.5px;white-space:nowrap;padding-bottom:9px}
 .chem-note{font-size:12px !important;color:var(--muted);opacity:.85}
+.chem-meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:7px}
+.chem-type{font-size:12.5px;font-weight:800;color:var(--ink);background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:3px 9px;line-height:1.35}
+.chem-carried{font-size:12.5px;font-weight:800;color:#0f7a4d;background:#eafaf1;border:1px solid #bfe8cf;border-radius:999px;padding:3px 9px;line-height:1.35}
+html[data-theme="dark"] .chem-carried{color:#8fe3b2;background:#123324;border-color:#1e5238}
+.chem-basis{font-weight:600;opacity:1 !important}
 .chem-toggle{background:none;border:0;color:var(--amber);font-weight:700;cursor:pointer;font-size:12.5px;text-decoration:underline;padding:0 2px}
 .chem-detail{padding:2px 0 8px 14px;border-bottom:1px solid rgba(255,255,255,.14)}
 .chem-detail .q-row{font-size:13px;padding:3px 0}
@@ -1133,11 +1138,11 @@ body.sample-mode #photoGrid button,body.sample-mode .photo-thumb button{pointer-
     <div class="set-row"><div class="set-grid g3">
       <div><label for="pCrew">Crew size</label><input type="number" id="pCrew" min="1" max="8" step="1" value="2"></div>
       <div><label for="pLaborRate">Labor $/hr each</label><input type="number" id="pLaborRate" min="0" max="100" step="1" value="22"></div>
-      <div><label>Chemicals</label><p style="font-size:12.5px;color:var(--muted);margin:2px 0 0;line-height:1.45">Priced per treatment from the Chemicals library below — no more percentage guess.</p></div>
+      <div><label>Chemicals</label><p style="font-size:12.5px;color:var(--muted);margin:2px 0 0;line-height:1.45">Priced per treatment from the Chemicals library below, at the retail Price (what you pay at the counter) — no more percentage guess.</p></div>
     </div></div>
 
     <h3 class="dsec">Chemicals</h3>
-    <p class="dhint">Your chemical library — seeded from your own QuickBooks product list (Oct 20, 2026 export) with your store cost &amp; price per container as sold. Chemical names and costs are <b>internal only</b>: they feed Pro View and the after-job actuals, and never appear on the customer quote, PDF, copy text, or share link. Edit anything — rename, change cost / price, remove, or add your own. A few products missing from the QB export (e.g. Sizzle, the Taginator 2×32 oz pack) aren’t seeded — add them here if you stock them.</p>
+    <p class="dhint">Your chemical library — seeded from your own QuickBooks product list (Oct 20, 2026 export) with your store cost &amp; price per container as sold. <b>Calculations use the retail Price figure only</b> — the purchase price a contractor pays at the counter. The Cost column is kept for reference and never affects any calculation. Chemical names and costs are <b>internal only</b>: they feed Pro View and the after-job actuals, and never appear on the customer quote, PDF, copy text, or share link. Edit anything — rename, change cost / price, remove, or add your own. A few products missing from the QB export (e.g. Sizzle, the Taginator 2×32 oz pack) aren’t seeded — add them here if you stock them.</p>
     <div class="chem-lib-tools">
       <input type="text" id="chemSearch" placeholder="Filter the library — e.g. degreaser, F9, sealer…" aria-label="Filter chemical library">
       <button class="btn btn-ghost btn-small" id="chemShowAll" type="button">Show all</button>
@@ -1147,8 +1152,8 @@ body.sample-mode #photoGrid button,body.sample-mode .photo-thumb button{pointer-
       <div class="nm">Add your own chemical</div>
       <div class="set-grid g3">
         <div><label for="newChemName">Name</label><input type="text" id="newChemName" placeholder="e.g. My degreaser 1 gal"></div>
-        <div><label for="newChemCost">Your cost $</label><input type="number" id="newChemCost" min="0" step="0.01" placeholder="0.00"></div>
-        <div><label for="newChemPrice">Sell price $</label><input type="number" id="newChemPrice" min="0" step="0.01" placeholder="0.00"></div>
+        <div><label for="newChemCost">Store cost $ (reference only)</label><input type="number" id="newChemCost" min="0" step="0.01" placeholder="0.00"></div>
+        <div><label for="newChemPrice">Retail price $ (used in calculations)</label><input type="number" id="newChemPrice" min="0" step="0.01" placeholder="0.00"></div>
       </div>
       <button class="btn btn-dark btn-small" id="addChemBtn" type="button" style="width:100%;margin-top:10px">+ Add chemical</button>
     </div>
@@ -1162,7 +1167,7 @@ body.sample-mode #photoGrid button,body.sample-mode .photo-thumb button{pointer-
     <p class="dhint">Your numbers only. Never prints on the customer quote.</p>
 <div class="profit" id="profitBox">
       <h3>🔒 Pro view — your numbers only <span style="font-size:12px;background:var(--amber);color:#111;padding:3px 7px;border-radius:999px;vertical-align:middle">NOT ON CUSTOMER QUOTE</span></h3>
-      <p style="font-size:12.5px;opacity:.75;margin:0 0 10px">Crew size &amp; labor rate live in ⚙ Pro Settings. Chemical costs come from each treatment’s chemical row and the Chemicals library below — internal only, never on the customer quote.</p>
+      <p style="font-size:12.5px;opacity:.75;margin:0 0 10px">Crew size &amp; labor rate live in ⚙ Pro Settings. Chemical costs come from each treatment’s chemical row and the Chemicals library below, calculated at the retail purchase price — internal only, never on the customer quote.</p>
       <div class="q-row"><span>Est. time on site</span><b id="pTime">—</b></div>
       <div class="q-row"><span>Est. chemicals <button type="button" class="chem-toggle" id="pChemToggle" aria-expanded="false">details</button></span><b id="pChem">—</b></div>
       <div class="chem-detail" id="pChemDetail" hidden></div>
@@ -1500,9 +1505,11 @@ function calc(){
   $("statRate").textContent=totalSq?"$"+(subtotal/totalSq).toFixed(2):"$0.00";
   var dispHours=Math.round(hours*10)/10;
   var crew=parseFloat($("pCrew").value)||2, laborRate=parseFloat($("pLaborRate").value)||22;
-  /* v19: chemical cost is itemised per treatment (amount used × your library
-     cost) plus a contractor-entered fuel figure — no more chem+fuel %.
-     chemEstimate() lives in the v19 script; until it loads, chem reads $0. */
+  /* v19/v20: chemical cost is itemised per treatment (amount used × the
+     chemical's retail Price from your library — what you pay at the counter,
+     not the store's cost) plus a contractor-entered fuel figure — no more
+     chem+fuel %. chemEstimate() lives in the v19 script; until it loads,
+     chem reads $0. */
   var chemInfo=(typeof chemEstimate==="function")?chemEstimate():null;
   var chem=chemInfo?Math.round(chemInfo.chem):0, fuel=chemInfo?Math.round(chemInfo.fuel):0;
   window.__chemInfo=chemInfo;
@@ -3427,22 +3434,22 @@ var CHEM_BANDS = {
    dilutions come from the Arizona research ladders / QB sales descriptions.
    Anything not known is "per label" — nothing invented. */
 var CHEM_TREATS = {
-  oil:{label:"Oil stain treatment", recQB:"F9 Double Eagle Degreaser - 1", recTag:"degreaser",
+  oil:{label:"Oil stain treatment", recQB:"F9 Double Eagle Degreaser - 1", recTag:"degreaser", type:"Cleaner / Degreaser / Neutralizer",
     why:"Degreasers cut petroleum and oil that general soap won\u2019t \u2014 Double Eagle is made for concrete, brick, pavers, tile, stone and grout. EBC Multipurpose is the other stocked degreaser.",
     how:"Stained area only \u2014 dwell, agitate, hot water for baked-in oil, rinse. Repeat for old stains."},
-  rust:{label:"Rust removal", recQB:"F9 Barc Rust Remover -1", recTag:"rust",
+  rust:{label:"Rust removal", recQB:"F9 Barc Rust Remover -1", recTag:"rust", type:"Rust & Oxidation Remover",
     why:"F9 BARC is an acid-based rust and battery-acid stain remover \u2014 a degreaser won\u2019t touch rust.",
     how:"Stain only, dwell per label, rinse."},
-  efflo:{label:"Efflorescence / calcium", recQB:"F9 Efflorescence & Calcium Remover - 1", recTag:"efflorescence",
+  efflo:{label:"Efflorescence / calcium", recQB:"F9 Efflorescence & Calcium Remover - 1", recTag:"efflorescence", type:"Efflorescence & Calcium Remover",
     why:"F9 Efflo is a specialty mineral remover made for efflorescence and calcium deposits.",
     how:"Dilute by severity \u2014 heavy 1:1\u20134:1, light 8:1\u201312:1. Dwell, then repeat light applications."},
-  house:{label:"House wash (soft wash)", recQB:"Pro Tool Lemony - 1", recTag:"",
+  house:{label:"House wash (soft wash)", recQB:"Pro Tool Lemony - 1", recTag:"", type:"Soft-wash surfactant / soap",
     why:"A soft-wash surfactant (used with SH and water) lets the mix dwell and lift dust, oxidation and mineral film at low pressure \u2014 high pressure damages stucco and tile. Priced for dust / oxidation / mineral film, not blanket mold kill.",
     how:"Soft-wash application, dwell, rinse. Batch per label."},
-  windows:{label:"Window cleaning \u2014 hard water", recQB:"54004", recTag:"windows",
+  windows:{label:"Window cleaning \u2014 hard water", recQB:"54004", recTag:"windows", type:"Glass cleaner concentrate",
     why:"Glass Gleam-4 is a window-cleaning concentrate with polymeric water softeners \u2014 made for hard-water areas.",
     how:"1/4 fl oz per gallon of water, squeegee."},
-  sealer:{label:"Paver sealer", recQB:"EC 101 WB", recTag:"sealer",
+  sealer:{label:"Paver sealer", recQB:"EC 101 WB", recTag:"sealer", type:"Water-based sealer",
     why:"EC 101 WB forms a uniform, long-lasting water-repellent coating on pavers, concrete and brick \u2014 the seal step of the wash + re-sand + seal system.",
     how:"Apply to clean, dry pavers as part of the wash + re-sand + seal system, per label."}
 };
@@ -3459,7 +3466,9 @@ function chemRec(tkey){
   if(t.recTag){ for(var i=0;i<CHEMS.length;i++){ if((CHEMS[i].tags||"").split(",").indexOf(t.recTag)>=0) return CHEMS[i]; } }
   return CHEMS[0]||null;
 }
-function unitCost(c){ if(!c) return 0; return (c.cost||0)/((c.per&&c.per>0)?c.per:1); }
+/* v20: chemical math uses the RETAIL Price (what the contractor pays at the
+   counter), NOT the store Cost. Cost stays in the library for reference only. */
+function unitCost(c){ if(!c) return 0; return (c.price||0)/((c.per&&c.per>0)?c.per:1); }
 function treatState(tkey){
   if(!treatChem[tkey]){ var rec=chemRec(tkey); treatChem[tkey]={chemId:rec?rec.id:null, sev:"moderate", amt:null, manual:false}; }
   return treatChem[tkey];
@@ -3484,25 +3493,50 @@ function activeTreats(){
   return out;
 }
 /* The one chem-cost entry point calc() uses: per-treatment amount x library
-   unit cost, plus the contractor-entered fuel figure from Pro View. */
+   retail unit price (Price column), plus the contractor-entered fuel figure
+   from Pro View. The library Cost column never enters the math. */
 function chemEstimate(){
   var fuelEl=$("pFuel"); var fuel=fuelEl?(parseFloat(fuelEl.value)||0):0;
   var lines=[], total=0;
   activeTreats().forEach(function(k){
     var st=treatState(k); var c=chemById(st.chemId)||chemRec(k);
     var amt=amtUsed(k); var cost=amt*unitCost(c); total+=cost;
-    lines.push({tkey:k, label:CHEM_TREATS[k].label, chemName:c?c.name:"\u2014", amt:amt, unit:c?c.unit:"", cost:cost});
+    lines.push({tkey:k, label:CHEM_TREATS[k].label, chemName:c?c.name:"\u2014", amt:amt, unit:c?c.unit:"", cost:cost, type:chemTypeFor(c,k)});
   });
   return {chem:total, fuel:fuel, lines:lines};
 }
 /* ----- Treatment chemical panels (estimator rows — contractor surface) ----- */
+/* v21: chemical TYPE, derived only from the product's own QuickBooks catalog
+   name / tags, or the recommendation's catalog-grounded type recorded in
+   CHEM_TREATS (taken from that product's catalog name and sales description).
+   When nothing in the catalog supports a specific type, fall back to a plain
+   generic label — never guess. */
+function chemTypeFor(c, tkey){
+  if(tkey && CHEM_TREATS[tkey] && CHEM_TREATS[tkey].type){
+    var rec=chemRec(tkey);
+    if(c && rec && c.id===rec.id) return CHEM_TREATS[tkey].type;
+  }
+  if(!c) return "Chemical treatment";
+  var n=c.name||"", low=n.toLowerCase(), found=[];
+  ["Cleaner","Degreaser","Neutralizer","Sealer","Surfactant","Detergent","Stripper","Solvent","Presoak","Polish","Wax","Soap"].forEach(function(w){ if(low.indexOf(w.toLowerCase())>=0) found.push(w); });
+  if(low.indexOf("remover")>=0){
+    var pre=["Efflorescence","Calcium","Rust","Oxidation","Mineral","Stain","Graffiti","Paint","Scum"].filter(function(w){ return n.indexOf(w)>=0; });
+    found.push(pre.length?(pre.join(" & ")+" Remover"):"Remover");
+  }
+  if(found.length) return found.join(" / ");
+  var tg=((c.tags||"").split(",")[0]||"");
+  var tagTypes={degreaser:"Degreaser",rust:"Rust treatment",efflorescence:"Efflorescence treatment",windows:"Window cleaning chemical",sealer:"Sealer"};
+  if(tagTypes[tg]) return tagTypes[tg];
+  return "Chemical treatment";
+}
 function chemPanelHTML(tkey){
   var t=CHEM_TREATS[tkey], st=treatState(tkey), rec=chemRec(tkey);
   var sel=chemById(st.chemId)||rec;
-  var opts=CHEMS.map(function(c){ return '<option value="'+c.id+'"'+(sel&&c.id===sel.id?" selected":"")+'>'+escChem(c.name)+' \u2014 '+money2(unitCost(c))+'/'+escChem(c.unit)+'</option>'; }).join("");
+  var opts=CHEMS.map(function(c){ return '<option value="'+c.id+'"'+(sel&&c.id===sel.id?" selected":"")+'>'+escChem(c.name)+' \u2014 retail '+money2(unitCost(c))+'/'+escChem(c.unit)+'</option>'; }).join("");
   var sevOpts=["light","moderate","heavy"].map(function(sv){ return '<option value="'+sv+'"'+(st.sev===sv?" selected":"")+'>'+sv.charAt(0).toUpperCase()+sv.slice(1)+'</option>'; }).join("");
   var lineCost=amtUsed(tkey)*unitCost(sel);
   return '<div class="chem-rec">\ud83e\uddea <b>Best chemical:</b> '+escChem(rec?rec.name:"\u2014")+'</div>'
+    +'<div class="chem-meta"><span class="chem-type">Type: '+escChem(chemTypeFor(rec,tkey))+'</span><span class="chem-carried">Carried at AZ Cleaning Supplies</span></div>'
     +'<p><b>Why:</b> '+escChem(t.why)+'</p>'
     +'<p><b>How:</b> '+escChem(t.how)+'</p>'
     +'<div class="chem-controls">'
@@ -3511,13 +3545,18 @@ function chemPanelHTML(tkey){
     +'<span class="chem-amt-wrap"><label>Amount (<span data-chem-unit="'+tkey+'">'+escChem(sel?sel.unit:"")+'</span>)</label><input type="number" min="0" step="0.05" data-chem-amt="'+tkey+'" value="'+trimNum(amtUsed(tkey))+'" aria-label="Amount used for '+escChem(t.label)+'"></span>'
     +'<span class="chem-linecost" data-chem-cost="'+tkey+'">Chem '+money2(lineCost)+'</span>'
     +'</div>'
-    +'<p class="chem-note">Internal only \u2014 chemical names &amp; costs never appear on the customer quote.</p>';
+    +'<p class="chem-note">Internal only \u2014 chemical names &amp; costs never appear on the customer quote. Costed at the retail purchase price (the library Price figure).</p>'
+    +'<p class="chem-note chem-basis">Quantities are contractor estimates pending SDS/TDS data — the contractor confirms the amount needed per job.</p>';
 }
 function bindChemPanel(panel, tkey){
   var st=treatState(tkey);
   var sample=document.body.classList.contains("sample-mode");
   var pick=panel.querySelector("[data-chem-pick]"), sev=panel.querySelector("[data-chem-sev]"), amt=panel.querySelector("[data-chem-amt]");
-  if(sample){ [pick,sev,amt].forEach(function(el){ if(el) el.disabled=true; }); return; }
+  /* Bind listeners even in sample mode (inputs stay disabled there): if the
+     visitor unlocks the full version in the same session, the panels the
+     sample created must keep working once re-enabled, not stay dead until a
+     reload. Disabled inputs never fire events, so sample stays read-only. */
+  if(sample){ [pick,sev,amt].forEach(function(el){ if(el) el.disabled=true; }); }
   if(pick) pick.addEventListener("change", function(){
     st.chemId=pick.value;
     var c=chemById(st.chemId);
@@ -3579,7 +3618,7 @@ function renderChemDetail(info){
   d.innerHTML=info.lines.map(function(){ return '<div class="q-row"><span></span><b></b></div>'; }).join("");
   var rows=d.querySelectorAll(".q-row");
   info.lines.forEach(function(l, i){
-    rows[i].querySelector("span").textContent=l.label+" \u2014 "+l.chemName+" ("+trimNum(l.amt)+" "+l.unit+")";
+    rows[i].querySelector("span").textContent=l.label+" \u2014 "+l.chemName+" ("+trimNum(l.amt)+" "+l.unit+")"+" — "+(l.type||"Chemical treatment");
     rows[i].querySelector("b").textContent=money2(l.cost);
   });
 }
@@ -3598,7 +3637,7 @@ function renderActChemRows(info){
         +'<label>Actual amt<br><input type="number" min="0" step="0.05"></label>'
         +'<span class="ac-cost"></span>';
       row.querySelector(".ac-name b").textContent=l.label;
-      row.querySelector(".ac-name span").textContent=l.chemName+" \u2014 est. "+trimNum(l.amt)+" "+l.unit;
+      row.querySelector(".ac-name span").textContent=l.chemName+" ("+(l.type||"Chemical treatment")+")"+" \u2014 est. "+trimNum(l.amt)+" "+l.unit;
       var inp=row.querySelector("input");
       inp.value=(actTreat[l.tkey]!=null)?actTreat[l.tkey]:trimNum(l.amt);
       inp.setAttribute("aria-label","Actual amount used \u2014 "+l.label);
@@ -3654,21 +3693,21 @@ function renderChemLib(){
     row.innerHTML='<div class="nm"><input type="text" data-cname="'+c.id+'" aria-label="Chemical name" style="flex:1;min-width:0;padding:8px 9px;font-size:15px;border-radius:8px;border:1.5px solid var(--line);background:var(--panel);color:var(--ink)"><button type="button" class="xbtn" data-cdel="'+c.id+'">Remove \u2715</button></div>'
       +'<div class="set-grid g3">'
       +'<div><label>Brand</label><input type="text" data-cbrand="'+c.id+'"></div>'
-      +'<div><label>Your cost $</label><input type="number" step="0.01" min="0" data-ccost="'+c.id+'"></div>'
-      +'<div><label>Sell price $</label><input type="number" step="0.01" min="0" data-cprice="'+c.id+'"></div></div>'
+      +'<div><label>Store cost $ (reference only)</label><input type="number" step="0.01" min="0" data-ccost="'+c.id+'"></div>'
+      +'<div><label>Retail price $ (used in calculations)</label><input type="number" step="0.01" min="0" data-cprice="'+c.id+'"></div></div>'
       +'<p style="font-size:12px;color:var(--muted);margin:6px 0 0"></p>';
     row.querySelector("[data-cname]").value=c.name;
     row.querySelector("[data-cbrand]").value=c.brand||"";
     row.querySelector("[data-ccost]").value=c.cost;
     row.querySelector("[data-cprice]").value=c.price;
-    row.querySelector("p").textContent="Sold per "+c.unit+(c.per>1?(" ("+c.per+" "+c.unit+" per container \u00b7 "+money2(unitCost(c))+" per "+c.unit+")"):"")+(c.tags?(" \u00b7 used for: "+c.tags.replace(/,/g,", ")):"");
+    row.querySelector("p").textContent="Sold per "+c.unit+(c.per>1?(" ("+c.per+" "+c.unit+" per container \u00b7 retail "+money2(unitCost(c))+" per "+c.unit+")"):"")+(c.tags?(" \u00b7 used for: "+c.tags.replace(/,/g,", ")):"");
     w.appendChild(row);
   });
   function afterEdit(){ refreshChemCosts(); if(typeof scheduleSave==="function") scheduleSave(); }
   w.querySelectorAll("[data-cname]").forEach(function(inp){ inp.addEventListener("input", function(){ var c=chemById(inp.dataset.cname); if(c){ c.name=inp.value; afterEdit(); } }); });
   w.querySelectorAll("[data-cbrand]").forEach(function(inp){ inp.addEventListener("input", function(){ var c=chemById(inp.dataset.cbrand); if(c){ c.brand=inp.value; afterEdit(); } }); });
-  w.querySelectorAll("[data-ccost]").forEach(function(inp){ inp.addEventListener("input", function(){ var c=chemById(inp.dataset.ccost); if(c){ var v=parseFloat(inp.value); c.cost=isNaN(v)?0:v; afterEdit(); if(typeof calc==="function") calc(); } }); });
-  w.querySelectorAll("[data-cprice]").forEach(function(inp){ inp.addEventListener("input", function(){ var c=chemById(inp.dataset.cprice); if(c){ var v=parseFloat(inp.value); c.price=isNaN(v)?0:v; afterEdit(); } }); });
+  w.querySelectorAll("[data-ccost]").forEach(function(inp){ inp.addEventListener("input", function(){ var c=chemById(inp.dataset.ccost); if(c){ var v=parseFloat(inp.value); c.cost=isNaN(v)?0:v; afterEdit(); } }); });
+  w.querySelectorAll("[data-cprice]").forEach(function(inp){ inp.addEventListener("input", function(){ var c=chemById(inp.dataset.cprice); if(c){ var v=parseFloat(inp.value); c.price=isNaN(v)?0:v; afterEdit(); if(typeof calc==="function") calc(); } }); });
   w.querySelectorAll("[data-cdel]").forEach(function(btn){ btn.addEventListener("click", function(){
     var c=chemById(btn.dataset.cdel); if(!c) return;
     CHEMS=CHEMS.filter(function(x){ return x.id!==c.id; });
