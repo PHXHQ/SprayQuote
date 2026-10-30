@@ -491,8 +491,10 @@ h2.step-title .ecoll-toggle-btn{font-family:"Barlow",system-ui,sans-serif;text-t
 @media (prefers-reduced-motion: reduce){.ecoll-chev{transition:none}}
 @media(max-width:640px){.ecoll-toolbar{padding:0 16px}.ecoll-toggle-btn{padding:7px 9px;font-size:12.5px}}
 /* ===== v17 additions ===== */
-.q-jump{border-top:2px solid #121417;margin-top:8px;padding-top:12px}
+.q-jump{margin-top:2px;padding-top:8px}
 .q-jump a{font-weight:800;color:var(--blue-dark);text-decoration:none;font-size:15px}
+.q-preview-total{display:flex;justify-content:space-between;align-items:baseline;gap:14px;border-top:2px solid #121417;margin-top:8px;padding-top:10px;font-weight:800;font-size:22px;line-height:1.2;color:#141414}
+.q-preview-total span:first-child{letter-spacing:.02em}
 .q-goodtoknow{font-size:13px;color:#5a5a5a;background:#f7f7f5;border:1px solid #ececec;padding:10px 12px;border-radius:8px;margin-top:12px;line-height:1.5}
 .q-goodtoknow b{display:block;color:#333;margin-bottom:3px}
 .q-goodtoknow ul{margin:0;padding-left:18px}
@@ -859,7 +861,8 @@ body.sample-mode #photoGrid button,body.sample-mode .photo-thumb button{pointer-
       <div class="q-body">
         <div class="q-client">Prepared for<br><b id="qClient">Your Customer</b><br><span id="qClientSub"></span></div>
         <div id="qLines"></div>
-        <div class="q-jump"><a href="#liveTotals">↓ Jump to your total — full totals are in the Quick quote panel at the bottom</a></div>
+        <div class="q-preview-total" id="qPreviewTotal" aria-live="polite"><span>TOTAL</span><span id="qPreviewTotalAmt">$0</span></div>
+        <div class="q-jump"><a href="#liveTotals">↓ Full breakdown in the Quick quote panel below</a></div>
         <div class="q-paylinks" id="qPayLinks"></div>
         <div class="q-note" id="qNote">Quote valid for 14 days.</div>
         <div class="q-jobmin-note" id="qJobMinNote"></div>
@@ -1425,6 +1428,7 @@ function calc(){
   $("qNote").textContent=$("notes").value||"Quote valid for 14 days.";
   $("qLines").innerHTML=lines.map(function(l){return '<div class="line-item"><div><b>'+l.title+'</b>'+(l.detail?'<small>'+l.detail+'</small>':"")+'</div><div class="line-amt">'+money(l.amt)+'</div></div>'}).join("")||'<p style="color:#888;font-size:14px">Add a service to build your quote.</p>';
   var qqT=$("qqTotal"); if(qqT) qqT.textContent=money(total);
+  var qpT=$("qPreviewTotalAmt"); if(qpT) qpT.textContent=money(total);
   var qqS=$("qqSub"); if(qqS) qqS.textContent=money(subtotal);
   var qqTx=$("qqTax"); if(qqTx) qqTx.textContent=money(tax);
   var qqDp=$("qqDep"); if(qqDp) qqDp.textContent=money(dep);
@@ -2278,6 +2282,7 @@ calc = function(){
     banner.textContent = "Package: " + tier.toUpperCase() + " — everything in Good, plus " + (c.lines.length ? c.lines.map(function(l){ return l.title; }).join(", ") : "no extras ticked yet") + ".";
     ql.appendChild(banner);
     var _qqT=$("qqTotal"); if(_qqT)_qqT.textContent=money(c.total);
+    var _qpT=$("qPreviewTotalAmt"); if(_qpT)_qpT.textContent=money(c.total);
     var _qqS=$("qqSub"); if(_qqS)_qqS.textContent=money(c.subtotal);
     var _qqTx=$("qqTax"); if(_qqTx)_qqTx.textContent=money(c.tax);
     var _qqDp=$("qqDep"); if(_qqDp)_qqDp.textContent=money(c.dep);
@@ -2791,8 +2796,9 @@ calc();
     var clone = document.getElementById("quoteDoc").cloneNode(true);
     clone.removeAttribute("id");
     docSlot.appendChild(clone);
-    // The side preview no longer carries a totals block (totals live in the
-    // bottom panel), so the customer view builds its own totals here.
+    // The side preview carries only a single TOTAL line (the full breakdown
+    // lives in the bottom panel), so the customer view builds its own full
+    // totals here and drops the preview TOTAL line to avoid duplication.
     try {
       var rr = (typeof calc === "function") ? calc() : null;
       if (rr) {
@@ -2808,6 +2814,7 @@ calc();
         var jump = clone.querySelector(".q-jump");
         if (qb && jump) qb.insertBefore(tdiv, jump); else if (qb) qb.appendChild(tdiv);
         if (jump) jump.style.display = "none";
+        var pvTotal = clone.querySelector(".q-preview-total"); if (pvTotal) pvTotal.style.display = "none";
         var phLink = clone.querySelector(".q-asphalt-note a"); if (phLink) phLink.style.display = "none";
       }
     } catch(e){}
