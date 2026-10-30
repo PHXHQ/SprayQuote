@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light" />
+<meta name="theme-color" content="#0b4a7a" />
+<link rel="icon" href="data:," />
+<title>SprayQuote — Exterior Cleaning Quotes for $10/month</title>
+<meta name="description" content="SprayQuote is the quoting tool for exterior cleaning pros: live pricing, branded PDF quotes, Good/Better/Best packages, signatures, deposit links, and Pro View margins — $10/month." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme: light;
+    --bg:#eaf3fc;
+    --bg-soft:#f4f9ff;
+    --surface:#ffffff;
+    --surface-blue:#dcecfb;
+    --ink:#0e2a44;
+    --ink-2:#12395e;
+    --muted:#4a657f;
+    --line:#c3d6ea;
+    --line-strong:#9fbddb;
+    --blue:#0f6ac6;
+    --blue-dark:#0a4a7f;
+    --blue-deep:#07365f;
+    --amber:#f59e0b;
+    --amber-dark:#d97706;
+    --amber-soft:#fef3d8;
+    --green:#15803d;
+    --radius:18px;
+    --shadow:0 18px 44px rgba(10,62,110,.14);
+    --shadow-sm:0 6px 18px rgba(10,62,110,.10);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Manrope",system-ui,-apple-system,Segoe UI,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.5}
+  a{color:inherit}
+  button{font:inherit;color:inherit}
+  .wrap{width:min(1160px,calc(100% - 40px));margin:0 auto}
+  h1,h2,h3{font-family:"Sora",sans-serif;letter-spacing:-.03em;line-height:1.02;margin:0}
+  p{margin:0}
+
+  /* Top bar */
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 0 6px}
+  .wordmark{font-family:"Sora",sans-serif;font-weight:800;font-size:26px;letter-spacing:-.04em;color:var(--ink);text-decoration:none}
+  .wordmark span{color:var(--blue)}
+  .wordmark i{font-style:normal;color:var(--amber-dark)}
+  .top-links{display:flex;align-items:center;gap:18px;font-size:14px;font-weight:700}
+  .top-links a{text-decoration:none;color:var(--ink-2)}
+  .top-links a:hover{color:var(--blue)}
+  .top-cta{background:var(--blue-dark);color:#fff !important;padding:10px 16px;border-radius:999px}
+  .top-cta:hover{background:var(--blue)}
+
+  /* Hero */
+  .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(28px,5vw,64px);align-items:center;padding:clamp(36px,6vw,72px) 0 56px}
+  .badge{display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line-strong);border-radius:999px;padding:7px 12px;font-size:13px;font-weight:800;color:var(--blue-dark)}
+  .badge b{background:var(--amber);color:#231400;border-radius:999px;padding:2px 8px;font-size:12px}
+  .hero h1{font-size:clamp(40px,6vw,68px);margin:20px 0 0;max-width:640px}
+  .hero h1 em{font-style:normal;color:var(--blue);box-shadow:inset 0 -0.32em 0 var(--amber-soft)}
+  .lead{margin-top:20px;font-size:clamp(17px,2vw,20px);line-height:1.55;color:var(--muted);max-width:560px;font-weight:500}
+  .lead strong{color:var(--ink)}
+  .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:54px;padding:0 22px;border-radius:12px;border:1.5px solid var(--line-strong);background:var(--surface);color:var(--ink);font-weight:800;text-decoration:none;cursor:pointer;font-size:16px}
+  .btn:hover{border-color:var(--blue);color:var(--blue-dark)}
+  .btn.primary{background:var(--amber);border-color:var(--amber-dark);color:#231400;box-shadow:0 10px 22px rgba(245,158,11,.28)}
+  .btn.primary:hover{background:#ffb224;color:#231400}
+  .btn.blue{background:var(--blue-dark);border-color:var(--blue-dark);color:#fff}
+  .btn.blue:hover{background:var(--blue)}
+  .hero-note{margin-top:14px;font-size:13.5px;color:var(--muted);font-weight:600}
+  .hero-checks{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:22px;font-size:14px;font-weight:700;color:var(--ink-2)}
+  .hero-checks span::before{content:"✓";color:var(--green);font-weight:800;margin-right:6px}
+
+  /* Quote mock */
+  .mock{background:var(--surface);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);overflow:hidden}
+  .mock-head{background:var(--blue-deep);color:#fff;padding:18px 22px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .mock-head strong{font-family:"Sora",sans-serif;font-size:17px}
+  .mock-head span{font-size:12px;font-weight:800;background:rgba(255,255,255,.16);padding:5px 9px;border-radius:999px;letter-spacing:.04em}
+  .mock-body{padding:20px 22px 22px}
+  .mock-meta{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:var(--muted);font-weight:600;padding-bottom:14px;border-bottom:1px dashed var(--line)}
+  .line-item{display:flex;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid #e6eef7}
+  .line-item b{font-size:15px;display:block}
+  .line-item small{color:var(--muted);font-weight:600}
+  .line-item .amt{font-weight:800;white-space:nowrap}
+  .tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0 4px}
+  .tier{border:1.5px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+  .tier small{display:block;font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+  .tier b{font-family:"Sora",sans-serif;font-size:17px}
+  .tier.best{border-color:var(--amber);background:var(--amber-soft)}
+  .tier.best small{color:var(--amber-dark)}
+  .totals{margin-top:14px;background:var(--bg-soft);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:14px}
+  .totals div{display:flex;justify-content:space-between;padding:3px 0;font-weight:600;color:var(--muted)}
+  .totals div.grand{border-top:1px solid var(--line);margin-top:7px;padding-top:10px;color:var(--ink);font-size:17px;font-weight:800}
+  .totals div.grand span:last-child{color:var(--blue-dark)}
+  .mock-foot{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+  .chip{font-size:12.5px;font-weight:800;background:var(--surface-blue);color:var(--blue-dark);border-radius:999px;padding:7px 11px}
+
+  /* Strip */
+  .strip{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--surface)}
+  .strip-inner{display:flex;flex-wrap:wrap;gap:10px 28px;padding:16px 0;font-weight:800;font-size:14px;color:var(--ink-2);justify-content:center;text-align:center}
+  .strip-inner span i{font-style:normal;color:var(--amber-dark);margin-right:7px}
+
+  section{padding:clamp(56px,8vw,92px) 0}
+  .kicker{font-size:13px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--blue);margin-bottom:12px}
+  .section-head{max-width:720px;margin-bottom:36px}
+  .section-head h2{font-size:clamp(32px,4.5vw,50px)}
+  .section-head p{margin-top:14px;color:var(--muted);font-size:17px;line-height:1.6;font-weight:500}
+
+  /* Features */
+  .feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .feature{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow-sm)}
+  .feature .ic{width:44px;height:44px;border-radius:12px;background:var(--surface-blue);display:grid;place-items:center;font-size:21px;margin-bottom:16px}
+  .feature h3{font-size:18px;margin-bottom:8px}
+  .feature p{color:var(--muted);font-size:14.5px;line-height:1.6;font-weight:500}
+  .feature.wide{grid-column:span 3;background:var(--blue-deep);color:#fff;border-color:var(--blue-deep);display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center}
+  .feature.wide .ic{background:rgba(255,255,255,.14)}
+  .feature.wide p{color:#cfe2f5}
+  .feature.wide ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+  .feature.wide li{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:12px 14px;font-weight:700;font-size:14.5px}
+  .feature.wide li small{display:block;font-weight:500;color:#cfe2f5;margin-top:2px}
+
+  /* Why different */
+  .diff-list{background:var(--surface);border:1px solid var(--line);border-radius:24px;overflow:hidden;box-shadow:var(--shadow-sm)}
+  .diff{display:grid;grid-template-columns:76px 1fr auto;gap:22px;align-items:start;padding:26px 28px;border-bottom:1px solid #e6eef7}
+  .diff:last-child{border-bottom:0}
+  .diff-num{font-family:"Sora",sans-serif;font-weight:800;font-size:30px;line-height:1;color:var(--blue);letter-spacing:-.03em}
+  .diff h3{font-size:20px;margin-bottom:7px}
+  .diff p{color:var(--muted);font-size:15px;line-height:1.65;font-weight:500;max-width:640px}
+  .diff p strong{color:var(--ink)}
+  .diff-tag{font-size:12px;font-weight:800;letter-spacing:.04em;background:var(--amber-soft);color:#8a5a00;border:1px solid #f3d48a;border-radius:999px;padding:6px 11px;white-space:nowrap;margin-top:2px}
+  .diff-tag.blue{background:var(--surface-blue);color:var(--blue-dark);border-color:var(--line)}
+
+  /* Steps */
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;counter-reset:step}
+  .step{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+  .step-num{width:36px;height:36px;border-radius:50%;background:var(--blue-dark);color:#fff;display:grid;place-items:center;font-family:"Sora",sans-serif;font-weight:800;margin-bottom:14px}
+  .step h3{font-size:16.5px;margin-bottom:7px}
+  .step p{font-size:14px;color:var(--muted);line-height:1.55;font-weight:500}
+  .step p strong{color:var(--ink)}
+  .step code,.inline-code{background:var(--surface-blue);border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em;font-weight:700;color:var(--blue-dark)}
+
+  /* Pricing / Get */
+  .get-shell{background:var(--surface);border:2px solid var(--blue);border-radius:24px;box-shadow:var(--shadow);overflow:hidden}
+  .get-top{display:grid;grid-template-columns:.9fr 1.1fr;gap:0}
+  .price-pane{background:var(--blue-deep);color:#fff;padding:clamp(26px,4vw,44px)}
+  .price-pane h2{font-size:clamp(30px,4vw,44px);color:#fff}
+  .price-pane p{color:#cfe2f5;margin-top:14px;line-height:1.6;font-weight:500}
+  .big-price{display:flex;align-items:flex-start;gap:6px;margin:26px 0 6px}
+  .big-price b{font-family:"Sora",sans-serif;font-size:84px;line-height:.85;letter-spacing:-.05em}
+  .big-price span{margin-top:10px;color:#cfe2f5;font-weight:700}
+  .price-pane ul{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:9px;font-size:14.5px;font-weight:600}
+  .price-pane li::before{content:"✓";color:var(--amber);font-weight:800;margin-right:9px}
+  .pay-pane{padding:clamp(26px,4vw,44px)}
+  .pay-pane h3{font-size:20px;margin-bottom:6px}
+  .pay-pane>p{color:var(--muted);font-size:14.5px;font-weight:500;line-height:1.55;margin-bottom:18px}
+  .pay-list{display:grid;gap:10px}
+  .pay-row{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--line);border-radius:14px;padding:13px 14px;background:var(--bg-soft)}
+  .pay-row .who{min-width:0}
+  .pay-row .who b{display:block;font-size:15px}
+  .pay-row .who span{display:block;font-size:13.5px;color:var(--muted);font-weight:600;word-break:break-all}
+  .pay-actions{display:flex;gap:7px;flex-shrink:0}
+  .small-btn{border:1.5px solid var(--line-strong);background:#fff;border-radius:9px;padding:8px 12px;font-weight:800;font-size:13.5px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
+  .small-btn:hover{border-color:var(--blue);color:var(--blue-dark)}
+  .small-btn.copy{background:var(--blue-dark);border-color:var(--blue-dark);color:#fff}
+  .honest{margin-top:18px;background:var(--amber-soft);border:1px solid #f3d48a;border-radius:12px;padding:13px 15px;font-size:13.5px;line-height:1.55;font-weight:600;color:#6b4a00}
+  .get-note{border-top:1px solid var(--line);padding:18px clamp(26px,4vw,44px);display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;justify-content:space-between;background:#fff}
+  .get-note p{font-size:14px;color:var(--muted);font-weight:600}
+  .get-note a{font-weight:800;color:var(--blue-dark)}
+
+  /* Sample */
+  .sample-shell{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(24px,4vw,48px);align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:clamp(26px,4vw,44px);box-shadow:var(--shadow-sm)}
+  .sample-shell h2{font-size:clamp(28px,4vw,40px)}
+  .sample-shell .copy p{margin-top:14px;color:var(--muted);line-height:1.6;font-weight:500}
+  .code-box{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:20px}
+  .code-pill{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:20px;font-weight:800;letter-spacing:.08em;background:var(--ink);color:#fff;border-radius:12px;padding:13px 18px}
+  .sample-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+  .sample-list li{display:flex;gap:12px;background:var(--bg-soft);border:1px solid var(--line);border-radius:12px;padding:13px 15px;font-weight:700;font-size:14.5px}
+  .sample-list li span{color:var(--blue);font-weight:800}
+
+  /* FAQ */
+  .faq{display:grid;grid-template-columns:.65fr 1.35fr;gap:48px}
+  .faq h2{font-size:clamp(32px,4.5vw,48px)}
+  .faq .section-head{margin-bottom:0}
+  details{border-top:1px solid var(--line-strong);padding:18px 0}
+  details:last-child{border-bottom:1px solid var(--line-strong)}
+  summary{list-style:none;cursor:pointer;font-weight:800;font-size:16.5px;display:flex;justify-content:space-between;gap:20px}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+";color:var(--blue);font-size:22px;line-height:1}
+  details[open] summary::after{content:"−"}
+  details p{margin:11px 28px 0 0;color:var(--muted);line-height:1.6;font-size:14.5px;font-weight:500}
+  details a{color:var(--blue-dark);font-weight:700}
+
+  footer{border-top:1px solid var(--line);padding:26px 0 38px;color:var(--muted);font-size:13px;font-weight:600;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  footer a{color:var(--blue-dark);font-weight:800}
+
+  .toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,80px);background:var(--ink);color:#fff;padding:12px 18px;border-radius:999px;font-weight:800;font-size:14px;box-shadow:var(--shadow);transition:transform .25s ease;z-index:50;pointer-events:none}
+  .toast.show{transform:translate(-50%,0)}
+
+  @media(max-width:900px){
+    .hero{grid-template-columns:1fr;padding-top:28px}
+    .feature-grid{grid-template-columns:1fr 1fr}
+    .feature.wide{grid-column:span 2;grid-template-columns:1fr}
+    .steps{grid-template-columns:1fr 1fr}
+    .get-top{grid-template-columns:1fr}
+    .sample-shell{grid-template-columns:1fr}
+    .faq{grid-template-columns:1fr;gap:28px}
+    .diff{grid-template-columns:56px 1fr}
+    .diff-tag{display:none}
+    .top-links a:not(.top-cta){display:none}
+  }
+  @media(max-width:560px){
+    .wrap{width:calc(100% - 28px)}
+    .wordmark{font-size:22px}
+    .top-cta{padding:8px 13px;font-size:13px;white-space:nowrap}
+    .feature-grid,.steps{grid-template-columns:1fr}
+    .feature.wide{grid-column:span 1}
+    .actions .btn{width:100%}
+    .tiers{grid-template-columns:1fr 1fr 1fr;gap:6px}
+    .tier b{font-size:15px}
+    .pay-row{flex-direction:column;align-items:flex-start}
+    .pay-actions{width:100%}
+    .pay-actions .small-btn{flex:1;justify-content:center}
+    .big-price b{font-size:68px}
+    footer{flex-direction:column}
+  }
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.toast{transition:none}}
+</style>
+</head>
+<body>
+
+<header class="wrap topbar">
+  <a class="wordmark" href="#top" aria-label="SprayQuote home">Spray<i>Quote</i></a>
+  <nav class="top-links" aria-label="Page">
+    <a href="#features">Features</a>
+    <a href="#why">Why SprayQuote</a>
+    <a href="#sample">Sample</a>
+    <a href="#faq">FAQ</a>
+    <a class="top-cta" href="#get">Get SprayQuote — $10/mo</a>
+  </nav>
+</header>
+
+<main id="top">
+  <!-- HERO -->
+  <div class="wrap hero">
+    <div>
+      <span class="badge">For pressure washing &amp; exterior cleaning pros <b>$10/mo</b></span>
+      <h1>Price the job on site. <em>Send a pro quote</em> before you leave.</h1>
+      <p class="lead">SprayQuote is the quoting tool built for exterior cleaning — house washes, driveways, roofs, windows, and commercial work. <strong>Live totals, your services and rates, and a branded quote your customer can sign and pay a deposit on.</strong></p>
+      <div class="actions">
+        <a class="btn primary" href="#get">Get SprayQuote — $10/mo →</a>
+        <a class="btn" href="#sample">See a sample first</a>
+      </div>
+      <p class="hero-note">Paid directly — no card checkout, no Stripe. Pay, get your unlock code, and open the tool.</p>
+      <div class="hero-checks">
+        <span>Based in Phoenix — all local</span>
+        <span>Residential &amp; commercial</span>
+        <span>Phoenix-metro city tax built in</span>
+        <span>Works on your phone</span>
+      </div>
+    </div>
+
+    <div class="mock" role="img" aria-label="Illustration of a SprayQuote quote showing line items, Good Better Best package prices, tax, total, and deposit due">
+      <div class="mock-head"><strong>Your Company — Quote</strong><span>LIVE PRICING</span></div>
+      <div class="mock-body">
+        <div class="mock-meta"><span>Residential · Phoenix, AZ</span><span>Quote total updates as you build it</span></div>
+        <div class="line-item"><div><b>House wash</b><small>Square footage + condition priced in</small></div><span class="amt">Priced live</span></div>
+        <div class="line-item"><div><b>Driveway &amp; concrete</b><small>Your service, your rate, your minimum</small></div><span class="amt">Priced live</span></div>
+        <div class="line-item"><div><b>Windows — inside &amp; out</b><small>Counted per window at the top of the quote</small></div><span class="amt">Priced live</span></div>
+        <div class="tiers" aria-hidden="true">
+          <div class="tier"><small>Good</small><b>Essential</b></div>
+          <div class="tier best"><small>Better ★</small><b>Most picked</b></div>
+          <div class="tier"><small>Best</small><b>Full detail</b></div>
+        </div>
+        <div class="totals">
+          <div><span>Subtotal</span><span>Calculated live</span></div>
+          <div><span>City tax</span><span>By job city</span></div>
+          <div><span>Deposit due</span><span>Pay link included</span></div>
+          <div class="grand"><span>Total</span><span>One clear number</span></div>
+        </div>
+        <div class="mock-foot">
+          <span class="chip">Branded PDF</span>
+          <span class="chip">Draw-to-sign</span>
+          <span class="chip">Share link</span>
+          <span class="chip">Pro View margins</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="strip" aria-hidden="true">
+    <div class="wrap strip-inner">
+      <span><i>◆</i>Live pricing</span>
+      <span><i>◆</i>Branded PDF quotes</span>
+      <span><i>◆</i>Good / Better / Best</span>
+      <span><i>◆</i>Signature + deposit link</span>
+      <span><i>◆</i>Margin tracking</span>
+      <span><i>◆</i>Monthly local pricing research</span>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <section id="features" class="wrap">
+    <div class="section-head">
+      <p class="kicker">What you get</p>
+      <h2>Everything in the live tool. Nothing that isn't.</h2>
+      <p>Every feature below is in SprayQuote today — the same tool you unlock after paying. No roadmap promises, no “coming soon” padding.</p>
+    </div>
+
+    <div class="feature-grid">
+      <article class="feature">
+        <div class="ic" aria-hidden="true">⚡</div>
+        <h3>Live pricing</h3>
+        <p>Totals, tax, and deposit update the second you change a service, size, or condition — so the number you show the customer is the number on the quote.</p>
+      </article>
+      <article class="feature">
+        <div class="ic" aria-hidden="true">▤</div>
+        <h3>Branded quotes + PDF</h3>
+        <p>Send a clean, branded quote and download it as a PDF — line items, packages, tax, and deposit all laid out the way a customer expects to read them.</p>
+      </article>
+      <article class="feature">
+        <div class="ic" aria-hidden="true">◈</div>
+        <h3>Good / Better / Best</h3>
+        <p>Offer three package tiers on the same quote and let the customer pick their level — instead of a single take-it-or-leave-it price.</p>
+      </article>
+      <article class="feature">
+        <div class="ic" aria-hidden="true">✎</div>
+        <h3>Sign, share &amp; collect</h3>
+        <p>Send a customer share link, let them draw-to-sign right on the quote, and include a deposit pay link so the job is booked — not just quoted.</p>
+      </article>
+      <article class="feature">
+        <div class="ic" aria-hidden="true">◐</div>
+        <h3>Pro View margins</h3>
+        <p>Pro View shows your costs and margins behind the customer price, so you know what a job actually makes before you commit to it.</p>
+      </article>
+      <article class="feature">
+        <div class="ic" aria-hidden="true">✓</div>
+        <h3>After-job actuals</h3>
+        <p>Record what the job really took after it's done and compare actuals against the quote — so the next estimate gets sharper.</p>
+      </article>
+      <article class="feature">
+        <div class="ic" aria-hidden="true">⚙</div>
+        <h3>Your services, your rates</h3>
+        <p>Customize the service list — rename services, set your own rates and minimums, add your own. The quote drop-downs are built from your list.</p>
+      </article>
+      <article class="feature">
+        <div class="ic" aria-hidden="true">⌂</div>
+        <h3>Residential + commercial</h3>
+        <p>Price homes and commercial properties in the same tool, with square footage and window count (inside, outside, or both) right up front.</p>
+      </article>
+      <article class="feature">
+        <div class="ic" aria-hidden="true">◎</div>
+        <h3>Phoenix-metro city tax</h3>
+        <p>City tax is handled for Phoenix-metro job cities, applied to the quote automatically — no separate tax math on the side.</p>
+      </article>
+
+      <article class="feature wide">
+        <div>
+          <div class="ic" aria-hidden="true">▣</div>
+          <h3>Saved on your device — plus the follow-up links</h3>
+          <p>Your quotes and settings save on the device you're using, ready when you reopen the tool. And when the job's done, SprayQuote carries the links that keep the work coming:</p>
+        </div>
+        <ul>
+          <li>Saved quotes &amp; settings<small>Stored on-device — reopen and pick up where you left off.</small></li>
+          <li>Review-request link<small>Send customers straight to leave you a review.</small></li>
+          <li>Booking link<small>Give customers a direct way to book the next job.</small></li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <!-- WHY SPRAYQUOTE -->
+  <section id="why" class="wrap" style="padding-top:0">
+    <div class="section-head">
+      <p class="kicker">Why SprayQuote</p>
+      <h2>Built different from the other guys.</h2>
+      <p>Six things that set SprayQuote apart from the competitors — the stuff contractors actually feel on every job, not feature-checklist filler.</p>
+    </div>
+
+    <div class="diff-list">
+      <article class="diff">
+        <div class="diff-num" aria-hidden="true">01</div>
+        <div>
+          <h3>Based in Phoenix. We're all local.</h3>
+          <p>SprayQuote is a Phoenix product, built by local people for the contractors who work here. That's why <strong>Phoenix-metro city tax is built right in</strong> and the whole tool is shaped around how exterior cleaning actually runs in the Valley — not adapted from somewhere else after the fact.</p>
+        </div>
+        <span class="diff-tag">Phoenix, AZ</span>
+      </article>
+
+      <article class="diff">
+        <div class="diff-num" aria-hidden="true">02</div>
+        <div>
+          <h3>Property panel: put it in once. It stays. It feeds everything else.</h3>
+          <p>Tired of typing the same property information in over and over? Tired of asking the customer for the same details again? Enter the property once — house size, driveway, windows, the works — and <strong>it stays in the panel and feeds every service on the quote automatically</strong>. Change it in one place and everything that uses it updates. Nobody re-types a measurement twice.</p>
+        </div>
+        <span class="diff-tag blue">Enter once</span>
+      </article>
+
+      <article class="diff">
+        <div class="diff-num" aria-hidden="true">03</div>
+        <div>
+          <h3>The quote travels inside the link you send.</h3>
+          <p>Send your customer a link and <strong>they land directly on their quote</strong> — the quote itself is embedded in the URL, so there's no gate code for the customer to hunt down and type in before they can even see their price. You send it, they open it, they're looking at the quote.</p>
+        </div>
+        <span class="diff-tag blue">No gate code</span>
+      </article>
+
+      <article class="diff">
+        <div class="diff-num" aria-hidden="true">04</div>
+        <div>
+          <h3>Not a glorified middleman. Your payments stay yours.</h3>
+          <p>This is the big one. The other guys take your customer's payment themselves and then pay you out — your money runs through them first. SprayQuote doesn't do that. <strong>You put your own payment links right on the quote</strong>, and the customer pays you directly. Your quote, your payment link, your money — no platform standing in the middle of it.</p>
+        </div>
+        <span class="diff-tag">You get paid direct</span>
+      </article>
+
+      <article class="diff">
+        <div class="diff-num" aria-hidden="true">05</div>
+        <div>
+          <h3>Before-and-after figures: estimate vs. what it actually was.</h3>
+          <p>Before the job, Pro View shows the estimate in real numbers — <strong>how long the job should take, your costs, and your margins</strong> — before you ever send the price. After the job, record the actuals and put them side by side with the estimate: what it really took and what the margin actually was at the end. That's how the next quote gets sharper instead of staying a guess.</p>
+        </div>
+        <span class="diff-tag blue">Estimate vs. actual</span>
+      </article>
+
+      <article class="diff">
+        <div class="diff-num" aria-hidden="true">06</div>
+        <div>
+          <h3>Monthly local pricing research — included in your $10/mo.</h3>
+          <p>Local market rates are <strong>researched, reviewed, and refreshed every month</strong> — Phoenix-metro first — so SprayQuote's shipped defaults stay grounded in what Maricopa County contractors are actually charging, not a national guess. Rates are published as <strong>ranges, not single prices</strong>, with a visible review date stamp (last reviewed: October 2026). Updates touch the shipped defaults only — <strong>they never overwrite rates you've customized yourself</strong>.</p>
+        </div>
+        <span class="diff-tag">Monthly · Oct 2026</span>
+      </article>
+    </div>
+  </section>
+
+  <!-- SAMPLE -->
+  <section id="sample" class="wrap" style="padding-top:0">
+    <div class="sample-shell">
+      <div class="copy">
+        <p class="kicker">Try before you pay</p>
+        <h2>See a sample first — free, no payment.</h2>
+        <p>Open the tool and enter the public sample code to see a read-only sample preview of a real quote — the layout, the packages, the totals, and the PDF your customers would get. The sample shows what the tool produces; it doesn't unlock the full version.</p>
+        <div class="code-box">
+          <span class="code-pill">SAMPLE602</span>
+          <button class="small-btn copy" type="button" data-copy="SAMPLE602">Copy code</button>
+          <a class="small-btn" href="https://PHXHQ.github.io/SprayQuote/" target="_blank" rel="noopener">Open SprayQuote ↗</a>
+        </div>
+      </div>
+      <ul class="sample-list">
+        <li><span>1</span> Open SprayQuote at PHXHQ.github.io/SprayQuote</li>
+        <li><span>2</span> Enter the sample code: SAMPLE602</li>
+        <li><span>3</span> Browse the sample quote — pricing, packages &amp; totals</li>
+        <li><span>4</span> Like what you see? Get the full tool below for $10/mo</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS + GET -->
+  <section id="get" class="wrap" style="padding-top:0">
+    <div class="section-head">
+      <p class="kicker">How getting it works</p>
+      <h2>Four steps. No checkout cart.</h2>
+      <p>SprayQuote is paid directly, person to person — there's no Stripe checkout and no automated billing. Here's exactly how it works, so there are no surprises.</p>
+    </div>
+
+    <div class="steps" style="margin-bottom:22px">
+      <div class="step"><div class="step-num">1</div><h3>Pay $10</h3><p>Send <strong>$10</strong> using any payment option in the box below — PayPal, Cash App, Venmo, Zelle, or Revolut.</p></div>
+      <div class="step"><div class="step-num">2</div><h3>Write “SprayQuote” in the note</h3><p>Put <strong>SprayQuote</strong> in the payment note so your payment is matched to the tool — that's the whole form.</p></div>
+      <div class="step"><div class="step-num">3</div><h3>Get your unlock code</h3><p>After paying, you'll receive your unlock code. Each code is issued after payment — codes aren't published on this page.</p></div>
+      <div class="step"><div class="step-num">4</div><h3>Unlock &amp; quote</h3><p>Open <strong>PHXHQ.github.io/SprayQuote</strong>, enter your code, and start quoting. On that device, the tool remembers your unlock for 7 days.</p></div>
+    </div>
+
+    <div class="get-shell">
+      <div class="get-top">
+        <div class="price-pane">
+          <h2>Get SprayQuote</h2>
+          <div class="big-price"><b>$10</b><span>/ month</span></div>
+          <p>One flat price for the full tool — every feature listed on this page, for residential and commercial quoting.</p>
+          <ul>
+            <li>Full unlock — not the read-only sample</li>
+            <li>Live pricing, PDF quotes &amp; share links</li>
+            <li>Pro View margins &amp; after-job actuals</li>
+            <li>Monthly local pricing research — included</li>
+            <li>Your services, rates &amp; settings saved on-device</li>
+          </ul>
+        </div>
+        <div class="pay-pane">
+          <h3>Pay $10 — pick any one</h3>
+          <p>Send $10 with the note <strong>“SprayQuote”</strong> using whichever app you already have:</p>
+          <div class="pay-list">
+            <div class="pay-row">
+              <div class="who"><b>PayPal</b><span>paypal.me/JRBorders</span></div>
+              <div class="pay-actions">
+                <button class="small-btn copy" type="button" data-copy="https://www.paypal.me/JRBorders">Copy PayPal</button>
+                <a class="small-btn" href="https://www.paypal.me/JRBorders" target="_blank" rel="noopener">Pay ↗</a>
+              </div>
+            </div>
+            <div class="pay-row">
+              <div class="who"><b>Cash App</b><span>$JRXPERIENCE</span></div>
+              <div class="pay-actions"><button class="small-btn copy" type="button" data-copy="$JRXPERIENCE">Copy $tag</button></div>
+            </div>
+            <div class="pay-row">
+              <div class="who"><b>Venmo</b><span>@JRB27</span></div>
+              <div class="pay-actions"><button class="small-btn copy" type="button" data-copy="@JRB27">Copy handle</button></div>
+            </div>
+            <div class="pay-row">
+              <div class="who"><b>Zelle — email only</b><span>thadiusblackstone@gmail.com<br>thejrxp@gmail.com</span></div>
+              <div class="pay-actions">
+                <button class="small-btn copy" type="button" data-copy="thadiusblackstone@gmail.com">Copy email 1</button>
+                <button class="small-btn copy" type="button" data-copy="thejrxp@gmail.com">Copy email 2</button>
+              </div>
+            </div>
+            <div class="pay-row">
+              <div class="who"><b>Revolut</b><span>revolut.me/jrxperience</span></div>
+              <div class="pay-actions">
+                <button class="small-btn copy" type="button" data-copy="https://revolut.me/jrxperience">Copy Revolut</button>
+                <a class="small-btn" href="https://revolut.me/jrxperience" target="_blank" rel="noopener">Pay ↗</a>
+              </div>
+            </div>
+          </div>
+          <div class="honest"><strong>Straight up:</strong> payment is direct and manual — no automated checkout and no automated billing. You send $10, note “SprayQuote,” and your unlock code is issued after payment.</div>
+        </div>
+      </div>
+      <div class="get-note">
+        <p>Already paid? Take your code straight to the tool:</p>
+        <a href="https://PHXHQ.github.io/SprayQuote/" target="_blank" rel="noopener">Unlock at PHXHQ.github.io/SprayQuote ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="wrap faq" style="padding-top:0">
+    <div class="section-head">
+      <p class="kicker">Questions</p>
+      <h2>Before you pay.</h2>
+      <p>The honest answers — including how payment actually works.</p>
+    </div>
+    <div>
+      <details>
+        <summary>How do I pay, exactly?</summary>
+        <p>Send $10 through PayPal, Cash App, Venmo, Zelle (by email only), or Revolut using the details in the <a href="#get">Get SprayQuote</a> section, and put “SprayQuote” in the payment note. There's no card checkout — payment is direct. After paying, you receive an unlock code to enter at <a href="https://PHXHQ.github.io/SprayQuote/" target="_blank" rel="noopener">PHXHQ.github.io/SprayQuote</a>.</p>
+      </details>
+      <details>
+        <summary>Is billing automated?</summary>
+        <p>No. There's no Stripe checkout and no automated billing — each month is paid the same direct way. This page doesn't promise any billing mechanic beyond that.</p>
+      </details>
+      <details>
+        <summary>What is the monthly local pricing research?</summary>
+        <p>Every month, local market rates for exterior cleaning in the Phoenix metro are researched and reviewed, and SprayQuote's shipped defaults are refreshed from that research. Rates are shown as ranges — not single prices — with a visible date stamp showing when they were last reviewed (October 2026). It's included in the $10/month price. Updates apply to the shipped defaults only: if you've set your own custom rates, they are never overwritten.</p>
+      </details>
+      <details>
+        <summary>What's the difference between the sample and the full tool?</summary>
+        <p>The sample (code <span class="inline-code">SAMPLE602</span>) is a public, read-only preview of a finished quote so you can see what SprayQuote produces. The full unlock lets you build your own quotes with your services, rates, and branding, save them on your device, and send share links, signatures, and deposit links to real customers.</p>
+      </details>
+      <details>
+        <summary>Do I have to enter my code every time?</summary>
+        <p>No. After a successful unlock, the tool remembers it on that device and browser for 7 days and restores the same access level. After 7 days it asks again — and on a different device or after clearing browser data, you'll enter your code again.</p>
+      </details>
+      <details>
+        <summary>Where are my quotes saved?</summary>
+        <p>On the device you're using. Your saved quotes and settings stay on-device, so they're there when you reopen SprayQuote on that same device and browser.</p>
+      </details>
+      <details>
+        <summary>Does it handle tax for my area?</summary>
+        <p>SprayQuote includes city tax for Phoenix-metro cities and applies it to the quote by job city. If you work outside the Phoenix metro, check the tax on your quotes against your local rate.</p>
+      </details>
+      <details>
+        <summary>Can I use it for commercial jobs?</summary>
+        <p>Yes — SprayQuote prices both residential and commercial exterior cleaning jobs, with customizable services so you can set it up for the work you actually sell.</p>
+      </details>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap">
+  <span><strong>SprayQuote</strong> — quoting tool for exterior cleaning pros · $10/month, paid directly</span>
+  <span><a href="https://PHXHQ.github.io/SprayQuote/" target="_blank" rel="noopener">Open the tool ↗</a> &nbsp;·&nbsp; Sample code: SAMPLE602</span>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite">Copied</div>
+
+<script>
+(function(){
+  var toast = document.getElementById('toast');
+  var timer = null;
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(timer);
+    timer = setTimeout(function(){ toast.classList.remove('show'); }, 1800);
+  }
+  function fallbackCopy(text){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); showToast('Copied: ' + text); }
+    catch(e){ showToast(text); }
+    ta.remove();
+  }
+  document.querySelectorAll('[data-copy]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var text = btn.getAttribute('data-copy');
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function(){ showToast('Copied: ' + text); }, function(){ fallbackCopy(text); });
+      } else { fallbackCopy(text); }
+    });
+  });
+})();
+</script>
+</body>
+</html>
