@@ -321,6 +321,14 @@ html[data-theme="dark"] .tier-card.sel{background:#2a3a55}
 .chem-carried{font-size:12.5px;font-weight:800;color:#0f7a4d;background:#eafaf1;border:1px solid #bfe8cf;border-radius:999px;padding:3px 9px;line-height:1.35}
 html[data-theme="dark"] .chem-carried{color:#8fe3b2;background:#123324;border-color:#1e5238}
 .chem-basis{font-weight:600;opacity:1 !important}
+.chem-pickup{font-size:12.5px;font-weight:700;color:var(--ink);background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:7px 9px;margin-top:7px;line-height:1.45}
+.chem-spec{font-size:13px;line-height:1.5;color:var(--muted);margin:5px 0 0}
+.chem-spec b{color:var(--ink)}
+.chem-range{font-size:13.5px;font-weight:700;color:var(--ink);background:#fff6da;border:1px solid #f0d48a;border-radius:8px;padding:8px 10px;margin-top:8px;line-height:1.5}
+html[data-theme="dark"] .chem-range{background:#2a3a55;border-color:#4a5a75}
+.chem-controls .chem-area-wrap input{width:110px}
+.chem-controls .chem-por-wrap select{width:150px}
+.sand-panel{flex-basis:100%;margin-top:10px}
 .chem-toggle{background:none;border:0;color:var(--amber);font-weight:700;cursor:pointer;font-size:12.5px;text-decoration:underline;padding:0 2px}
 .chem-detail{padding:2px 0 8px 14px;border-bottom:1px solid rgba(255,255,255,.14)}
 .chem-detail .q-row{font-size:13px;padding:3px 0}
@@ -804,6 +812,7 @@ body.sample-mode #photoGrid button,body.sample-mode .photo-thumb button{pointer-
           <span class="label" style="margin-top:6px">Pavers — price the full system</span>
           <label class="toggle-row" for="paverResandOn"><input type="checkbox" id="paverResandOn"><span><b>Paver joint re-sand</b><span>Per sq ft of driveway — rate in ⚙ Pro Settings (default $0.50)</span></span></label>
           <label class="toggle-row" for="paverSealerOn"><input type="checkbox" id="paverSealerOn"><span><b>Paver sealer</b><span>Per sq ft of driveway — rate in ⚙ Pro Settings (default $1.00)</span></span></label>
+          <div id="resandChemSlot"></div>
           <div id="sealerChemSlot"></div>
         </div>
         <div class="field" style="margin-bottom:4px">
@@ -1159,7 +1168,7 @@ body.sample-mode #photoGrid button,body.sample-mode .photo-thumb button{pointer-
     </div>
     <div class="set-row">
       <div class="nm">Default amount used — by severity</div>
-      <p style="font-size:12.5px;color:var(--muted);margin:0 0 8px;line-height:1.5">Starting points only — the amount on each treatment’s chemical row is what gets costed, and you confirm or adjust it per job. Amounts are in the picked chemical’s own unit (gallons, fl oz, containers). Rust is per stain and multiplies by the stain count.</p>
+      <p style="font-size:12.5px;color:var(--muted);margin:0 0 8px;line-height:1.5">Fallback starting points for treatments with no published coverage rate — the amount on each treatment’s chemical row is what gets costed, and you confirm or adjust it per job. Where a manufacturer coverage range exists (rust, efflorescence), the panel calculates a low–high range from the treated area instead, and the amount field starts at the high estimate. Amounts are in the picked chemical’s own unit (gallons, fl oz, containers). Rust fallback is per stain and multiplies by the stain count.</p>
       <div class="chem-band-grid" id="chemBands"></div>
     </div>
 
@@ -3453,7 +3462,84 @@ var CHEM_TREATS = {
     why:"EC 101 WB forms a uniform, long-lasting water-repellent coating on pavers, concrete and brick \u2014 the seal step of the wash + re-sand + seal system.",
     how:"Apply to clean, dry pavers as part of the wash + re-sand + seal system, per label."}
 };
-var treatChem = {}; /* tkey -> {chemId, sev, amt, manual} */
+/* ---------- v22: manufacturer coverage ranges, dilution bands, pickup ----------
+   Every rate below comes from the verified SDS/TDS/manufacturer inventory or
+   J.R.'s recorded decisions — nothing invented. RANGE RULE: a published
+   coverage range is always shown as a low–high quantity range, never collapsed
+   to one number. Low coverage rate = MORE product (the high estimate); high
+   coverage rate = LESS product (the low estimate). Porosity, texture, and
+   severity move a job within the range. Costs use the retail Price basis. */
+var PICKUP_TXT = "Pick up at AZ Cleaning Supplies \u2014 2435 S. 11th Ave, Phoenix, AZ 85007 \u00b7 623-680-3155 \u00b7 Mon\u2013Fri 9 AM\u20135 PM, Sat 10 AM\u20132 PM \u00b7 In-store pickup only.";
+/* F9 BARC: coverage is 400–800 sq ft per gallon of MIXED (diluted) product
+   (J.R. decision — supersedes the per-gallon-of-concentrate dealer framing).
+   mpc = gallons of mixed product yielded per gallon of concentrate, derived
+   from the published per-concentrate yields: porous 600–1,200 -> 1.5;
+   semi-porous 800–2,400 -> 2–3; non-porous 1,200–2,400 -> 3. */
+var BARC_BANDS = {
+  porous:{label:"Porous \u2014 concrete / brick / pavers", dil:"1:2", mpcMin:1.5, mpcMax:1.5},
+  semi:{label:"Semi-porous \u2014 stucco / plastic / vinyl / asphalt / stone", dil:"1:1\u20132:1", mpcMin:2, mpcMax:3},
+  nonporous:{label:"Non-porous \u2014 sealed concrete / coatings / clay pavers / tile / metal", dil:"2:1", mpcMin:3, mpcMax:3}
+};
+var CHEM_INFO = {
+  oil:{spec:"<b>Dilution (water:product):</b> very heavily soiled \u2014 straight (undiluted); heavily soiled 1:1\u20135:1; moderately soiled 10:1; lightly soiled 20:1; neutralizer 8:1.",
+       flag:"Coverage not published by manufacturer \u2014 contractor confirms amount."},
+  rust:{spec:"<b>Dilution:</b> porous (concrete / brick / pavers) 1:2; semi-porous (stucco / plastic / vinyl / asphalt / stone) 1:1\u20132:1; non-porous (sealed concrete / coatings / clay pavers / tile / metal) 2:1. <b>Coverage:</b> 400\u2013800 sq ft per gallon of MIXED (diluted) product. <b>Yield per gallon of concentrate as sold:</b> porous 600\u20131,200 sq ft; semi-porous 800\u20132,400 sq ft; non-porous 1,200\u20132,400 sq ft.",
+       flag:"Heavy stains needing a second pass cut coverage in half or worse."},
+  efflo:{spec:"<b>Dilution (water:product):</b> thick calcium / coating prep 1:1\u20134:1; medium 4:1\u20138:1; light 8:1\u201312:1; powdery 12:1; general 8:1. <b>Coverage:</b> 200\u2013400 sq ft/gal on porous masonry; up to 1,200 sq ft/gal on sealed / non-porous.",
+       flag:""},
+  house:{spec:"", flag:"No published per-area rate \u2014 surfactant is dosed per mix, not per sq ft. Amount is a contractor estimate \u2014 contractor confirms amount."},
+  windows:{spec:"<b>Dilution:</b> 1/4 fl oz per gallon of water.", flag:"No published per-area rate. Amount is a contractor estimate \u2014 contractor confirms amount."},
+  sealer:{spec:"<b>Ready to use</b> \u2014 do not dilute.", flag:"Coverage not stated by manufacturer \u2014 apply until surface saturated, single coat. Amount is a contractor estimate \u2014 contractor confirms amount."}
+};
+function isSampleMode22(){ return document.body.classList.contains("sample-mode"); }
+function rustAreaFor(){ var st = treatState("rust"); var a = parseFloat(st.area); return (!isNaN(a) && a > 0) ? a : 0; }
+function effloAreaFor(){
+  if(typeof findAddon === "function" && typeof addonQtyFor === "function"){
+    var a = findAddon("efflo"); if(a){ var q = addonQtyFor(a); return q > 0 ? q : 0; }
+  }
+  return 0;
+}
+function paverAreaFor(){
+  var driveSq = 0;
+  if(typeof services !== "undefined"){ services.forEach(function(s2){ if(s2.type === "concrete" || s2.type === "pavers") driveSq = Math.max(driveSq, s2.sqft || 0); }); }
+  if(!driveSq && typeof basicsVal === "function") driveSq = basicsVal("driveSqft");
+  return driveSq || 0;
+}
+/* Joint Sand (J.R. owner statement): 300–400 sq ft per 50-lb bag at 1/4-inch
+   joints. Bags are always whole bags, rounded UP at both ends of the range. */
+function sandBagsFor(area){ if(!(area > 0)) return null; return {low:Math.ceil(area / 400), high:Math.ceil(area / 300), area:area}; }
+/* The published-coverage range for a treatment, or null when no area-based
+   math applies (no area entered, a different chemical picked, or sample mode
+   — the locked sample always prices from its original estimate amounts). */
+function chemRangeFor(tkey){
+  if(isSampleMode22()) return null;
+  var st = treatState(tkey), rec = chemRec(tkey), sel = chemById(st.chemId) || rec;
+  if(!sel || !rec || sel.id !== rec.id) return null;
+  if(tkey === "rust"){
+    var area = rustAreaFor(); if(!(area > 0)) return null;
+    var band = BARC_BANDS[st.por || "porous"] || BARC_BANDS.porous;
+    var mixedLow = area / 800, mixedHigh = area / 400;
+    return {low:mixedLow / band.mpcMax, high:mixedHigh / band.mpcMin, area:area, mixedLow:mixedLow, mixedHigh:mixedHigh};
+  }
+  if(tkey === "efflo"){
+    var a2 = effloAreaFor(); if(!(a2 > 0)) return null;
+    return {low:a2 / 400, high:a2 / 200, area:a2};
+  }
+  return null;
+}
+function rangeTextFor(tkey){
+  var rg = chemRangeFor(tkey);
+  if(tkey === "rust"){
+    if(!rg) return "Enter the treated area above to calculate the amount from the published coverage range (400\u2013800 sq ft per gallon of mixed product). Until then, the amount below is a contractor estimate.";
+    return "Estimated need: " + trimNum(rg.low) + "\u2013" + trimNum(rg.high) + " gal of concentrate for " + trimNum(rg.area) + " sq ft (" + trimNum(rg.mixedLow) + "\u2013" + trimNum(rg.mixedHigh) + " gal mixed at 400\u2013800 sq ft/gal). Porosity, texture, and severity move a job within the range. The amount field starts at the high estimate \u2014 edit it if you know the job.";
+  }
+  if(tkey === "efflo"){
+    if(!rg) return "Set the treated sq ft on the efflorescence add-on row to calculate the amount from the published coverage range (200\u2013400 sq ft/gal, porous masonry).";
+    return "Estimated need: " + trimNum(rg.low) + "\u2013" + trimNum(rg.high) + " gal for " + trimNum(rg.area) + " sq ft of treated area (200\u2013400 sq ft/gal, porous masonry). Sealed / non-porous runs up to 1,200 sq ft/gal, so it can take far less. Porosity, texture, and severity move a job within the range. The amount field starts at the high estimate \u2014 edit it if you know the job.";
+  }
+  return "";
+}
+var treatChem = {}; /* tkey -> {chemId, sev, amt, manual, area, por} */
 var actTreat = {};  /* tkey -> actual amount used, once the contractor edits it */
 function escChem(t){ return String(t==null?"":t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 function money2(n){ return "$"+(Math.round(n*100)/100).toFixed(2); }
@@ -3470,8 +3556,11 @@ function chemRec(tkey){
    counter), NOT the store Cost. Cost stays in the library for reference only. */
 function unitCost(c){ if(!c) return 0; return (c.price||0)/((c.per&&c.per>0)?c.per:1); }
 function treatState(tkey){
-  if(!treatChem[tkey]){ var rec=chemRec(tkey); treatChem[tkey]={chemId:rec?rec.id:null, sev:"moderate", amt:null, manual:false}; }
-  return treatChem[tkey];
+  if(!treatChem[tkey]){ var rec=chemRec(tkey); treatChem[tkey]={chemId:rec?rec.id:null, sev:"moderate", amt:null, manual:false, area:null, por:"porous"}; }
+  var st22=treatChem[tkey];
+  if(st22.por===undefined) st22.por="porous";
+  if(st22.area===undefined) st22.area=null;
+  return st22;
 }
 function bandAmt(tkey, sev){
   var b=CHEM_BANDS[tkey]; var v=b?((typeof b[sev]==="number")?b[sev]:(b.moderate||0)):0;
@@ -3481,6 +3570,7 @@ function bandAmt(tkey, sev){
 function amtUsed(tkey){
   var st=treatState(tkey);
   if(st.manual && st.amt!=null && !isNaN(st.amt)) return Math.max(0,st.amt);
+  var rg=chemRangeFor(tkey); if(rg) return rg.high;
   return bandAmt(tkey, st.sev);
 }
 function activeTreats(){
@@ -3501,7 +3591,8 @@ function chemEstimate(){
   activeTreats().forEach(function(k){
     var st=treatState(k); var c=chemById(st.chemId)||chemRec(k);
     var amt=amtUsed(k); var cost=amt*unitCost(c); total+=cost;
-    lines.push({tkey:k, label:CHEM_TREATS[k].label, chemName:c?c.name:"\u2014", amt:amt, unit:c?c.unit:"", cost:cost, type:chemTypeFor(c,k)});
+    var rg=chemRangeFor(k);
+    lines.push({tkey:k, label:CHEM_TREATS[k].label, chemName:c?c.name:"\u2014", amt:amt, unit:c?c.unit:"", cost:cost, type:chemTypeFor(c,k), range:rg, costLow:rg?rg.low*unitCost(c):null, costHigh:rg?rg.high*unitCost(c):null});
   });
   return {chem:total, fuel:fuel, lines:lines};
 }
@@ -3532,31 +3623,41 @@ function chemTypeFor(c, tkey){
 function chemPanelHTML(tkey){
   var t=CHEM_TREATS[tkey], st=treatState(tkey), rec=chemRec(tkey);
   var sel=chemById(st.chemId)||rec;
+  var info=CHEM_INFO[tkey]||{spec:"",flag:""};
   var opts=CHEMS.map(function(c){ return '<option value="'+c.id+'"'+(sel&&c.id===sel.id?" selected":"")+'>'+escChem(c.name)+' \u2014 retail '+money2(unitCost(c))+'/'+escChem(c.unit)+'</option>'; }).join("");
   var sevOpts=["light","moderate","heavy"].map(function(sv){ return '<option value="'+sv+'"'+(st.sev===sv?" selected":"")+'>'+sv.charAt(0).toUpperCase()+sv.slice(1)+'</option>'; }).join("");
-  var lineCost=amtUsed(tkey)*unitCost(sel);
+  var porOpts="";
+  if(tkey==="rust"){ porOpts=["porous","semi","nonporous"].map(function(pk){ return '<option value="'+pk+'"'+((st.por||"porous")===pk?" selected":"")+'>'+escChem(BARC_BANDS[pk].label)+'</option>'; }).join(""); }
+  var rg=chemRangeFor(tkey), uc=unitCost(sel);
+  var lineCostTxt=rg?("Chem "+money2(rg.low*uc)+"\u2013"+money2(rg.high*uc)):("Chem "+money2(amtUsed(tkey)*uc));
   return '<div class="chem-rec">\ud83e\uddea <b>Best chemical:</b> '+escChem(rec?rec.name:"\u2014")+'</div>'
     +'<div class="chem-meta"><span class="chem-type">Type: '+escChem(chemTypeFor(rec,tkey))+'</span><span class="chem-carried">Carried at AZ Cleaning Supplies</span></div>'
+    +'<div class="chem-pickup">'+escChem(PICKUP_TXT)+'</div>'
     +'<p><b>Why:</b> '+escChem(t.why)+'</p>'
     +'<p><b>How:</b> '+escChem(t.how)+'</p>'
+    +(info.spec?('<p class="chem-spec">'+info.spec+'</p>'):"")
     +'<div class="chem-controls">'
     +'<span class="chem-pick-wrap"><label>Chemical used (internal)</label><select data-chem-pick="'+tkey+'" aria-label="Chemical for '+escChem(t.label)+'">'+opts+'</select></span>'
+    +(tkey==="rust"?('<span class="chem-area-wrap"><label>Treated area (sq ft)</label><input type="number" min="0" step="10" data-chem-area="'+tkey+'" value="'+(st.area!=null&&st.area!==""?st.area:"")+'" placeholder="e.g. 400" aria-label="Treated area in square feet for rust removal"></span>'
+      +'<span class="chem-por-wrap"><label>Surface porosity</label><select data-chem-por="'+tkey+'" aria-label="Surface porosity for rust removal">'+porOpts+'</select></span>'):"")
     +'<span class="chem-sev-wrap"><label>Severity</label><select data-chem-sev="'+tkey+'" aria-label="Severity for '+escChem(t.label)+'">'+sevOpts+'</select></span>'
     +'<span class="chem-amt-wrap"><label>Amount (<span data-chem-unit="'+tkey+'">'+escChem(sel?sel.unit:"")+'</span>)</label><input type="number" min="0" step="0.05" data-chem-amt="'+tkey+'" value="'+trimNum(amtUsed(tkey))+'" aria-label="Amount used for '+escChem(t.label)+'"></span>'
-    +'<span class="chem-linecost" data-chem-cost="'+tkey+'">Chem '+money2(lineCost)+'</span>'
+    +'<span class="chem-linecost" data-chem-cost="'+tkey+'">'+lineCostTxt+'</span>'
     +'</div>'
-    +'<p class="chem-note">Internal only \u2014 chemical names &amp; costs never appear on the customer quote. Costed at the retail purchase price (the library Price figure).</p>'
-    +'<p class="chem-note chem-basis">Quantities are contractor estimates pending SDS/TDS data — the contractor confirms the amount needed per job.</p>';
+    +((tkey==="rust"||tkey==="efflo")?('<p class="chem-range" data-chem-range="'+tkey+'">'+escChem(rangeTextFor(tkey))+'</p>'):"")
+    +(info.flag?('<p class="chem-note chem-basis">'+escChem(info.flag)+'</p>'):"")
+    +'<p class="chem-note">Internal only \u2014 chemical names &amp; costs never appear on the customer quote. Costed at the retail purchase price (the library Price figure).</p>';
 }
 function bindChemPanel(panel, tkey){
   var st=treatState(tkey);
   var sample=document.body.classList.contains("sample-mode");
   var pick=panel.querySelector("[data-chem-pick]"), sev=panel.querySelector("[data-chem-sev]"), amt=panel.querySelector("[data-chem-amt]");
+  var area=panel.querySelector("[data-chem-area]"), por=panel.querySelector("[data-chem-por]");
   /* Bind listeners even in sample mode (inputs stay disabled there): if the
      visitor unlocks the full version in the same session, the panels the
      sample created must keep working once re-enabled, not stay dead until a
      reload. Disabled inputs never fire events, so sample stays read-only. */
-  if(sample){ [pick,sev,amt].forEach(function(el){ if(el) el.disabled=true; }); }
+  if(sample){ [pick,sev,amt,area,por].forEach(function(el){ if(el) el.disabled=true; }); }
   if(pick) pick.addEventListener("change", function(){
     st.chemId=pick.value;
     var c=chemById(st.chemId);
@@ -3565,7 +3666,7 @@ function bindChemPanel(panel, tkey){
   });
   if(sev) sev.addEventListener("change", function(){
     st.sev=sev.value;
-    if(!st.manual && amt) amt.value=trimNum(bandAmt(tkey, st.sev));
+    if(!st.manual && !chemRangeFor(tkey) && amt) amt.value=trimNum(bandAmt(tkey, st.sev));
     calc();
   });
   if(amt) amt.addEventListener("input", function(){
@@ -3573,6 +3674,44 @@ function bindChemPanel(panel, tkey){
     else { var v=parseFloat(amt.value); st.amt=isNaN(v)?0:v; st.manual=true; }
     calc();
   });
+  if(area) area.addEventListener("input", function(){
+    if(area.value===""){ st.area=null; }
+    else { var v2=parseFloat(area.value); st.area=isNaN(v2)?null:v2; }
+    calc();
+  });
+  if(por) por.addEventListener("change", function(){
+    st.por=por.value;
+    calc();
+  });
+}
+/* ----- Paver re-sand: Joint Sand bags (internal panel only) ----- */
+function sandRangeText(){
+  var area=paverAreaFor(), bags=sandBagsFor(area);
+  if(!bags) return "Set the driveway / paver size above to calculate bags \u2014 Joint Sand covers 300\u2013400 sq ft per 50-lb bag at 1/4-inch joints.";
+  return "Estimated need: "+bags.low+"\u2013"+bags.high+" bags (50-lb bags) for "+trimNum(area)+" sq ft of pavers \u2014 Joint Sand covers 300\u2013400 sq ft per 50-lb bag at 1/4-inch joints, rounded up to whole bags. Joint width and texture move a job within the range; order the high estimate to be safe.";
+}
+function sandPanelHTML(){
+  return '<div class="chem-rec">\ud83e\uddea <b>Joint sand:</b> Joint Sand (50-lb bags)</div>'
+    +'<div class="chem-meta"><span class="chem-type">Type: Joint sand \u2014 50-lb bag</span><span class="chem-carried">Carried at AZ Cleaning Supplies</span></div>'
+    +'<div class="chem-pickup">'+escChem(PICKUP_TXT)+'</div>'
+    +'<p class="chem-range" data-sand-range>'+escChem(sandRangeText())+'</p>'
+    +'<p class="chem-note chem-basis">Joint Sand has no price in the chemical library \u2014 bags are shown for ordering only, and re-sand cost stays on the existing re-sand rate line. No chemical cost is added for sand.</p>'
+    +'<p class="chem-note">Internal only \u2014 product names &amp; costs never appear on the customer quote.</p>';
+}
+function refreshSandPanel(){
+  var slot=$("resandChemSlot"); if(!slot) return;
+  var el=slot.querySelector("[data-sand-range]"); if(el) el.textContent=sandRangeText();
+}
+function decorateSandPanel(){
+  var slot=$("resandChemSlot"); if(!slot) return;
+  var rOn=$("paverResandOn"), ds=$("driveSurface");
+  var on=!!(rOn && rOn.checked && ds && ds.value==="pavers");
+  if(on && !slot.querySelector(".chem-panel")){
+    var p=document.createElement("div"); p.className="chem-panel sand-panel"; p.innerHTML=sandPanelHTML();
+    slot.appendChild(p);
+  }
+  if(!on && slot.querySelector(".chem-panel")) slot.innerHTML="";
+  refreshSandPanel();
 }
 function decorateChemPanels(){
   var wrap=$("addons");
@@ -3610,6 +3749,7 @@ function decorateChemPanels(){
     }
     if(!on && slot.querySelector(".chem-panel")) slot.innerHTML="";
   }
+  decorateSandPanel();
 }
 /* ----- Pro View detail + actuals rows ----- */
 function renderChemDetail(info){
@@ -3618,8 +3758,9 @@ function renderChemDetail(info){
   d.innerHTML=info.lines.map(function(){ return '<div class="q-row"><span></span><b></b></div>'; }).join("");
   var rows=d.querySelectorAll(".q-row");
   info.lines.forEach(function(l, i){
-    rows[i].querySelector("span").textContent=l.label+" \u2014 "+l.chemName+" ("+trimNum(l.amt)+" "+l.unit+")"+" — "+(l.type||"Chemical treatment");
-    rows[i].querySelector("b").textContent=money2(l.cost);
+    var amtTxt=l.range?(trimNum(l.range.low)+"\u2013"+trimNum(l.range.high)+" "+l.unit+" \u2014 range"):(trimNum(l.amt)+" "+l.unit);
+    rows[i].querySelector("span").textContent=l.label+" \u2014 "+l.chemName+" ("+amtTxt+")"+" — "+(l.type||"Chemical treatment");
+    rows[i].querySelector("b").textContent=l.range?(money2(l.costLow)+"\u2013"+money2(l.costHigh)):money2(l.cost);
   });
 }
 var actSig="";
@@ -3637,7 +3778,7 @@ function renderActChemRows(info){
         +'<label>Actual amt<br><input type="number" min="0" step="0.05"></label>'
         +'<span class="ac-cost"></span>';
       row.querySelector(".ac-name b").textContent=l.label;
-      row.querySelector(".ac-name span").textContent=l.chemName+" ("+(l.type||"Chemical treatment")+")"+" \u2014 est. "+trimNum(l.amt)+" "+l.unit;
+      row.querySelector(".ac-name span").textContent=l.chemName+" ("+(l.type||"Chemical treatment")+")"+" \u2014 est. "+(l.range?(trimNum(l.range.low)+"\u2013"+trimNum(l.range.high)):trimNum(l.amt))+" "+l.unit;
       var inp=row.querySelector("input");
       inp.value=(actTreat[l.tkey]!=null)?actTreat[l.tkey]:trimNum(l.amt);
       inp.setAttribute("aria-label","Actual amount used \u2014 "+l.label);
@@ -3661,16 +3802,36 @@ function refreshActChemTotal(){
     var st=treatState(l.tkey); var c=chemById(st.chemId)||chemRec(l.tkey);
     var a=(actTreat[l.tkey]!=null)?actTreat[l.tkey]:l.amt;
     var cost=(parseFloat(a)||0)*unitCost(c); total+=cost;
-    var cell=document.querySelector('.act-chem-row[data-tkey="'+l.tkey+'"] .ac-cost');
-    if(cell) cell.textContent=money2(cost);
+    var row=document.querySelector('.act-chem-row[data-tkey="'+l.tkey+'"]');
+    if(row){
+      var cell=row.querySelector(".ac-cost"); if(cell) cell.textContent=money2(cost);
+      /* v22: keep the row's est. label and untouched actual input in sync when
+         an area-driven range moves the estimate after the row was built. */
+      var lab=row.querySelector(".ac-name span");
+      if(lab) lab.textContent=l.chemName+" ("+(l.type||"Chemical treatment")+")"+" \u2014 est. "+(l.range?(trimNum(l.range.low)+"\u2013"+trimNum(l.range.high)):trimNum(l.amt))+" "+l.unit;
+      var inp=row.querySelector("input");
+      if(inp && actTreat[l.tkey]==null && document.activeElement!==inp) inp.value=trimNum(l.amt);
+    }
   });
   var ac=$("actChem"); if(ac) ac.value=total>0?String(Math.round(total*100)/100):"";
+}
+function refreshChemPanels(info){
+  (info?info.lines:[]).forEach(function(l){
+    document.querySelectorAll('[data-chem-range="'+l.tkey+'"]').forEach(function(el){ el.textContent=rangeTextFor(l.tkey); });
+    if(!l.range) return;
+    var st=treatState(l.tkey);
+    if(!st.manual){
+      document.querySelectorAll('[data-chem-amt="'+l.tkey+'"]').forEach(function(inp){ if(document.activeElement!==inp) inp.value=trimNum(l.range.high); });
+    }
+  });
 }
 function refreshChemCosts(){
   var info=chemEstimate(); window.__chemInfo=info;
   info.lines.forEach(function(l){
-    document.querySelectorAll('[data-chem-cost="'+l.tkey+'"]').forEach(function(el){ el.textContent="Chem "+money2(l.cost); });
+    document.querySelectorAll('[data-chem-cost="'+l.tkey+'"]').forEach(function(el){ el.textContent=l.range?("Chem "+money2(l.costLow)+"\u2013"+money2(l.costHigh)):("Chem "+money2(l.cost)); });
   });
+  refreshChemPanels(info);
+  if(typeof decorateSandPanel==="function") decorateSandPanel();
   renderChemDetail(info);
   renderActChemRows(info);
 }
