@@ -301,6 +301,36 @@ html[data-theme="dark"] .tier-card.sel{background:#2a3a55}
 .actuals input{background:#1e2227;color:#fff;border-color:#2a2f36}
 .actuals-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 .actuals-grid label{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#c9ced4;display:block;margin-bottom:4px}
+/* v19 — chemical recommendations (contractor-only surfaces) */
+.chem-panel{flex-basis:100%;margin-top:10px;border:1px dashed var(--amber-dark);border-radius:10px;padding:10px 12px;background:var(--panel);text-align:left}
+.chem-panel .chem-rec{font-size:14px;line-height:1.35}
+.chem-panel .chem-rec b{color:var(--amber-dark)}
+.chem-panel p{margin:4px 0 0;font-size:13px;line-height:1.45;color:var(--muted)}
+.chem-panel p b{color:var(--ink)}
+.chem-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-top:9px}
+.chem-controls label{font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);display:block}
+.chem-controls select,.chem-controls input{padding:8px 9px;font-size:15px;border-radius:8px;margin-top:3px}
+.chem-controls .chem-pick-wrap{flex:1 1 200px;min-width:0}
+.chem-controls .chem-pick-wrap select{width:100%}
+.chem-controls .chem-amt-wrap input{width:92px}
+.chem-controls .chem-sev-wrap select{width:118px}
+.chem-linecost{font-weight:800;font-size:14.5px;white-space:nowrap;padding-bottom:9px}
+.chem-note{font-size:12px !important;color:var(--muted);opacity:.85}
+.chem-toggle{background:none;border:0;color:var(--amber);font-weight:700;cursor:pointer;font-size:12.5px;text-decoration:underline;padding:0 2px}
+.chem-detail{padding:2px 0 8px 14px;border-bottom:1px solid rgba(255,255,255,.14)}
+.chem-detail .q-row{font-size:13px;padding:3px 0}
+.profit input.chem-fuel-inp,.actuals input[readonly]{opacity:.75}
+.act-chem-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.12);font-size:13.5px}
+.act-chem-row .ac-name{flex:1 1 170px;min-width:0}
+.act-chem-row .ac-name span{display:block;font-size:12px;opacity:.75}
+.act-chem-row input{width:92px;padding:8px 9px;font-size:15px}
+.act-chem-row .ac-cost{font-weight:800;white-space:nowrap}
+.chem-lib-tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.chem-lib-tools input[type=text]{flex:1 1 200px}
+.chem-band-grid{display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:6px;align-items:center}
+.chem-band-grid label{font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.chem-band-grid .cb-name{font-size:13.5px;font-weight:700}
+.chem-band-grid input{padding:8px 9px;font-size:15px;width:100%}
 .cust-view{position:fixed;inset:0;z-index:95;background:var(--bg);overflow-y:auto;padding:20px 14px 44px;display:none}
 .cust-view.open{display:block}
 .cust-inner{max-width:640px;margin:0 auto}
@@ -769,6 +799,7 @@ body.sample-mode #photoGrid button,body.sample-mode .photo-thumb button{pointer-
           <span class="label" style="margin-top:6px">Pavers — price the full system</span>
           <label class="toggle-row" for="paverResandOn"><input type="checkbox" id="paverResandOn"><span><b>Paver joint re-sand</b><span>Per sq ft of driveway — rate in ⚙ Pro Settings (default $0.50)</span></span></label>
           <label class="toggle-row" for="paverSealerOn"><input type="checkbox" id="paverSealerOn"><span><b>Paver sealer</b><span>Per sq ft of driveway — rate in ⚙ Pro Settings (default $1.00)</span></span></label>
+          <div id="sealerChemSlot"></div>
         </div>
         <div class="field" style="margin-bottom:4px">
           <span class="label">Property type</span>
@@ -1102,16 +1133,40 @@ body.sample-mode #photoGrid button,body.sample-mode .photo-thumb button{pointer-
     <div class="set-row"><div class="set-grid g3">
       <div><label for="pCrew">Crew size</label><input type="number" id="pCrew" min="1" max="8" step="1" value="2"></div>
       <div><label for="pLaborRate">Labor $/hr each</label><input type="number" id="pLaborRate" min="0" max="100" step="1" value="22"></div>
-      <div><label for="pChemPct">Chem + fuel %</label><input type="number" id="pChemPct" min="0" max="40" step="1" value="9"></div>
+      <div><label>Chemicals</label><p style="font-size:12.5px;color:var(--muted);margin:2px 0 0;line-height:1.45">Priced per treatment from the Chemicals library below — no more percentage guess.</p></div>
     </div></div>
+
+    <h3 class="dsec">Chemicals</h3>
+    <p class="dhint">Your chemical library — seeded from your own QuickBooks product list (Oct 20, 2026 export) with your store cost &amp; price per container as sold. Chemical names and costs are <b>internal only</b>: they feed Pro View and the after-job actuals, and never appear on the customer quote, PDF, copy text, or share link. Edit anything — rename, change cost / price, remove, or add your own. A few products missing from the QB export (e.g. Sizzle, the Taginator 2×32 oz pack) aren’t seeded — add them here if you stock them.</p>
+    <div class="chem-lib-tools">
+      <input type="text" id="chemSearch" placeholder="Filter the library — e.g. degreaser, F9, sealer…" aria-label="Filter chemical library">
+      <button class="btn btn-ghost btn-small" id="chemShowAll" type="button">Show all</button>
+    </div>
+    <div id="setChems"></div>
+    <div class="set-row" style="margin-top:10px">
+      <div class="nm">Add your own chemical</div>
+      <div class="set-grid g3">
+        <div><label for="newChemName">Name</label><input type="text" id="newChemName" placeholder="e.g. My degreaser 1 gal"></div>
+        <div><label for="newChemCost">Your cost $</label><input type="number" id="newChemCost" min="0" step="0.01" placeholder="0.00"></div>
+        <div><label for="newChemPrice">Sell price $</label><input type="number" id="newChemPrice" min="0" step="0.01" placeholder="0.00"></div>
+      </div>
+      <button class="btn btn-dark btn-small" id="addChemBtn" type="button" style="width:100%;margin-top:10px">+ Add chemical</button>
+    </div>
+    <div class="set-row">
+      <div class="nm">Default amount used — by severity</div>
+      <p style="font-size:12.5px;color:var(--muted);margin:0 0 8px;line-height:1.5">Starting points only — the amount on each treatment’s chemical row is what gets costed, and you confirm or adjust it per job. Amounts are in the picked chemical’s own unit (gallons, fl oz, containers). Rust is per stain and multiplies by the stain count.</p>
+      <div class="chem-band-grid" id="chemBands"></div>
+    </div>
 
     <h3 class="dsec">Pro View — margins</h3>
     <p class="dhint">Your numbers only. Never prints on the customer quote.</p>
 <div class="profit" id="profitBox">
       <h3>🔒 Pro view — your numbers only <span style="font-size:12px;background:var(--amber);color:#111;padding:3px 7px;border-radius:999px;vertical-align:middle">NOT ON CUSTOMER QUOTE</span></h3>
-      <p style="font-size:12.5px;opacity:.75;margin:0 0 10px">Crew size, labor rate &amp; chemical % live in ⚙ Pro Settings.</p>
+      <p style="font-size:12.5px;opacity:.75;margin:0 0 10px">Crew size &amp; labor rate live in ⚙ Pro Settings. Chemical costs come from each treatment’s chemical row and the Chemicals library below — internal only, never on the customer quote.</p>
       <div class="q-row"><span>Est. time on site</span><b id="pTime">—</b></div>
-      <div class="q-row"><span>Est. chemical + fuel</span><b id="pChem">—</b></div>
+      <div class="q-row"><span>Est. chemicals <button type="button" class="chem-toggle" id="pChemToggle" aria-expanded="false">details</button></span><b id="pChem">—</b></div>
+      <div class="chem-detail" id="pChemDetail" hidden></div>
+      <div class="q-row"><span>Est. fuel $</span><span>$ <input type="number" class="chem-fuel-inp" id="pFuel" min="0" step="1" value="0" style="width:84px;padding:7px 9px;font-size:15px" aria-label="Estimated fuel cost in dollars"></span></div>
       <div class="q-row"><span>Est. labor</span><b id="pLabor">—</b></div>
       <div class="q-row"><span>Effective $ / hour (gross)</span><b id="pHourly">—</b></div>
       <div class="q-row"><span>Est. gross margin</span><b class="margin" id="pMargin">—</b></div>
@@ -1121,8 +1176,10 @@ body.sample-mode #photoGrid button,body.sample-mode .photo-thumb button{pointer-
       <h3>🧾 After the job — actuals vs. estimate</h3>
       <div class="actuals-grid">
         <div><label for="actHours">Actual hours on site</label><input type="number" id="actHours" min="0" step="0.25" placeholder="e.g. 3.5"></div>
-        <div><label for="actChem">Actual chemical + fuel $</label><input type="number" id="actChem" min="0" step="1" placeholder="e.g. 85"></div>
+        <div><label for="actFuel">Actual fuel $</label><input type="number" id="actFuel" min="0" step="1" placeholder="e.g. 15"></div>
+        <div><label for="actChem">Actual chemicals $ (from rows below)</label><input type="number" id="actChem" min="0" step="0.01" readonly aria-readonly="true"></div>
       </div>
+      <div id="actChemRows"></div>
       <div id="actResults">
         <div class="q-row"><span>Estimated margin</span><b id="actEstMargin">—</b></div>
         <div class="q-row"><span>Actual margin</span><b id="actMargin">Enter actuals above</b></div>
@@ -1442,8 +1499,14 @@ function calc(){
   var stEl=$("statTotal"); if(stEl) stEl.textContent=money(total); $("statTime").textContent="~"+hours.toFixed(1)+" hr";
   $("statRate").textContent=totalSq?"$"+(subtotal/totalSq).toFixed(2):"$0.00";
   var dispHours=Math.round(hours*10)/10;
-  var crew=parseFloat($("pCrew").value)||2, laborRate=parseFloat($("pLaborRate").value)||22, chemPct=(parseFloat($("pChemPct").value)||0)/100;
-  var chem=Math.round(total*chemPct), labor=Math.round(dispHours*crew*laborRate), marginDollars=Math.round(total)-chem-labor, margin=total>0?Math.round(marginDollars/Math.round(total)*100):0;
+  var crew=parseFloat($("pCrew").value)||2, laborRate=parseFloat($("pLaborRate").value)||22;
+  /* v19: chemical cost is itemised per treatment (amount used × your library
+     cost) plus a contractor-entered fuel figure — no more chem+fuel %.
+     chemEstimate() lives in the v19 script; until it loads, chem reads $0. */
+  var chemInfo=(typeof chemEstimate==="function")?chemEstimate():null;
+  var chem=chemInfo?Math.round(chemInfo.chem):0, fuel=chemInfo?Math.round(chemInfo.fuel):0;
+  window.__chemInfo=chemInfo;
+  var labor=Math.round(dispHours*crew*laborRate), marginDollars=Math.round(total)-chem-fuel-labor, margin=total>0?Math.round(marginDollars/Math.round(total)*100):0;
   $("pTime").textContent=dispHours.toFixed(1)+" hrs (incl. setup)";
   $("pChem").textContent=money(chem); $("pLabor").textContent=money(labor);
   $("pHourly").textContent=money(Math.round(total)/Math.max(dispHours,0.1))+" / hr";
@@ -2134,16 +2197,20 @@ function renderActuals(r){
 }
 function updateActuals(){
   if (!lastTotals) return;
-  var h = parseFloat($("actHours").value), c = parseFloat($("actChem").value);
-  if (isNaN(h) || h <= 0 || isNaN(c)) {
+  var h = parseFloat($("actHours").value);
+  /* v19: actual chemical $ is the sum of the per-treatment actual rows
+     (auto-filled into actChem by the v19 script) plus actual fuel. */
+  var cChem = parseFloat($("actChem").value), cFuel = parseFloat(($("actFuel") || {}).value);
+  var c = (isNaN(cChem) ? 0 : cChem) + (isNaN(cFuel) ? 0 : cFuel);
+  if (isNaN(h) || h <= 0) {
     $("actMargin").textContent = "Enter actuals above"; $("actHourly").textContent = "—"; $("actVar").textContent = "—";
     return;
   }
   var total = lastTotals.total;
   var crew = parseFloat($("pCrew").value) || 2, lr = parseFloat($("pLaborRate").value) || 22;
   var estHours = parseFloat(($("pTime").textContent || "").replace(/[^0-9.]/g, "")) || 0;
-  var chemPct = (parseFloat($("pChemPct").value) || 0) / 100;
-  var estChem = Math.round(total * chemPct), estLabor = Math.round(estHours * crew * lr);
+  var ci = window.__chemInfo;
+  var estChem = ci ? Math.round(ci.chem + ci.fuel) : 0, estLabor = Math.round(estHours * crew * lr);
   var estProfit = Math.round(total) - estChem - estLabor;
   var estMargin = total > 0 ? Math.round(estProfit / Math.round(total) * 100) : 0;
   var actProfit = Math.round(total - c - Math.round(h * crew * lr));
@@ -2228,7 +2295,7 @@ function renderSavedList(){
   }
   store.quotes.forEach(function(q){
     var d = document.createElement("div"); d.className = "saved-item";
-    var hasAct = q.state && q.state.fields && ((q.state.fields.actHours || "") !== "" || (q.state.fields.actChem || "") !== "");
+    var hasAct = q.state && (((q.state.fields || {}).actHours || "") !== "" || (q.state.actTreat && Object.keys(q.state.actTreat).length > 0));
     d.innerHTML = '<div class="si-main"><b></b><span></span></div>';
     d.querySelector("b").textContent = q.name;
     if (!q.status) q.status = "Open";
@@ -3011,8 +3078,9 @@ calc();
     "Your payment links — deposits":"Your own pay links shown for deposits",
     "Reviews & booking":"Review and booking calendar links",
     "Embed on your website":"Copy a quote button or full-tool embed for your site",
-    "Job cost assumptions \u2014 Pro View":"Crew, labor & chemical % behind Pro View",
-    "Job cost assumptions — Pro View":"Crew, labor & chemical % behind Pro View",
+    "Job cost assumptions \u2014 Pro View":"Crew & labor behind Pro View",
+    "Job cost assumptions — Pro View":"Crew & labor behind Pro View",
+    "Chemicals":"Your chemical library — costs feed Pro View only, never the customer quote",
     "Pro View \u2014 margins":"Estimated margin, $/hr and after-job actuals",
     "Pro View — margins":"Estimated margin, $/hr and after-job actuals",
     "How pricing works":"How rates, minimums & add-ons add up"
@@ -3336,5 +3404,381 @@ calc();
   if(typeof calc==="function") calc();
 })();
 </script>
+<script>
+/* ---------- v19: chemical library, per-treatment recommendations, itemised chem costs ----------
+   INTERNAL-ONLY RULE (user decision): chemical names and chemical costs appear
+   ONLY on contractor surfaces — the treatment chemical rows in the estimator,
+   Pro View, the after-job actuals, and this Pro Settings library. Customer
+   surfaces (side preview, Live totals, PDF, copy text, #q= share view) are
+   built from calc() line items, which never carry chemical data. */
+var CHEM_SEED=[{"id":"ch1","qb":"102-10  Paint Scentsations C&C","name":"Paint Scentsations C&C","brand":"","cost":14.43,"price":22.5,"tags":"","unit":"container","per":1},{"id":"ch2","qb":"103-10 Paint Scentsations FA","name":"Paint Scentsations FA","brand":"","cost":14.43,"price":22.5,"tags":"","unit":"container","per":1},{"id":"ch3","qb":"105-10 Paint Scentsations VB","name":"Paint Scentsations VB","brand":"","cost":14.43,"price":22.5,"tags":"","unit":"container","per":1},{"id":"ch4","qb":"106-10 Paint Scentsations CS","name":"Paint Scentsations CS","brand":"","cost":14.43,"price":22.5,"tags":"","unit":"container","per":1},{"id":"ch5","qb":"14004 - CS 4xGal Oil-Flo 141","name":"Oil-Flo 141 (4x Gal)","brand":"","cost":166.08,"price":0,"tags":"","unit":"container","per":1},{"id":"ch6","qb":"14012 - CS 12xPt - Oil-Flo 141","name":"Oil-Flo 141 (12x Pt)","brand":"","cost":137.69,"price":0,"tags":"","unit":"container","per":1},{"id":"ch7","qb":"17004 - CS, 4x Gal - Oil Flow Safety Solvent Cleaner","name":"Oil-Flo Safety Solvent Cleaner (4x Gal)","brand":"","cost":180.24,"price":0,"tags":"","unit":"container","per":1},{"id":"ch8","qb":"17012 CS, 12xPT Oil Flo Safety Solvent Cleaner -","name":"Oil-Flo Safety Solvent Cleaner (12x Pt)","brand":"","cost":144.69,"price":0,"tags":"","unit":"container","per":1},{"id":"ch9","qb":"2 lb Pail Potassium Hydroxide","name":"2 lb Pail Potassium Hydroxide","brand":"","cost":7.92,"price":18.5,"tags":"","unit":"lb","per":2},{"id":"ch10","qb":"2 lb Red Hot Devil Lye Sodium Hydroxide","name":"2 lb Red Hot Devil Lye Sodium Hydroxide","brand":"","cost":5.79,"price":16.5,"tags":"","unit":"lb","per":2},{"id":"ch11","qb":"2619","name":"Red Devil Soot Remover (12x case)","brand":"","cost":96.05,"price":150.0,"tags":"","unit":"case","per":1},{"id":"ch12","qb":"4791","name":"KO Koil Kleen (4x case)","brand":"","cost":149.33,"price":354.0,"tags":"","unit":"case","per":1},{"id":"ch13","qb":"50 lb Red Hot Devil Lye Sodium Hydroxide","name":"50 lb Red Hot Devil Lye Sodium Hydroxide","brand":"","cost":105.76,"price":150.0,"tags":"","unit":"lb","per":50},{"id":"ch14","qb":"5101","name":"KO Koil Kleen 8lb","brand":"","cost":39.52,"price":88.5,"tags":"","unit":"lb","per":8},{"id":"ch15","qb":"54004","name":"Glass Gleam-4","brand":"","cost":116.84,"price":186.0,"tags":"windows","unit":"fl oz","per":128},{"id":"ch16","qb":"54012 - CS, 12xQt - Glass Gleam-4","name":"Glass Gleam-4 (12x Qt)","brand":"","cost":126.57,"price":0,"tags":"windows","unit":"fl oz","per":384},{"id":"ch17","qb":"57112, CS, 12x Qt - Glass Gleam Solar","name":"Glass Gleam Solar (12x Qt)","brand":"","cost":141.84,"price":0,"tags":"windows","unit":"fl oz","per":384},{"id":"ch18","qb":"990-48A  Paint Scentsations Mini Display","name":"Paint Scentsations Mini Display","brand":"","cost":74.0,"price":168.0,"tags":"","unit":"container","per":1},{"id":"ch19","qb":"A.R.T. - Gallon","name":"A.R.T. 1G","brand":"EACO CHEM","cost":80.69,"price":160.0,"tags":"","unit":"gal","per":1},{"id":"ch20","qb":"A.R.T. - Pint","name":"A.R.T. PT","brand":"EACO CHEM","cost":12.88,"price":26.5,"tags":"","unit":"container","per":1},{"id":"ch21","qb":"ABF Restoration - 1","name":"ABF Restoration 1G","brand":"EACO CHEM","cost":21.4,"price":47.5,"tags":"","unit":"gal","per":1},{"id":"ch22","qb":"ABF Restoration - 5","name":"ABF Restoration 5G","brand":"EACO CHEM","cost":87.85,"price":175.0,"tags":"","unit":"gal","per":5},{"id":"ch23","qb":"AcrylicStrip - 1","name":"AcrylicStrip 1G","brand":"EACO CHEM","cost":32.2,"price":62.5,"tags":"","unit":"gal","per":1},{"id":"ch24","qb":"AcrylicStrip - 5","name":"AcrylicStrip 5G","brand":"EACO CHEM","cost":137.0,"price":245.0,"tags":"","unit":"gal","per":5},{"id":"ch25","qb":"Barrier - Ultimate Stain Blocking Surface Sealer","name":"Barrier 5G","brand":"TRIDENT","cost":330.0,"price":450.0,"tags":"sealer","unit":"gal","per":5},{"id":"ch26","qb":"Bleach Magic - 1","name":"Bleach Magic - 1","brand":"","cost":0,"price":0,"tags":"","unit":"gal","per":1},{"id":"ch27","qb":"Brake Parts Cleaner","name":"Brake Parts Cleaner","brand":"","cost":77.25,"price":110.0,"tags":"","unit":"container","per":1},{"id":"ch28","qb":"BREAK WALL - Superior Water Repelling & Salt Blocking Sealer","name":"Break Wall 5G","brand":"TRIDENT","cost":194.25,"price":260.0,"tags":"sealer","unit":"gal","per":5},{"id":"ch29","qb":"Bullseye - 5","name":"Bullseye 5G","brand":"","cost":175.0,"price":250.0,"tags":"","unit":"gal","per":5},{"id":"ch30","qb":"Burn Restore -1","name":"Burn Restore 1G","brand":"","cost":16.6,"price":35.5,"tags":"","unit":"gal","per":1},{"id":"ch31","qb":"C-Tar Melt - 5","name":"C-Tar Melt 5G","brand":"EACO CHEM","cost":160.2,"price":255.0,"tags":"","unit":"gal","per":5},{"id":"ch32","qb":"C-Tar Melt -1","name":"C-Tar Melt 1G","brand":"EACO CHEM","cost":36.85,"price":62.5,"tags":"","unit":"gal","per":1},{"id":"ch33","qb":"C-Tar Melt -55","name":"C-Tar Melt 55G","brand":"EACO CHEM","cost":1247.25,"price":1925.0,"tags":"","unit":"gal","per":55},{"id":"ch34","qb":"Calcite Presoak -1","name":"Calcite Presoak 1G","brand":"EACO CHEM","cost":17.25,"price":35.5,"tags":"efflorescence","unit":"gal","per":1},{"id":"ch35","qb":"Chem Spec Rust Remover","name":"Chem Spec Rust Remover","brand":"","cost":10.33,"price":15.0,"tags":"rust","unit":"container","per":1},{"id":"ch36","qb":"Cleansol BC - 1","name":"Cleansol BC 1G","brand":"EACO CHEM","cost":17.95,"price":39.5,"tags":"","unit":"gal","per":1},{"id":"ch37","qb":"Cleansol BC - 5","name":"Cleansol BC 5G","brand":"EACO CHEM","cost":70.65,"price":150.0,"tags":"","unit":"gal","per":5},{"id":"ch38","qb":"Cleansol BC - 55","name":"Cleansol BC 55G","brand":"EACO CHEM","cost":592.0,"price":1225.0,"tags":"","unit":"gal","per":55},{"id":"ch39","qb":"ConSalt -Corrosive Salt Remover and Protectant -1","name":"ConSalt 1G","brand":"","cost":18.55,"price":35.5,"tags":"","unit":"gal","per":1},{"id":"ch40","qb":"CP & B","name":"CP&B (Clean, Polish & Brighten)","brand":"","cost":19.55,"price":36.5,"tags":"","unit":"container","per":1},{"id":"ch41","qb":"CT Wash - 5","name":"CT Wash 5G","brand":"EACO CHEM","cost":45.92,"price":105.0,"tags":"","unit":"gal","per":5},{"id":"ch42","qb":"CT Wash - 55","name":"CT Wash 55G","brand":"EACO CHEM","cost":383.04,"price":800.0,"tags":"","unit":"gal","per":55},{"id":"ch43","qb":"Cyclone -Industry's Most Trusted Joint Stabilizing Sealer For Over 30 Years","name":"Cyclone 5G","brand":"TRIDENT","cost":180.5,"price":245.0,"tags":"sealer","unit":"gal","per":5},{"id":"ch44","qb":"Denco Brake & Parts Cleaner","name":"Denco Brake & Parts Cleaner","brand":"","cost":3.06,"price":4.99,"tags":"","unit":"container","per":1},{"id":"ch45","qb":"EBC Glide Glass & Window Cleaner - 1 Gallon","name":"EBC Glide Window Cleaning Soap 1G","brand":"EBC","cost":27.5,"price":43.5,"tags":"windows","unit":"gal","per":1},{"id":"ch46","qb":"EBC Glide Glass & Window Cleaner - 5 gallon","name":"EBC Glide Window Cleaning Soap 5G","brand":"EBC","cost":99.27,"price":180.0,"tags":"windows","unit":"gal","per":5},{"id":"ch47","qb":"EBC Multipurpose Cleaner & Degreaser - 1 Gallon","name":"EBC Multipurpose Cleaner and Degreaser 1G","brand":"EBC","cost":26.94,"price":37.5,"tags":"degreaser","unit":"gal","per":1},{"id":"ch48","qb":"EBC Multipurpose Cleaner & Degreaser - 5 Gallon","name":"EBC Multipurpose Cleaner and Degreaser 5G","brand":"EBC","cost":100.15,"price":139.0,"tags":"degreaser","unit":"gal","per":5},{"id":"ch49","qb":"EBC Multipurpose Cleaner & Degreaser 55 Drum Kit","name":"EBC Multipurpose Cleaner and Degreaser 55G (Drum Kit)","brand":"EBC","cost":598.29,"price":800.0,"tags":"degreaser","unit":"gal","per":55},{"id":"ch50","qb":"EBC Restorer - 1 Gallon","name":"EBC Restorer Restoration Cleaner 1G","brand":"EBC","cost":25.7,"price":35.5,"tags":"","unit":"gal","per":1},{"id":"ch51","qb":"EBC Restorer - 5 Gallon","name":"EBC Restorer Restoration Cleaner 5G","brand":"EBC","cost":113.36,"price":162.0,"tags":"","unit":"gal","per":5},{"id":"ch52","qb":"EC 101 WB","name":"EC 101 WB","brand":"EACO CHEM","cost":21.16,"price":51.5,"tags":"sealer","unit":"container","per":1},{"id":"ch53","qb":"EC Shine - 1","name":"EC Shine - 1","brand":"","cost":0,"price":0,"tags":"","unit":"gal","per":1},{"id":"ch54","qb":"EC102 SOL - 1","name":"EC 102 SOL 1G","brand":"EACO CHEM","cost":50.0,"price":100.0,"tags":"sealer","unit":"gal","per":1},{"id":"ch55","qb":"EF-Fortless - 1","name":"EF-Fortless 1G","brand":"EACO CHEM","cost":18.5,"price":40.5,"tags":"","unit":"gal","per":1},{"id":"ch56","qb":"EF-Fortless - 5","name":"EF-Fortless 5G","brand":"EACO CHEM","cost":73.35,"price":160.0,"tags":"","unit":"gal","per":5},{"id":"ch57","qb":"F9 Barc Rust Remover - 5","name":"F9 BARC Rust and Oxidation Remover 5G","brand":"F9","cost":131.25,"price":200.0,"tags":"rust","unit":"gal","per":5},{"id":"ch58","qb":"F9 Barc Rust Remover -1","name":"F9 BARC Rust and Oxidation Remover 1G","brand":"F9","cost":26.5,"price":52.5,"tags":"rust","unit":"gal","per":1},{"id":"ch59","qb":"F9 Barc Rust Remover -Case (4)","name":"F9 BARC Rust and Oxidation Remover (Case of 4)","brand":"F9","cost":120.0,"price":186.0,"tags":"rust","unit":"case","per":1},{"id":"ch60","qb":"F9 Double Eagle (Case 4)","name":"F9 Double Eagle Cleaner, Degreaser, Neutralizer (Case of 4)","brand":"F9","cost":111.0,"price":175.0,"tags":"degreaser","unit":"case","per":1},{"id":"ch61","qb":"F9 Double Eagle Degreaser - 1","name":"F9 Double Eagle Cleaner, Degreaser, Neutralizer 1G","brand":"F9","cost":22.5,"price":45.5,"tags":"degreaser","unit":"gal","per":1},{"id":"ch62","qb":"F9 Double Eagle-  5","name":"F9 Double Eagle Cleaner, Degreaser, Neutralizer 5G","brand":"F9","cost":120.25,"price":175.0,"tags":"degreaser","unit":"gal","per":5},{"id":"ch63","qb":"F9 Efflo Remover - 5","name":"F9 Efflorescence and Calcium Remover 5G","brand":"F9","cost":140.75,"price":200.0,"tags":"efflorescence","unit":"gal","per":5},{"id":"ch64","qb":"F9 Efflo Remover - Case (4)","name":"F9 Efflorescence and Calcium Remover (Case of 4)","brand":"F9","cost":128.0,"price":186.0,"tags":"efflorescence","unit":"case","per":1},{"id":"ch65","qb":"F9 Efflorescence & Calcium Remover - 1","name":"F9 Efflorescence and Calcium Remover 1G","brand":"F9","cost":30.75,"price":51.5,"tags":"efflorescence","unit":"gal","per":1},{"id":"ch66","qb":"F9 Grounds Keeper (Case 4)","name":"F9 Groundskeeper (Case of 4)","brand":"F9","cost":128.0,"price":186.0,"tags":"","unit":"case","per":1},{"id":"ch67","qb":"F9 Grounds Keeper - 5","name":"F9 Groundskeeper 5G","brand":"F9","cost":140.75,"price":200.0,"tags":"","unit":"gal","per":5},{"id":"ch68","qb":"F9 Grounds Keeper - 55","name":"F9 Groundskeeper 55G","brand":"F9","cost":1245.0,"price":1850.0,"tags":"","unit":"gal","per":55},{"id":"ch69","qb":"Glory Truckwash BC - 1","name":"Glory Truckwash BC 1G","brand":"EACO CHEM","cost":19.8,"price":39.5,"tags":"","unit":"gal","per":1},{"id":"ch70","qb":"Glory Truckwash BC - 5","name":"Glory Truckwash BC 5G","brand":"EACO CHEM","cost":63.05,"price":150.0,"tags":"","unit":"gal","per":5},{"id":"ch71","qb":"Glory Truckwash BC - 55","name":"Glory Truckwash BC 55G","brand":"EACO CHEM","cost":592.0,"price":1100.0,"tags":"","unit":"gal","per":55},{"id":"ch72","qb":"Gold Assassin - 1","name":"Gold Assassin 1G","brand":"GOLD ASSASSIN","cost":12.5,"price":37.5,"tags":"","unit":"gal","per":1},{"id":"ch73","qb":"Gold Assassin - 5","name":"Gold Assassin 5G","brand":"GOLD ASSASSIN","cost":57.0,"price":135.0,"tags":"","unit":"gal","per":5},{"id":"ch74","qb":"Gold Assassin - 5 DropShip","name":"Gold Assassin (DropShip) 5G","brand":"GOLD ASSASSIN","cost":65.0,"price":125.0,"tags":"","unit":"gal","per":5},{"id":"ch75","qb":"Gold Assassin - Case","name":"Gold Assassin (Case)","brand":"GOLD ASSASSIN","cost":55.0,"price":110.0,"tags":"","unit":"case","per":1},{"id":"ch76","qb":"Gold Assassin - Kit","name":"Gold Assassin (Kit)","brand":"GOLD ASSASSIN","cost":260.0,"price":450.0,"tags":"","unit":"container","per":1},{"id":"ch77","qb":"Graf-Ex - 1","name":"Graf-Ex 1G","brand":"EACO CHEM","cost":31.05,"price":55.5,"tags":"","unit":"gal","per":1},{"id":"ch78","qb":"HD Britenol - 1","name":"HD Britenol 1G","brand":"EACO CHEM","cost":17.75,"price":39.5,"tags":"","unit":"gal","per":1},{"id":"ch79","qb":"HD Britenol - 5","name":"HD Britenol 5G","brand":"EACO CHEM","cost":69.5,"price":150.0,"tags":"","unit":"gal","per":5},{"id":"ch80","qb":"Heritage Restorer -1","name":"Heritage Restorer 1G","brand":"EACO CHEM","cost":20.95,"price":45.5,"tags":"","unit":"gal","per":1},{"id":"ch81","qb":"Hot Stain Remover - 1","name":"Hot Stain Remover 1G","brand":"EACO CHEM","cost":19.15,"price":42.5,"tags":"","unit":"gal","per":1},{"id":"ch82","qb":"Hot Stain Remover - 5","name":"Hot Stain Remover 5G","brand":"EACO CHEM","cost":76.65,"price":160.0,"tags":"","unit":"gal","per":5},{"id":"ch83","qb":"Hot Stain Remover - 55","name":"Hot Stain Remover 55G","brand":"EACO CHEM","cost":658.0,"price":1350.0,"tags":"","unit":"gal","per":55},{"id":"ch84","qb":"Hotter N Hell 5 Gallon","name":"Hotter N Hell 5G","brand":"","cost":77.0,"price":95.0,"tags":"","unit":"gal","per":5},{"id":"ch85","qb":"Hurricane CAT 4 - Advanced Sealer Performance 2-Part Urethane Wet Look Sealer","name":"Hurricane Cat 4 5G","brand":"TRIDENT","cost":229.0,"price":325.0,"tags":"sealer","unit":"gal","per":5},{"id":"ch86","qb":"Hurricane Cat 5 - Ultimate New Generation 2-Part Urethane Wet Look Sealer - 7","name":"Hurricane Cat 5 5G","brand":"TRIDENT","cost":429.0,"price":599.0,"tags":"sealer","unit":"gal","per":5},{"id":"ch87","qb":"Hurricane Cat 5 Half Kit- Ultimate New Generation 2-Part Urethane Wet Look Sealer - 7","name":"Hurricane Cat 5 \u00bd Kit","brand":"TRIDENT","cost":250.0,"price":315.0,"tags":"","unit":"container","per":1},{"id":"ch88","qb":"InStrip -1","name":"InStrip 1G","brand":"EACO CHEM","cost":43.75,"price":76.5,"tags":"","unit":"gal","per":1},{"id":"ch89","qb":"Jetty - Wet Look Hybrid Sealer - 5","name":"Jetty 5G","brand":"TRIDENT","cost":300.0,"price":425.0,"tags":"sealer","unit":"gal","per":5},{"id":"ch90","qb":"Kabosh ActivStrip - 5","name":"Kabosh ActivStrip 5G","brand":"","cost":139.0,"price":225.0,"tags":"","unit":"gal","per":5},{"id":"ch91","qb":"LCS - 1","name":"LCS 1G","brand":"EACO CHEM","cost":19.3,"price":39.5,"tags":"","unit":"gal","per":1},{"id":"ch92","qb":"LCS - 5","name":"LCS 5G","brand":"EACO CHEM","cost":77.4,"price":160.0,"tags":"","unit":"gal","per":5},{"id":"ch93","qb":"Max Pro Brake Cleaner","name":"Max Pro Brake Cleaner","brand":"","cost":3.84,"price":6.95,"tags":"","unit":"container","per":1},{"id":"ch94","qb":"MediClean Disinfectant Spray Plus","name":"MediClean Disinfectant Spray Plus","brand":"","cost":31.5,"price":67.5,"tags":"","unit":"container","per":1},{"id":"ch95","qb":"MediClean Disinfectant Spray Plus - Case 4 x 1 Gallon","name":"MediClean Disinfectant Spray Plus (4x1 Gal)","brand":"","cost":126.0,"price":0,"tags":"","unit":"container","per":1},{"id":"ch96","qb":"Micro-Seal - 5","name":"Micro-Seal 5G","brand":"","cost":112.37,"price":185.0,"tags":"sealer","unit":"gal","per":5},{"id":"ch97","qb":"NMD80 - 5","name":"NMD 80 5G","brand":"EACO CHEM","cost":45.92,"price":115.0,"tags":"","unit":"gal","per":5},{"id":"ch98","qb":"NMD80 -55","name":"NMD 80 55G","brand":"EACO CHEM","cost":383.04,"price":875.0,"tags":"","unit":"gal","per":55},{"id":"ch99","qb":"NMD80- 1","name":"NMD 80 1G","brand":"EACO CHEM","cost":13.82,"price":29.5,"tags":"","unit":"gal","per":1},{"id":"ch100","qb":"One Restore - 1","name":"OneRestore 1G","brand":"EACO CHEM","cost":21.3,"price":46.5,"tags":"","unit":"gal","per":1},{"id":"ch101","qb":"One Restore - 5","name":"OneRestore 5G","brand":"EACO CHEM","cost":87.25,"price":175.0,"tags":"","unit":"gal","per":5},{"id":"ch102","qb":"One Restore - 55","name":"OneRestore 55G","brand":"EACO CHEM","cost":774.85,"price":1625.0,"tags":"","unit":"gal","per":55},{"id":"ch103","qb":"Oxalic Acid - 1lb","name":"Oxalic Acid (1lb)","brand":"","cost":5.0,"price":10.99,"tags":"","unit":"lb","per":1},{"id":"ch104","qb":"Point Break - Advanced Organic Stain Remover","name":"Point Break 1G","brand":"TRIDENT","cost":36.5,"price":50.5,"tags":"","unit":"gal","per":1},{"id":"ch105","qb":"Point Break- 5g - Advanced Organic Stain Remover","name":"Point Break 5G","brand":"TRIDENT","cost":166.75,"price":235.0,"tags":"","unit":"gal","per":5},{"id":"ch106","qb":"Polished Stone Cleaner - 1","name":"Polished Stone Cleaner 1G","brand":"EACO CHEM","cost":17.8,"price":45.5,"tags":"","unit":"gal","per":1},{"id":"ch107","qb":"Poop-D-Zolver","name":"Poop-D-Zolver","brand":"","cost":1.55,"price":12.5,"tags":"","unit":"container","per":1},{"id":"ch108","qb":"Pro Choice Odor Eliminator","name":"Pro Choice Odor Eliminator","brand":"","cost":10.0,"price":42.5,"tags":"","unit":"container","per":1},{"id":"ch109","qb":"Pro Tool Lemony - 1","name":"Pro Tool Lemony 1G","brand":"","cost":12.95,"price":35.5,"tags":"","unit":"gal","per":1},{"id":"ch110","qb":"PSR Paver Sealer Remover Gel Five","name":"PSR Paver Sealer Remover Gel 5G","brand":"","cost":220.0,"price":380.0,"tags":"sealer","unit":"gal","per":5},{"id":"ch111","qb":"PSR Paver Sealer Remover Gel Gallon","name":"PSR Paver Sealer Remover Gel 1G","brand":"","cost":45.0,"price":80.0,"tags":"sealer","unit":"gal","per":1},{"id":"ch112","qb":"PSR Paver Sealer Remover Spray Five","name":"PSR Paver Sealer Remover Spray 5G","brand":"","cost":215.0,"price":370.0,"tags":"sealer","unit":"gal","per":5},{"id":"ch113","qb":"PSR Paver Sealer Remover Spray Gallon","name":"PSR Paver Sealer Remover Spray 1G","brand":"","cost":44.0,"price":75.0,"tags":"sealer","unit":"gal","per":1},{"id":"ch114","qb":"Rekrete 30 LB Tub","name":"Rekrete 30lb Tub","brand":"","cost":46.44,"price":160.0,"tags":"","unit":"lb","per":30},{"id":"ch115","qb":"Rekrete 50lb Bag","name":"Rekrete 50lb Bag","brand":"","cost":75.0,"price":0,"tags":"","unit":"lb","per":50},{"id":"ch116","qb":"Rip Tide - Powerful Sealer Stripper","name":"Rip Tide 5G","brand":"TRIDENT","cost":276.6,"price":395.0,"tags":"","unit":"gal","per":5},{"id":"ch117","qb":"RS10 BC - 1","name":"RS10 BC 1G","brand":"EACO CHEM","cost":16.6,"price":42.5,"tags":"","unit":"gal","per":1},{"id":"ch118","qb":"RS10 BC- 5","name":"RS10 BC 5G","brand":"EACO CHEM","cost":69.85,"price":140.0,"tags":"","unit":"gal","per":5},{"id":"ch119","qb":"Safe Harbor - Fast Acting Oil & Grease Spot Remover","name":"Safe Harbor 1G","brand":"TRIDENT","cost":49.75,"price":67.5,"tags":"","unit":"gal","per":1},{"id":"ch120","qb":"Safe Harbor- 5g - Fast Acting Oil & Grease Spot Remover","name":"Safe Harbor 5G","brand":"TRIDENT","cost":238.0,"price":317.5,"tags":"","unit":"gal","per":5},{"id":"ch121","qb":"Samples","name":"Samples","brand":"","cost":0,"price":0,"tags":"","unit":"container","per":1},{"id":"ch122","qb":"Scentsations Fresh Air 1 oz","name":"Scentsations Fresh Air 1 oz","brand":"","cost":0,"price":5.0,"tags":"","unit":"container","per":1},{"id":"ch123","qb":"Screen Magic - 1/2 Gallon","name":"Screen Magic 2G","brand":"","cost":56.7,"price":99.99,"tags":"windows","unit":"container","per":1},{"id":"ch124","qb":"Screen Magic - 32 oz","name":"Screen Magic 32oz","brand":"","cost":5.85,"price":12.5,"tags":"windows","unit":"container","per":1},{"id":"ch125","qb":"Screen Magic 1 gal. Refill Ready to Use Window Screen Cleaner","name":"Screen Magic Refill 1G","brand":"","cost":18.45,"price":29.99,"tags":"windows","unit":"gal","per":1},{"id":"ch126","qb":"Sea Wall - Ultra Water Repelling & Salt Blocking Sealer","name":"Sea Wall 5G","brand":"TRIDENT","cost":270.0,"price":360.0,"tags":"sealer","unit":"gal","per":5},{"id":"ch127","qb":"SEALTHANE 2 Part Gloss Urethane Wet Look Full Kit","name":"SEALTHANE 2 Part Gloss Urethane Wet Look Full Kit","brand":"","cost":225.0,"price":375.0,"tags":"sealer","unit":"container","per":1},{"id":"ch128","qb":"Smoke Melt - 1","name":"Smoke Melt 1G","brand":"EACO CHEM","cost":19.15,"price":41.5,"tags":"","unit":"gal","per":1},{"id":"ch129","qb":"Sodium Bicarbonate","name":"Sodium Bicarbonate","brand":"","cost":43.5,"price":52.5,"tags":"","unit":"container","per":1},{"id":"ch130","qb":"Sodium Hydroxide - 2lb","name":"Sodium Hydroxide (2lb)","brand":"","cost":7.0,"price":16.5,"tags":"","unit":"lb","per":2},{"id":"ch131","qb":"Sodium Hypochlorite - 13","name":"Sodium Hypochlorite 13G","brand":"","cost":105.71,"price":122.56,"tags":"","unit":"container","per":1},{"id":"ch132","qb":"Sodium Hypochlorite - 30","name":"Sodium Hypochlorite 30G","brand":"","cost":223.5,"price":258.02,"tags":"","unit":"container","per":1},{"id":"ch133","qb":"Sodium Hypochlorite 12.5% -6","name":"Sodium Hypochlorite 12.5% 6G","brand":"","cost":54.18,"price":64.5,"tags":"","unit":"container","per":1},{"id":"ch134","qb":"SOS-50-1","name":"SOS-50 1G","brand":"EACO CHEM","cost":17.2,"price":35.5,"tags":"","unit":"gal","per":1},{"id":"ch135","qb":"Stripper Cream - 2","name":"Stripper Cream 2G","brand":"EACO CHEM","cost":44.5,"price":95.5,"tags":"","unit":"container","per":1},{"id":"ch136","qb":"Stripper Cream - 5","name":"Stripper Cream 5G","brand":"EACO CHEM","cost":86.45,"price":185.0,"tags":"","unit":"gal","per":5},{"id":"ch137","qb":"Supreme BC - 1","name":"Supreme BC 1G","brand":"EACO CHEM","cost":20.4,"price":35.5,"tags":"","unit":"gal","per":1},{"id":"ch138","qb":"Sweep Away Oil Stain Absorber","name":"Sweep Away Oil Stain Absorber","brand":"","cost":16.0,"price":20,"tags":"oil","unit":"container","per":1},{"id":"ch139","qb":"Sweep Away Oil Stain Eliminator - 1.5lb","name":"Sweep Away Oil Stain Eliminator (1.5lb)","brand":"","cost":3.0,"price":29.5,"tags":"oil","unit":"lb","per":1.5},{"id":"ch140","qb":"Sweep Away Oil Stain Eliminator - 30LB","name":"Sweep Away Oil Stain Eliminator (30LB)","brand":"","cost":46.44,"price":160.0,"tags":"oil","unit":"lb","per":30},{"id":"ch141","qb":"Sweep Away Spray Oil Stain Degreaser","name":"Sweep Away Spray Oil Stain Degreaser","brand":"","cost":3.84,"price":17,"tags":"degreaser,oil","unit":"container","per":1},{"id":"ch142","qb":"Tagaway -1","name":"Tagaway 1G","brand":"TAGINATOR / TAGAWAY","cost":39.84,"price":68.5,"tags":"","unit":"gal","per":1},{"id":"ch143","qb":"Tagaway -5","name":"Tagaway 5G","brand":"TAGINATOR / TAGAWAY","cost":179.28,"price":315.0,"tags":"","unit":"gal","per":5},{"id":"ch144","qb":"Tagaway 32 oz Trigger Spray - Case 6","name":"Tagaway 32oz Trigger Spray (Case of 6)","brand":"TAGINATOR / TAGAWAY","cost":77.72,"price":0,"tags":"","unit":"case","per":1},{"id":"ch145","qb":"Taginator -1","name":"Taginator 1G","brand":"TAGINATOR / TAGAWAY","cost":38.51,"price":67.5,"tags":"","unit":"gal","per":1},{"id":"ch146","qb":"Taginator -5","name":"Taginator 5G","brand":"TAGINATOR / TAGAWAY","cost":175.98,"price":305.0,"tags":"","unit":"gal","per":5},{"id":"ch147","qb":"Taginator 32oz Trigger Spray","name":"Taginator 32oz Trigger Spray 32oz","brand":"TAGINATOR / TAGAWAY","cost":13.52,"price":26.5,"tags":"","unit":"container","per":1},{"id":"ch148","qb":"Taginator 32oz Trigger Spray - Case 6","name":"Taginator 32oz Trigger Spray (Case of 6)","brand":"TAGINATOR / TAGAWAY","cost":75.24,"price":0,"tags":"","unit":"case","per":1},{"id":"ch149","qb":"Tidal Wave Gel - 5","name":"Tidal Wave Gel 5G","brand":"TRIDENT","cost":354.0,"price":420.0,"tags":"","unit":"gal","per":5},{"id":"ch150","qb":"Tidal Wave X - 1 gallon","name":"Tidal Wave X 1G","brand":"TRIDENT","cost":49.0,"price":75.0,"tags":"","unit":"gal","per":1},{"id":"ch151","qb":"Tidal Wave X - 5 Gallon","name":"Tidal Wave X 5G","brand":"TRIDENT","cost":219.0,"price":295.0,"tags":"","unit":"gal","per":5},{"id":"ch152","qb":"Truck Wash Supreme - 5","name":"Truck Wash Supreme SC 5G","brand":"EACO CHEM","cost":77.4,"price":155.0,"tags":"","unit":"gal","per":5},{"id":"ch153","qb":"Truck Wash Supreme - 55","name":"Truck Wash Supreme SC 55G","brand":"EACO CHEM","cost":666.4,"price":1300.0,"tags":"","unit":"gal","per":55},{"id":"ch154","qb":"Truck Wash Supreme -1","name":"Truck Wash Supreme SC 1G","brand":"EACO CHEM","cost":21.25,"price":41.5,"tags":"","unit":"gal","per":1},{"id":"ch155","qb":"TSUNAMI -Premium Wet Look Joint Stabilizing Sealer - 5","name":"Tsunami 5G","brand":"TRIDENT","cost":235.0,"price":335.0,"tags":"sealer","unit":"gal","per":5},{"id":"ch156","qb":"Typhoon","name":"Typhoon 5G","brand":"TRIDENT","cost":186.5,"price":240.0,"tags":"sealer","unit":"gal","per":5},{"id":"ch157","qb":"White Scum Presoak -1","name":"White Scum Presoak 1G","brand":"EACO CHEM","cost":21.4,"price":45.5,"tags":"","unit":"gal","per":1},{"id":"ch158","qb":"White Water - 5g","name":"White Water 5G","brand":"TRIDENT","cost":131.5,"price":175.0,"tags":"","unit":"gal","per":5},{"id":"ch159","qb":"White Water - Powerful Efflorescence, Salt & Mineral Stain Remover","name":"White Water 1G","brand":"TRIDENT","cost":29.25,"price":39.5,"tags":"","unit":"gal","per":1},{"id":"ch160","qb":"Wipe Out - Robust Surface Cleaner","name":"Wipe Out 1G","brand":"TRIDENT","cost":31.25,"price":45.5,"tags":"","unit":"gal","per":1},{"id":"ch161","qb":"Wipe Out-5g - Robust Surface Cleaner","name":"Wipe Out 5G","brand":"TRIDENT","cost":141.0,"price":188.0,"tags":"","unit":"gal","per":5}];
+var CHEMS = JSON.parse(JSON.stringify(CHEM_SEED));
+/* Default amount used per treatment, by severity band — starting points the
+   contractor calibrates here and confirms per job. NOT coverage rates. */
+var CHEM_BANDS = {
+  oil:{light:0.25,moderate:0.5,heavy:1},
+  rust:{light:0.05,moderate:0.1,heavy:0.25},
+  efflo:{light:0.25,moderate:0.5,heavy:1},
+  house:{light:0.25,moderate:0.5,heavy:1},
+  windows:{light:0.5,moderate:1,heavy:2},
+  sealer:{light:1,moderate:2,heavy:3}
+};
+/* Recommendations: every product named here exists in the QB export above;
+   dilutions come from the Arizona research ladders / QB sales descriptions.
+   Anything not known is "per label" — nothing invented. */
+var CHEM_TREATS = {
+  oil:{label:"Oil stain treatment", recQB:"F9 Double Eagle Degreaser - 1", recTag:"degreaser",
+    why:"Degreasers cut petroleum and oil that general soap won\u2019t \u2014 Double Eagle is made for concrete, brick, pavers, tile, stone and grout. EBC Multipurpose is the other stocked degreaser.",
+    how:"Stained area only \u2014 dwell, agitate, hot water for baked-in oil, rinse. Repeat for old stains."},
+  rust:{label:"Rust removal", recQB:"F9 Barc Rust Remover -1", recTag:"rust",
+    why:"F9 BARC is an acid-based rust and battery-acid stain remover \u2014 a degreaser won\u2019t touch rust.",
+    how:"Stain only, dwell per label, rinse."},
+  efflo:{label:"Efflorescence / calcium", recQB:"F9 Efflorescence & Calcium Remover - 1", recTag:"efflorescence",
+    why:"F9 Efflo is a specialty mineral remover made for efflorescence and calcium deposits.",
+    how:"Dilute by severity \u2014 heavy 1:1\u20134:1, light 8:1\u201312:1. Dwell, then repeat light applications."},
+  house:{label:"House wash (soft wash)", recQB:"Pro Tool Lemony - 1", recTag:"",
+    why:"A soft-wash surfactant (used with SH and water) lets the mix dwell and lift dust, oxidation and mineral film at low pressure \u2014 high pressure damages stucco and tile. Priced for dust / oxidation / mineral film, not blanket mold kill.",
+    how:"Soft-wash application, dwell, rinse. Batch per label."},
+  windows:{label:"Window cleaning \u2014 hard water", recQB:"54004", recTag:"windows",
+    why:"Glass Gleam-4 is a window-cleaning concentrate with polymeric water softeners \u2014 made for hard-water areas.",
+    how:"1/4 fl oz per gallon of water, squeegee."},
+  sealer:{label:"Paver sealer", recQB:"EC 101 WB", recTag:"sealer",
+    why:"EC 101 WB forms a uniform, long-lasting water-repellent coating on pavers, concrete and brick \u2014 the seal step of the wash + re-sand + seal system.",
+    how:"Apply to clean, dry pavers as part of the wash + re-sand + seal system, per label."}
+};
+var treatChem = {}; /* tkey -> {chemId, sev, amt, manual} */
+var actTreat = {};  /* tkey -> actual amount used, once the contractor edits it */
+function escChem(t){ return String(t==null?"":t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function money2(n){ return "$"+(Math.round(n*100)/100).toFixed(2); }
+function trimNum(n){ return String(Math.round(n*100)/100); }
+function chemById(id){ for(var i=0;i<CHEMS.length;i++){ if(CHEMS[i].id===id) return CHEMS[i]; } return null; }
+function chemByQB(qb){ for(var i=0;i<CHEMS.length;i++){ if(CHEMS[i].qb===qb) return CHEMS[i]; } return null; }
+function chemRec(tkey){
+  var t=CHEM_TREATS[tkey]; if(!t) return CHEMS[0]||null;
+  var c=chemByQB(t.recQB); if(c) return c;
+  if(t.recTag){ for(var i=0;i<CHEMS.length;i++){ if((CHEMS[i].tags||"").split(",").indexOf(t.recTag)>=0) return CHEMS[i]; } }
+  return CHEMS[0]||null;
+}
+function unitCost(c){ if(!c) return 0; return (c.cost||0)/((c.per&&c.per>0)?c.per:1); }
+function treatState(tkey){
+  if(!treatChem[tkey]){ var rec=chemRec(tkey); treatChem[tkey]={chemId:rec?rec.id:null, sev:"moderate", amt:null, manual:false}; }
+  return treatChem[tkey];
+}
+function bandAmt(tkey, sev){
+  var b=CHEM_BANDS[tkey]; var v=b?((typeof b[sev]==="number")?b[sev]:(b.moderate||0)):0;
+  if(tkey==="rust"){ var a=(typeof findAddon==="function")?findAddon("rust"):null; v=v*(a?addonQtyFor(a):1); }
+  return v;
+}
+function amtUsed(tkey){
+  var st=treatState(tkey);
+  if(st.manual && st.amt!=null && !isNaN(st.amt)) return Math.max(0,st.amt);
+  return bandAmt(tkey, st.sev);
+}
+function activeTreats(){
+  var out=[];
+  ["oil","rust","efflo"].forEach(function(k){ if(selectedAddons[k] && (typeof findAddon!=="function" || findAddon(k))) out.push(k); });
+  if(services.some(function(s){ return s.type==="house"; })) out.push("house");
+  if(services.some(function(s){ return s.type==="windows"; }) && (typeof winCountVal!=="function" || winCountVal()>0)) out.push("windows");
+  var ps=$("paverSealerOn"), ds=$("driveSurface");
+  if(ps && ps.checked && ds && ds.value==="pavers") out.push("sealer");
+  return out;
+}
+/* The one chem-cost entry point calc() uses: per-treatment amount x library
+   unit cost, plus the contractor-entered fuel figure from Pro View. */
+function chemEstimate(){
+  var fuelEl=$("pFuel"); var fuel=fuelEl?(parseFloat(fuelEl.value)||0):0;
+  var lines=[], total=0;
+  activeTreats().forEach(function(k){
+    var st=treatState(k); var c=chemById(st.chemId)||chemRec(k);
+    var amt=amtUsed(k); var cost=amt*unitCost(c); total+=cost;
+    lines.push({tkey:k, label:CHEM_TREATS[k].label, chemName:c?c.name:"\u2014", amt:amt, unit:c?c.unit:"", cost:cost});
+  });
+  return {chem:total, fuel:fuel, lines:lines};
+}
+/* ----- Treatment chemical panels (estimator rows — contractor surface) ----- */
+function chemPanelHTML(tkey){
+  var t=CHEM_TREATS[tkey], st=treatState(tkey), rec=chemRec(tkey);
+  var sel=chemById(st.chemId)||rec;
+  var opts=CHEMS.map(function(c){ return '<option value="'+c.id+'"'+(sel&&c.id===sel.id?" selected":"")+'>'+escChem(c.name)+' \u2014 '+money2(unitCost(c))+'/'+escChem(c.unit)+'</option>'; }).join("");
+  var sevOpts=["light","moderate","heavy"].map(function(sv){ return '<option value="'+sv+'"'+(st.sev===sv?" selected":"")+'>'+sv.charAt(0).toUpperCase()+sv.slice(1)+'</option>'; }).join("");
+  var lineCost=amtUsed(tkey)*unitCost(sel);
+  return '<div class="chem-rec">\ud83e\uddea <b>Best chemical:</b> '+escChem(rec?rec.name:"\u2014")+'</div>'
+    +'<p><b>Why:</b> '+escChem(t.why)+'</p>'
+    +'<p><b>How:</b> '+escChem(t.how)+'</p>'
+    +'<div class="chem-controls">'
+    +'<span class="chem-pick-wrap"><label>Chemical used (internal)</label><select data-chem-pick="'+tkey+'" aria-label="Chemical for '+escChem(t.label)+'">'+opts+'</select></span>'
+    +'<span class="chem-sev-wrap"><label>Severity</label><select data-chem-sev="'+tkey+'" aria-label="Severity for '+escChem(t.label)+'">'+sevOpts+'</select></span>'
+    +'<span class="chem-amt-wrap"><label>Amount (<span data-chem-unit="'+tkey+'">'+escChem(sel?sel.unit:"")+'</span>)</label><input type="number" min="0" step="0.05" data-chem-amt="'+tkey+'" value="'+trimNum(amtUsed(tkey))+'" aria-label="Amount used for '+escChem(t.label)+'"></span>'
+    +'<span class="chem-linecost" data-chem-cost="'+tkey+'">Chem '+money2(lineCost)+'</span>'
+    +'</div>'
+    +'<p class="chem-note">Internal only \u2014 chemical names &amp; costs never appear on the customer quote.</p>';
+}
+function bindChemPanel(panel, tkey){
+  var st=treatState(tkey);
+  var sample=document.body.classList.contains("sample-mode");
+  var pick=panel.querySelector("[data-chem-pick]"), sev=panel.querySelector("[data-chem-sev]"), amt=panel.querySelector("[data-chem-amt]");
+  if(sample){ [pick,sev,amt].forEach(function(el){ if(el) el.disabled=true; }); return; }
+  if(pick) pick.addEventListener("change", function(){
+    st.chemId=pick.value;
+    var c=chemById(st.chemId);
+    var u=panel.querySelector("[data-chem-unit]"); if(u&&c) u.textContent=c.unit;
+    calc();
+  });
+  if(sev) sev.addEventListener("change", function(){
+    st.sev=sev.value;
+    if(!st.manual && amt) amt.value=trimNum(bandAmt(tkey, st.sev));
+    calc();
+  });
+  if(amt) amt.addEventListener("input", function(){
+    if(amt.value===""){ st.manual=false; st.amt=null; }
+    else { var v=parseFloat(amt.value); st.amt=isNaN(v)?0:v; st.manual=true; }
+    calc();
+  });
+}
+function decorateChemPanels(){
+  var wrap=$("addons");
+  if(wrap){
+    var chosen=ADDONS.filter(function(a){ return selectedAddons[a.id]; });
+    var rows=wrap.querySelectorAll(".addon-row");
+    chosen.forEach(function(a, i){
+      if(["oil","rust","efflo"].indexOf(a.id)<0) return;
+      var row=rows[i]; if(!row) return;
+      if(!row.querySelector(".chem-panel")){
+        var p=document.createElement("div"); p.className="chem-panel"; p.innerHTML=chemPanelHTML(a.id);
+        row.appendChild(p); bindChemPanel(p, a.id);
+      }
+    });
+  }
+  var sw=$("services");
+  if(sw){
+    var cards=sw.querySelectorAll(".service-card");
+    services.forEach(function(s, i){
+      var tk=s.type==="house"?"house":(s.type==="windows"?"windows":null);
+      if(!tk) return;
+      var card=cards[i]; if(!card) return;
+      if(!card.querySelector(".chem-panel")){
+        var p=document.createElement("div"); p.className="chem-panel"; p.innerHTML=chemPanelHTML(tk);
+        card.appendChild(p); bindChemPanel(p, tk);
+      }
+    });
+  }
+  var slot=$("sealerChemSlot");
+  if(slot){
+    var on=activeTreats().indexOf("sealer")>=0;
+    if(on && !slot.querySelector(".chem-panel")){
+      var p2=document.createElement("div"); p2.className="chem-panel"; p2.innerHTML=chemPanelHTML("sealer");
+      slot.appendChild(p2); bindChemPanel(p2, "sealer");
+    }
+    if(!on && slot.querySelector(".chem-panel")) slot.innerHTML="";
+  }
+}
+/* ----- Pro View detail + actuals rows ----- */
+function renderChemDetail(info){
+  var d=$("pChemDetail"); if(!d) return;
+  if(!info.lines.length){ d.innerHTML='<div class="q-row"><span>No treatments on this quote</span><b>$0.00</b></div>'; return; }
+  d.innerHTML=info.lines.map(function(){ return '<div class="q-row"><span></span><b></b></div>'; }).join("");
+  var rows=d.querySelectorAll(".q-row");
+  info.lines.forEach(function(l, i){
+    rows[i].querySelector("span").textContent=l.label+" \u2014 "+l.chemName+" ("+trimNum(l.amt)+" "+l.unit+")";
+    rows[i].querySelector("b").textContent=money2(l.cost);
+  });
+}
+var actSig="";
+function renderActChemRows(info){
+  var w=$("actChemRows"); if(!w) return;
+  var sig=info.lines.map(function(l){ return l.tkey+":"+l.chemName; }).join("|");
+  if(sig!==actSig){
+    actSig=sig; w.innerHTML="";
+    if(!info.lines.length){
+      w.innerHTML='<p style="font-size:12.5px;opacity:.75;margin:2px 0 8px">No treatments on this quote \u2014 no chemical actuals to record.</p>';
+    }
+    info.lines.forEach(function(l){
+      var row=document.createElement("div"); row.className="act-chem-row"; row.dataset.tkey=l.tkey;
+      row.innerHTML='<span class="ac-name"><b></b><span></span></span>'
+        +'<label>Actual amt<br><input type="number" min="0" step="0.05"></label>'
+        +'<span class="ac-cost"></span>';
+      row.querySelector(".ac-name b").textContent=l.label;
+      row.querySelector(".ac-name span").textContent=l.chemName+" \u2014 est. "+trimNum(l.amt)+" "+l.unit;
+      var inp=row.querySelector("input");
+      inp.value=(actTreat[l.tkey]!=null)?actTreat[l.tkey]:trimNum(l.amt);
+      inp.setAttribute("aria-label","Actual amount used \u2014 "+l.label);
+      if(document.body.classList.contains("sample-mode")) inp.disabled=true;
+      (function(tk, input){
+        input.addEventListener("input", function(){
+          var v=parseFloat(input.value); actTreat[tk]=isNaN(v)?null:v;
+          refreshActChemTotal();
+          if(typeof updateActuals==="function") updateActuals();
+          if(typeof scheduleSave==="function") scheduleSave();
+        });
+      })(l.tkey, inp);
+      w.appendChild(row);
+    });
+  }
+  refreshActChemTotal();
+}
+function refreshActChemTotal(){
+  var info=chemEstimate(); var total=0;
+  info.lines.forEach(function(l){
+    var st=treatState(l.tkey); var c=chemById(st.chemId)||chemRec(l.tkey);
+    var a=(actTreat[l.tkey]!=null)?actTreat[l.tkey]:l.amt;
+    var cost=(parseFloat(a)||0)*unitCost(c); total+=cost;
+    var cell=document.querySelector('.act-chem-row[data-tkey="'+l.tkey+'"] .ac-cost');
+    if(cell) cell.textContent=money2(cost);
+  });
+  var ac=$("actChem"); if(ac) ac.value=total>0?String(Math.round(total*100)/100):"";
+}
+function refreshChemCosts(){
+  var info=chemEstimate(); window.__chemInfo=info;
+  info.lines.forEach(function(l){
+    document.querySelectorAll('[data-chem-cost="'+l.tkey+'"]').forEach(function(el){ el.textContent="Chem "+money2(l.cost); });
+  });
+  renderChemDetail(info);
+  renderActChemRows(info);
+}
+/* Hook into the existing render cycle: renderActuals runs on every calc. */
+var _renderActuals19=renderActuals;
+renderActuals=function(r){ refreshChemCosts(); _renderActuals19(r); };
+var _renderAddons19=renderAddons;
+renderAddons=function(){ _renderAddons19(); decorateChemPanels(); };
+var _renderServices19=renderServices;
+renderServices=function(){ _renderServices19(); decorateChemPanels(); };
+/* ----- Pro Settings: chemical library editor + severity band defaults ----- */
+function renderChemLib(){
+  var w=$("setChems"); if(!w) return;
+  var q=(($("chemSearch")||{}).value||"").toLowerCase();
+  var list=CHEMS.filter(function(c){ return !q || (c.name+" "+(c.brand||"")+" "+(c.tags||"")).toLowerCase().indexOf(q)>=0; });
+  w.innerHTML="";
+  if(!list.length){ w.innerHTML='<p style="font-size:13.5px;color:var(--muted);margin:2px 0 8px">No chemicals match that filter.</p>'; return; }
+  list.forEach(function(c){
+    var row=document.createElement("div"); row.className="set-row";
+    row.innerHTML='<div class="nm"><input type="text" data-cname="'+c.id+'" aria-label="Chemical name" style="flex:1;min-width:0;padding:8px 9px;font-size:15px;border-radius:8px;border:1.5px solid var(--line);background:var(--panel);color:var(--ink)"><button type="button" class="xbtn" data-cdel="'+c.id+'">Remove \u2715</button></div>'
+      +'<div class="set-grid g3">'
+      +'<div><label>Brand</label><input type="text" data-cbrand="'+c.id+'"></div>'
+      +'<div><label>Your cost $</label><input type="number" step="0.01" min="0" data-ccost="'+c.id+'"></div>'
+      +'<div><label>Sell price $</label><input type="number" step="0.01" min="0" data-cprice="'+c.id+'"></div></div>'
+      +'<p style="font-size:12px;color:var(--muted);margin:6px 0 0"></p>';
+    row.querySelector("[data-cname]").value=c.name;
+    row.querySelector("[data-cbrand]").value=c.brand||"";
+    row.querySelector("[data-ccost]").value=c.cost;
+    row.querySelector("[data-cprice]").value=c.price;
+    row.querySelector("p").textContent="Sold per "+c.unit+(c.per>1?(" ("+c.per+" "+c.unit+" per container \u00b7 "+money2(unitCost(c))+" per "+c.unit+")"):"")+(c.tags?(" \u00b7 used for: "+c.tags.replace(/,/g,", ")):"");
+    w.appendChild(row);
+  });
+  function afterEdit(){ refreshChemCosts(); if(typeof scheduleSave==="function") scheduleSave(); }
+  w.querySelectorAll("[data-cname]").forEach(function(inp){ inp.addEventListener("input", function(){ var c=chemById(inp.dataset.cname); if(c){ c.name=inp.value; afterEdit(); } }); });
+  w.querySelectorAll("[data-cbrand]").forEach(function(inp){ inp.addEventListener("input", function(){ var c=chemById(inp.dataset.cbrand); if(c){ c.brand=inp.value; afterEdit(); } }); });
+  w.querySelectorAll("[data-ccost]").forEach(function(inp){ inp.addEventListener("input", function(){ var c=chemById(inp.dataset.ccost); if(c){ var v=parseFloat(inp.value); c.cost=isNaN(v)?0:v; afterEdit(); if(typeof calc==="function") calc(); } }); });
+  w.querySelectorAll("[data-cprice]").forEach(function(inp){ inp.addEventListener("input", function(){ var c=chemById(inp.dataset.cprice); if(c){ var v=parseFloat(inp.value); c.price=isNaN(v)?0:v; afterEdit(); } }); });
+  w.querySelectorAll("[data-cdel]").forEach(function(btn){ btn.addEventListener("click", function(){
+    var c=chemById(btn.dataset.cdel); if(!c) return;
+    CHEMS=CHEMS.filter(function(x){ return x.id!==c.id; });
+    renderChemLib(); renderAddons(); renderServices(); if(typeof calc==="function") calc();
+    if(typeof toast==="function") toast("Removed from library: "+c.name);
+  }); });
+}
+function renderChemBands(){
+  var w=$("chemBands"); if(!w) return;
+  var html='<span></span><label>Light</label><label>Moderate</label><label>Heavy</label>';
+  Object.keys(CHEM_TREATS).forEach(function(k){
+    html+='<span class="cb-name">'+escChem(CHEM_TREATS[k].label)+'</span>'+["light","moderate","heavy"].map(function(sv){
+      return '<input type="number" min="0" step="0.05" value="'+CHEM_BANDS[k][sv]+'" data-band="'+k+"."+sv+'" aria-label="'+escChem(CHEM_TREATS[k].label)+' default amount \u2014 '+sv+'">';
+    }).join("");
+  });
+  w.innerHTML=html;
+  w.querySelectorAll("[data-band]").forEach(function(inp){
+    inp.addEventListener("input", function(){
+      var parts=inp.dataset.band.split("."); var v=parseFloat(inp.value);
+      if(!isNaN(v)&&v>=0){ CHEM_BANDS[parts[0]][parts[1]]=v; if(typeof calc==="function") calc(); if(typeof scheduleSave==="function") scheduleSave(); }
+    });
+  });
+}
+/* ----- Persistence: library, per-treatment picks, actual amounts, fuel ----- */
+if(typeof FIELD_IDS!=="undefined"){ ["pFuel","actFuel"].forEach(function(id){ if(FIELD_IDS.indexOf(id)<0) FIELD_IDS.push(id); }); }
+function applyChemState(s){
+  if(!s) return;
+  try{
+    /* States saved before v19 (or a sample stash captured before the v19
+       wrappers loaded) carry no chemical fields — fall back to the device
+       settings' chemical state rather than losing the library and picks. */
+    if((!s.chemLib || !s.treatChem) && typeof store!=="undefined" && store.settings && store.settings!==s){
+      if(!s.chemLib && store.settings.chemLib) s.chemLib=store.settings.chemLib;
+      if(!s.treatChem && store.settings.treatChem) s.treatChem=store.settings.treatChem;
+      if(!s.actTreat && store.settings.actTreat) s.actTreat=store.settings.actTreat;
+      if(!s.chemBands && store.settings.chemBands) s.chemBands=store.settings.chemBands;
+    }
+    if(s.chemLib && s.chemLib.length) CHEMS=s.chemLib;
+    if(s.treatChem) treatChem=s.treatChem;
+    if(s.actTreat) actTreat=s.actTreat;
+    if(s.chemBands) Object.keys(s.chemBands).forEach(function(k){ if(CHEM_BANDS[k]) CHEM_BANDS[k]=s.chemBands[k]; });
+    var f=s.fields||{};
+    ["pFuel","actFuel"].forEach(function(id){ var el=$(id); if(el && f[id]!==undefined) el.value=f[id]; });
+    actSig="";
+    renderChemLib(); renderChemBands(); decorateChemPanels();
+  }catch(e){}
+}
+if(typeof collectSettings==="function"){
+  var _collect19=collectSettings;
+  collectSettings=function(){
+    var s=_collect19();
+    s.chemLib=CHEMS; s.treatChem=treatChem; s.actTreat=actTreat; s.chemBands=CHEM_BANDS;
+    return s;
+  };
+}
+if(typeof applySettings==="function"){
+  var _apply19=applySettings;
+  applySettings=function(s){ _apply19(s); applyChemState(s); if(typeof calc==="function") calc(); };
+}
+if(typeof encodeState==="function"){
+  /* Customer share links never carry the internal chemical library or costs. */
+  var _enc19=encodeState;
+  encodeState=function(st){ var c=JSON.parse(JSON.stringify(st||{})); delete c.chemLib; delete c.treatChem; delete c.actTreat; delete c.chemBands; return _enc19(c); };
+}
+/* ----- Wire up controls ----- */
+(function(){
+  var pf=$("pFuel"); if(pf) pf.addEventListener("input", function(){ calc(); });
+  var af=$("actFuel"); if(af) af.addEventListener("input", function(){ if(typeof updateActuals==="function") updateActuals(); if(typeof scheduleSave==="function") scheduleSave(); });
+  var ct=$("pChemToggle");
+  if(ct) ct.addEventListener("click", function(){
+    var d=$("pChemDetail"); if(!d) return;
+    var open=d.hidden; d.hidden=!open;
+    ct.setAttribute("aria-expanded", open?"true":"false");
+    ct.textContent=open?"hide":"details";
+  });
+  var cs=$("chemSearch"); if(cs) cs.addEventListener("input", renderChemLib);
+  var sa=$("chemShowAll"); if(sa) sa.addEventListener("click", function(){ var i=$("chemSearch"); if(i) i.value=""; renderChemLib(); });
+  var ab=$("addChemBtn");
+  if(ab) ab.addEventListener("click", function(){
+    var name=($("newChemName").value||"").trim();
+    var cost=parseFloat($("newChemCost").value), price=parseFloat($("newChemPrice").value);
+    if(!name){ toast("Give the chemical a name first"); return; }
+    CHEMS.push({id:"ch"+Date.now(), qb:"", name:name, brand:"", cost:isNaN(cost)?0:cost, price:isNaN(price)?0:price, tags:"", unit:"container", per:1, custom:true});
+    $("newChemName").value=""; $("newChemCost").value=""; $("newChemPrice").value="";
+    renderChemLib(); renderAddons(); renderServices(); calc();
+    toast("Chemical added to your library");
+  });
+  /* Sample mode always demos the feature with the default picks and bands,
+     whatever a stored full-version quote carries. */
+  if(window.MutationObserver){
+    var wasSample=document.body.classList.contains("sample-mode");
+    new MutationObserver(function(){
+      var isS=document.body.classList.contains("sample-mode");
+      if(isS && !wasSample){
+        treatChem={}; actTreat={}; actSig="";
+        document.querySelectorAll(".chem-panel").forEach(function(p){ p.remove(); });
+        decorateChemPanels();
+        if(typeof calc==="function") calc();
+      }
+      wasSample=isS;
+    }).observe(document.body, {attributes:true, attributeFilter:["class"]});
+  }
+  /* Restore any stored chemical state (settings were applied before this
+     script loaded), then render everything once. */
+  try{ if(typeof store!=="undefined" && store.settings) applyChemState(store.settings); }catch(e){}
+  renderChemLib(); renderChemBands(); decorateChemPanels();
+  if(typeof calc==="function") calc();
+})();
+</script>
+</body>
+
 </body>
 </html>
