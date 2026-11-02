@@ -605,6 +605,60 @@ body.sample-mode #photoGrid button,body.sample-mode .photo-thumb button{pointer-
   body.sheet-printing .sheet-doc{box-shadow:none;border:0}
   body.sheet-printing .sheet-chem .sc-amtin input{border:0;padding:0;width:auto}
 }
+/* ===== v24 — Separate printable Chem Breakdown list (contractor only) ===== */
+.chem-view{position:fixed;inset:0;z-index:97;background:var(--bg);overflow-y:auto;padding:20px 14px 44px;display:none}
+.chem-view.open{display:block}
+.chem-inner{max-width:880px;margin:0 auto}
+.chem-actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.chem-doc{background:#fff;color:#141414;border:1px solid #d9d9d9;border-radius:6px;box-shadow:0 14px 40px rgba(0,0,0,.18);overflow:hidden;font-variant-numeric:tabular-nums}
+.cb-picklist{border:1px solid #d9d9d9;border-radius:10px;overflow:hidden;margin:0 0 6px}
+.cb-pick-head{display:grid;grid-template-columns:34px 1.6fr .9fr .9fr .7fr;gap:10px;background:#14365a;color:#fff;padding:9px 12px;font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.cb-pick-row{display:grid;grid-template-columns:34px 1.6fr .9fr .9fr .7fr;gap:10px;padding:11px 12px;border-top:1px solid #eee;align-items:start;font-size:14px}
+.cb-pick-row:first-of-type{border-top:0}
+.cb-box{width:19px;height:19px;border:2px solid #141414;border-radius:4px;display:block;margin-top:2px;background:#fff}
+.cb-prod b{display:block;font-size:15px;line-height:1.3}
+.cb-prod span{display:block;color:#666;font-size:12.5px;line-height:1.4;margin-top:2px}
+.cb-cell span{display:block;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#777}
+.cb-cell b{font-size:14.5px}
+.cb-detail{border:1px solid #e4e4e4;border-radius:10px;padding:13px 14px;margin:0 0 12px;background:#fcfcf9;break-inside:avoid}
+.cb-detail h4{margin:0;font-size:16.5px;line-height:1.3}
+.cb-detail h4 span{font-weight:600;color:#555;font-size:13.5px}
+.cb-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+.cb-tag{font-size:12.5px;font-weight:800;border-radius:999px;padding:3px 9px;line-height:1.35;border:1px solid var(--line)}
+.cb-tag.type{background:#eef3f9;color:#152a3d}
+.cb-tag.carried{background:#eafaf1;border-color:#bfe8cf;color:#0f7a4d}
+.cb-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;margin-top:11px;font-size:14px}
+.cb-grid .lab{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#777;display:block}
+.cb-whyhow{font-size:13.5px;line-height:1.55;color:#333;margin-top:10px}
+.cb-whyhow p{margin:0 0 6px}
+.cb-whyhow p:last-child{margin-bottom:0}
+.cb-spec{font-size:13px;line-height:1.55;color:#444;margin-top:8px}
+.cb-flag{font-size:13px;font-weight:700;color:#8f5f00;background:#fff6da;border:1px solid #f0d48a;border-radius:8px;padding:7px 9px;margin-top:9px;line-height:1.45}
+.cb-range{font-size:13.5px;font-weight:700;color:#141414;background:#fff6da;border:1px solid #f0d48a;border-radius:8px;padding:8px 10px;margin-top:8px;line-height:1.5}
+.cb-amtin{display:flex;gap:7px;align-items:center}
+.cb-amtin input{width:92px;padding:8px 9px;font-size:15px;border:1.5px solid #cfd8e3;border-radius:8px;background:#fff;color:#141414}
+.cb-totals{border:2px solid #121417;border-radius:10px;padding:12px 14px;margin:0 0 6px}
+.cb-prep{display:flex;flex-direction:column;gap:0;border:1px solid #e4e4e4;border-radius:10px;overflow:hidden;margin:0 0 6px}
+.cb-prep-row{display:flex;gap:11px;align-items:flex-start;padding:10px 12px;font-size:14px;line-height:1.45;border-top:1px solid #eee}
+.cb-prep-row:first-child{border-top:0}
+.cb-prep-row .cb-box{flex-shrink:0}
+@media(min-width:641px){
+  .cb-pick-row .cb-cell span{display:none}
+}
+@media(max-width:640px){
+  .cb-pick-head{display:none}
+  .cb-pick-row{grid-template-columns:28px 1fr;gap:8px 10px}
+  .cb-pick-row .cb-cell{grid-column:2}
+  .cb-grid{grid-template-columns:1fr}
+}
+@media print{
+  body.chem-printing>*{display:none!important}
+  body.chem-printing>#chemView{display:block!important;position:static;overflow:visible;padding:0;background:#fff}
+  body.chem-printing .chem-actions{display:none!important}
+  body.chem-printing .chem-doc{box-shadow:none;border:0}
+  body.chem-printing .cb-amtin input{border:0;padding:0;width:auto;font-weight:800}
+  body.chem-printing .cb-detail,body.chem-printing .cb-pick-row{break-inside:avoid}
+}
 </style>
 </head>
 <body class="gate-locked">
@@ -971,6 +1025,7 @@ body.sample-mode #photoGrid button,body.sample-mode .photo-thumb button{pointer-
       <button class="btn btn-ghost" id="copyBtn" style="background:var(--panel)">📋 Copy quote text</button>
       <button class="btn btn-ghost full" id="shareBtn" style="background:var(--panel)">🔗 Copy customer link — totals only, no costs or margins</button>
       <button class="btn btn-ghost full" id="sheetBtn" type="button" style="background:var(--panel)">🧾 Contractor quote sheet — internal, everything in one place</button>
+      <button class="btn btn-ghost full" id="chemListBtn" type="button" style="background:var(--panel);border-color:var(--amber-dark)">🧪 Chem breakdown — separate printable list for the contractor</button>
     </div>
 
     <div class="sig-wrap" id="sigWrap">
@@ -1306,6 +1361,18 @@ body.sample-mode #photoGrid button,body.sample-mode .photo-thumb button{pointer-
     </div>
     <div class="sheet-doc" id="sheetDoc"></div>
     <p style="font-size:13px;color:var(--muted);margin:12px 2px 0;line-height:1.5">Internal only — this sheet never appears on the customer quote preview, PDF, copy text, or share link. Amounts used are editable here and on each treatment&rsquo;s chemical row; costs update from the retail Price in your chemical library.</p>
+  </div>
+</div>
+
+<div class="chem-view" id="chemView" role="dialog" aria-modal="true" aria-label="Chem breakdown — printable list for the contractor">
+  <div class="chem-inner">
+    <div class="chem-actions">
+      <button class="btn btn-amber" id="chemPrint" type="button" style="width:auto">🖨 Print chem list</button>
+      <button class="btn btn-ghost" id="chemClose" type="button" style="background:var(--panel)">✕ Close</button>
+      <button class="btn btn-ghost" id="chemOpenSheet" type="button" style="background:var(--panel)">🧾 Open full contractor sheet</button>
+    </div>
+    <div class="chem-doc" id="chemDoc"></div>
+    <p style="font-size:13px;color:var(--muted);margin:12px 2px 0;line-height:1.5">Contractor only — this separate chem list never appears on the customer quote preview, PDF, copy text, or share link. Print it on its own for pickup and for the truck. Amounts are editable here and stay in sync with each treatment&rsquo;s chemical row.</p>
   </div>
 </div>
 
@@ -4211,6 +4278,179 @@ function closeSheet(){
   });
   document.addEventListener("keydown", function(e){
     if(e.key === "Escape" && $("sheetView").classList.contains("open")) closeSheet();
+  });
+})();
+</script>
+<script>
+/* ---------- v24: Separate printable Chem Breakdown list (contractor only) ----------
+   A standalone list the quoter / contractor can print on its own — separate
+   from the customer quote and separate from the full contractor quote sheet.
+   It answers three jobs in order: (1) what to pick up, (2) how much and what
+   quality / type each chemical is, with dilution and coverage, and (3) what
+   it costs. Built only when the contractor opens it, from the same
+   chemEstimate() / v22 range math the panels and contractor sheet use.
+   INTERNAL-ONLY LOCK (unchanged): never part of the customer preview, PDF,
+   copy text, or share link; encodeState() still strips all chemical state. */
+function cbSevLabel(sev){ return sev ? (sev.charAt(0).toUpperCase() + sev.slice(1)) : "Moderate"; }
+function renderChemBreakdown(){
+  var doc = $("chemDoc"); if(!doc) return;
+  var r = (typeof calc === "function") ? calc() : {lines:[], total:0};
+  var info = (typeof chemEstimate === "function") ? chemEstimate() : {chem:0, fuel:0, lines:[]};
+  var sample = document.body.classList.contains("sample-mode");
+  var biz = ($("bizName") && $("bizName").value) || "Your Company";
+  var qnum = (($("qNum")||{}).textContent || "").trim();
+  var h = "";
+  /* Header */
+  h += '<div class="sheet-head"><div><h2>Chem Breakdown</h2>'
+     + '<div class="sheet-biz">' + escChem(biz) + (qnum ? ' \u00b7 Quote ' + escChem(qnum) : '') + ' \u00b7 Printable list for the contractor</div></div>'
+     + '<span class="sheet-lock">Contractor only \u2014 not for the customer</span></div>';
+  /* Job snapshot — what this list is for */
+  h += '<div class="sheet-sec"><h3>Job this list is for</h3>'
+     + '<div class="sheet-kv"><span>Client</span><b>' + escChem(($("clientName").value || "").trim() || "\u2014") + '</b></div>'
+     + '<div class="sheet-kv"><span>Property address</span><b>' + escChem(($("clientAddr").value || "").trim() || "\u2014") + '</b></div>'
+     + '<div class="sheet-kv"><span>Job date</span><b>' + escChem(sheetJobDate()) + '</b></div>'
+     + '<div class="sheet-kv"><span>Quote total (for reference)</span><b>' + money(r.total || 0) + '</b></div>';
+  if(r.lines && r.lines.length){
+    h += '<div class="sheet-kv"><span>Work covered</span><b style="max-width:62%">' + escChem(r.lines.map(function(l){ return l.title; }).join(" \u00b7 ")) + '</b></div>';
+  }
+  h += '<p class="sheet-note" style="margin-top:8px">Take this sheet to pickup and to the truck. Tick each product off as you load it. Quantities use the published coverage ranges where they exist \u2014 the amount to bring starts at the high estimate so you do not run short.</p></div>';
+  /* 1 — Pickup list at a glance */
+  h += '<div class="sheet-sec"><h3>1 \u00b7 Pickup list \u2014 what to get</h3>';
+  var rOn = $("paverResandOn"), dsEl = $("driveSurface");
+  var hasSand = !!(rOn && rOn.checked && dsEl && dsEl.value === "pavers");
+  var bags = hasSand ? sandBagsFor(paverAreaFor()) : null;
+  if(!info.lines.length && !hasSand){
+    h += '<p class="sheet-note" style="font-size:14.5px;color:#141414"><b>No chemicals needed on this quote yet.</b> Add a treatment (oil, rust, efflorescence) or a service that uses chemicals \u2014 house wash, window cleaning, paver sealer \u2014 and the recommended products, types, dilutions and quantities will list here automatically.</p>';
+  } else {
+    h += '<div class="cb-picklist"><div class="cb-pick-head"><span></span><span>Product</span><span>For</span><span>Qty to bring</span><span>Line cost</span></div>';
+    info.lines.forEach(function(l){
+      var st = treatState(l.tkey), c = chemById(st.chemId) || chemRec(l.tkey);
+      var brand = (c && c.brand) ? c.brand : "";
+      var qtyTxt = l.range ? (trimNum(l.range.low) + "\u2013" + trimNum(l.range.high) + " " + l.unit + " \u00b7 bring " + trimNum(l.amt) + " " + l.unit) : (trimNum(l.amt) + " " + l.unit);
+      var costTxt = l.range ? (money2(l.costLow) + "\u2013" + money2(l.costHigh)) : money2(l.cost);
+      h += '<div class="cb-pick-row"><span class="cb-box" aria-hidden="true"></span>'
+         + '<div class="cb-prod"><b>' + escChem(l.chemName) + '</b><span>' + escChem([brand, l.type || "Chemical treatment"].filter(Boolean).join(" \u00b7 ")) + ' \u00b7 Carried at AZ Cleaning Supplies</span></div>'
+         + '<div class="cb-cell"><span>For</span><b>' + escChem(l.label) + '</b></div>'
+         + '<div class="cb-cell"><span>Qty to bring</span><b>' + escChem(qtyTxt) + '</b></div>'
+         + '<div class="cb-cell"><span>Line cost</span><b>' + escChem(costTxt) + '</b></div></div>';
+    });
+    if(hasSand){
+      h += '<div class="cb-pick-row"><span class="cb-box" aria-hidden="true"></span>'
+         + '<div class="cb-prod"><b>Joint Sand (50-lb bags)</b><span>Joint sand \u00b7 Carried at AZ Cleaning Supplies</span></div>'
+         + '<div class="cb-cell"><span>For</span><b>Paver joint re-sand</b></div>'
+         + '<div class="cb-cell"><span>Qty to bring</span><b>' + (bags ? (bags.low + "\u2013" + bags.high + " bags \u00b7 bring " + bags.high + " bags") : "Set paver area to calculate") + '</b></div>'
+         + '<div class="cb-cell"><span>Line cost</span><b>On re-sand rate line</b></div></div>';
+    }
+    h += '</div><p class="sheet-note">Costs are at the retail Price from your chemical library \u2014 what you pay at the counter, not store cost.</p>';
+  }
+  h += '</div>';
+  /* 2 — Full breakdown per chemical: type / quality, why, how, dilution, quantity */
+  h += '<div class="sheet-sec"><h3>2 \u00b7 Breakdown by chemical \u2014 type, dilution &amp; quantity</h3>';
+  if(!info.lines.length && !hasSand){
+    h += '<p class="sheet-note">Nothing to break down yet \u2014 see the note above.</p>';
+  }
+  info.lines.forEach(function(l, idx){
+    var st = treatState(l.tkey), c = chemById(st.chemId) || chemRec(l.tkey), uc = unitCost(c);
+    var treat = CHEM_TREATS[l.tkey] || {why:"", how:""};
+    var ci = CHEM_INFO[l.tkey] || {spec:"", flag:""};
+    var rangeTxt = l.range ? (trimNum(l.range.low) + "\u2013" + trimNum(l.range.high) + " " + l.unit) : ((l.tkey === "rust" || l.tkey === "efflo") ? "Calculates from the treated area \u2014 see coverage below" : "No published coverage range \u2014 contractor estimate");
+    var costTxt = l.range ? (money2(l.costLow) + "\u2013" + money2(l.costHigh)) : money2(l.cost);
+    var extra = [];
+    extra.push("Severity: " + cbSevLabel(st.sev));
+    if(l.tkey === "rust"){
+      var band = (typeof BARC_BANDS !== "undefined") ? (BARC_BANDS[st.por || "porous"] || BARC_BANDS.porous) : null;
+      if(band) extra.push("Surface: " + band.label);
+      if(st.area) extra.push("Treated area: " + trimNum(parseFloat(st.area) || 0) + " sq ft");
+    }
+    if(l.tkey === "efflo"){
+      var ea = (typeof effloAreaFor === "function") ? effloAreaFor() : 0;
+      if(ea) extra.push("Treated area: " + trimNum(ea) + " sq ft");
+    }
+    h += '<div class="cb-detail"><h4>' + (idx + 1) + ". " + escChem(l.chemName) + ' <span>\u2014 ' + escChem(l.label) + '</span></h4>'
+       + '<div class="cb-tags"><span class="cb-tag type">Type: ' + escChem(l.type || "Chemical treatment") + '</span><span class="cb-tag carried">\u2713 Carried at AZ Cleaning Supplies</span>'
+       + ((c && c.brand) ? '<span class="cb-tag">Brand: ' + escChem(c.brand) + '</span>' : '') + '</div>'
+       + '<div class="cb-grid">'
+       + '<div><span class="lab">Dilution</span>' + escChem(SHEET_DIL[l.tkey] || "Per label") + '</div>'
+       + '<div><span class="lab">Quantity needed (range)</span>' + escChem(rangeTxt) + '</div>'
+       + '<div><span class="lab">Amount to bring (editable)</span><span class="cb-amtin"><input type="number" min="0" step="0.05" data-cb-amt="' + l.tkey + '" value="' + trimNum(l.amt) + '" aria-label="Amount to bring \u2014 ' + escChem(l.label) + '"' + (sample ? " disabled" : "") + '> ' + escChem(l.unit) + '</span></div>'
+       + '<div><span class="lab">Retail price</span>' + money2(uc) + ' / ' + escChem(l.unit) + '</div>'
+       + '<div><span class="lab">Job context</span>' + escChem(extra.join(" \u00b7 ")) + '</div>'
+       + '<div><span class="lab">Cost' + (l.range ? " range" : "") + '</span><b>' + escChem(costTxt) + '</b></div>'
+       + '</div>'
+       + '<div class="cb-whyhow">'
+       + (treat.why ? '<p><b>Why this one:</b> ' + escChem(treat.why) + '</p>' : '')
+       + (treat.how ? '<p><b>How to use:</b> ' + escChem(treat.how) + '</p>' : '')
+       + '</div>'
+       + (ci.spec ? '<div class="cb-spec">' + ci.spec + '</div>' : '')
+       + ((l.tkey === "rust" || l.tkey === "efflo") && typeof rangeTextFor === "function" ? '<div class="cb-range">' + escChem(rangeTextFor(l.tkey)) + '</div>' : '')
+       + (ci.flag ? '<div class="cb-flag">' + escChem(ci.flag) + '</div>' : '')
+       + '</div>';
+  });
+  if(hasSand){
+    h += '<div class="cb-detail"><h4>Joint Sand (50-lb bags) <span>\u2014 Paver joint re-sand</span></h4>'
+       + '<div class="cb-tags"><span class="cb-tag type">Type: Joint sand \u2014 50-lb bag</span><span class="cb-tag carried">\u2713 Carried at AZ Cleaning Supplies</span></div>'
+       + '<div class="cb-grid">'
+       + '<div><span class="lab">Coverage</span>300\u2013400 sq ft per 50-lb bag at 1/4-inch joints</div>'
+       + '<div><span class="lab">Quantity needed (range)</span>' + (bags ? (bags.low + "\u2013" + bags.high + " bags") : "Set the paver area to calculate") + '</div>'
+       + '<div><span class="lab">Amount to bring</span><b>' + (bags ? (bags.high + " bags (high estimate)") : "\u2014") + '</b></div>'
+       + '<div><span class="lab">Price</span>No library price \u2014 ordering only; cost stays on the re-sand rate line</div>'
+       + '</div></div>';
+  }
+  h += '</div>';
+  /* 3 — Cost breakdown */
+  var lowTot = 0, highTot = 0, hasRange = false;
+  info.lines.forEach(function(l){ if(l.range){ hasRange = true; lowTot += (l.costLow || 0); highTot += (l.costHigh || 0); } else { lowTot += l.cost; highTot += l.cost; } });
+  h += '<div class="sheet-sec"><h3>3 \u00b7 Chem cost breakdown</h3><div class="cb-totals">'
+     + '<div class="sheet-kv"><span>Estimated chemicals (amounts to bring)</span><b>' + money2(info.chem) + '</b></div>';
+  if(hasRange) h += '<div class="sheet-kv"><span>Chemical cost range (low\u2013high estimate)</span><b>' + money2(lowTot) + " \u2013 " + money2(highTot) + '</b></div>';
+  if(info.fuel > 0) h += '<div class="sheet-kv"><span>Fuel (from Pro View)</span><b>' + money2(info.fuel) + '</b></div>';
+  h += '<div class="sheet-kv" style="font-size:16px"><span><b>Chemicals + fuel</b></span><b>' + money2((info.chem || 0) + (info.fuel || 0)) + '</b></div>'
+     + '</div><p class="sheet-note">Line costs above use each product&rsquo;s retail Price. If you change an amount to bring, this total updates everywhere \u2014 here, on the contractor sheet, and in Pro View.</p></div>';
+  /* Pickup + load-out checklist */
+  h += '<div class="sheet-sec"><h3>Pickup &amp; load-out</h3><div class="sheet-pickup">' + escChem(PICKUP_TXT) + '</div>'
+     + '<div class="cb-prep">'
+     + '<div class="cb-prep-row"><span class="cb-box" aria-hidden="true"></span><span><b>Picked up / loaded</b> \u2014 every product on the list above is in the truck, lids tight.</span></div>'
+     + '<div class="cb-prep-row"><span class="cb-box" aria-hidden="true"></span><span><b>Amounts checked</b> \u2014 quantities match the &ldquo;bring&rdquo; amounts, including the high estimate where a range is shown.</span></div>'
+     + '<div class="cb-prep-row"><span class="cb-box" aria-hidden="true"></span><span><b>Dilution noted</b> \u2014 mix ratios for this job are written / known before you leave.</span></div>'
+     + '<div class="cb-prep-row"><span class="cb-box" aria-hidden="true"></span><span><b>Actuals after the job</b> \u2014 record what you actually used in Pro Settings so the next quote gets sharper.</span></div>'
+     + '</div></div>';
+  h += '<div class="sheet-sec" style="padding-bottom:16px"><p class="sheet-note" style="margin:0">Generated from this quote in SprayQuote. Chemical names, types and costs are contractor-only \u2014 they never appear on the customer quote, PDF, copy text, or share link.</p></div>';
+  doc.innerHTML = h;
+  doc.querySelectorAll("[data-cb-amt]").forEach(function(inp){
+    inp.addEventListener("change", function(){
+      var st = treatState(inp.dataset.cbAmt);
+      if(inp.value === ""){ st.manual = false; st.amt = null; }
+      else { var v = parseFloat(inp.value); st.amt = isNaN(v) ? 0 : v; st.manual = true; }
+      renderChemBreakdown();
+      if(typeof calc === "function") calc();
+      if(typeof scheduleSave === "function") scheduleSave();
+    });
+  });
+}
+function openChemList(){
+  renderChemBreakdown();
+  $("chemView").classList.add("open");
+  document.body.style.overflow = "hidden";
+  $("chemView").scrollTop = 0;
+}
+function closeChemList(){
+  $("chemView").classList.remove("open");
+  if(!$("settingsDrawer").classList.contains("open") && !$("sheetView").classList.contains("open")) document.body.style.overflow = "";
+}
+(function(){
+  var b = $("chemListBtn"); if(b) b.addEventListener("click", openChemList);
+  var c = $("chemClose"); if(c) c.addEventListener("click", closeChemList);
+  var s = $("chemOpenSheet"); if(s) s.addEventListener("click", function(){ closeChemList(); if(typeof openSheet === "function") openSheet(); });
+  var p = $("chemPrint");
+  if(p) p.addEventListener("click", function(){
+    document.body.classList.add("chem-printing");
+    var done = function(){ document.body.classList.remove("chem-printing"); window.removeEventListener("afterprint", done); };
+    window.addEventListener("afterprint", done);
+    setTimeout(done, 2000);
+    try { window.print(); } catch(e){ done(); }
+  });
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape" && $("chemView").classList.contains("open")) closeChemList();
   });
 })();
 </script>
